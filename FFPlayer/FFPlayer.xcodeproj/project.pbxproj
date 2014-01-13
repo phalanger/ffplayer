@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1FC0717E1883F24900ED63E8 /* FFAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC0717D1883F24900ED63E8 /* FFAlertView.m */; };
+		1FC071821883F36D00ED63E8 /* FFSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC071811883F36D00ED63E8 /* FFSettingViewController.m */; };
 		1FE5F8711883891D00CB4C09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8701883891D00CB4C09 /* Foundation.framework */; };
 		1FE5F8731883891D00CB4C09 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8721883891D00CB4C09 /* CoreGraphics.framework */; };
 		1FE5F8751883891D00CB4C09 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8741883891D00CB4C09 /* UIKit.framework */; };
@@ -16,7 +18,6 @@
 		1FE5F8841883891D00CB4C09 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FE5F8821883891D00CB4C09 /* Main_iPhone.storyboard */; };
 		1FE5F8871883891D00CB4C09 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FE5F8851883891D00CB4C09 /* Main_iPad.storyboard */; };
 		1FE5F88A1883891D00CB4C09 /* FFFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5F8891883891D00CB4C09 /* FFFirstViewController.m */; };
-		1FE5F88D1883891D00CB4C09 /* FFSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5F88C1883891D00CB4C09 /* FFSecondViewController.m */; };
 		1FE5F88F1883891D00CB4C09 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FE5F88E1883891D00CB4C09 /* Images.xcassets */; };
 		1FE5F8961883891D00CB4C09 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8951883891D00CB4C09 /* XCTest.framework */; };
 		1FE5F8971883891D00CB4C09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8701883891D00CB4C09 /* Foundation.framework */; };
@@ -54,6 +55,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1FC0717C1883F24900ED63E8 /* FFAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFAlertView.h; path = GUI/FFAlertView.h; sourceTree = "<group>"; };
+		1FC0717D1883F24900ED63E8 /* FFAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFAlertView.m; path = GUI/FFAlertView.m; sourceTree = "<group>"; };
+		1FC071801883F36D00ED63E8 /* FFSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFSettingViewController.h; path = GUI/FFSettingViewController.h; sourceTree = "<group>"; };
+		1FC071811883F36D00ED63E8 /* FFSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFSettingViewController.m; path = GUI/FFSettingViewController.m; sourceTree = "<group>"; };
 		1FE5F86D1883891D00CB4C09 /* FFPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE5F8701883891D00CB4C09 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1FE5F8721883891D00CB4C09 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -68,8 +73,6 @@
 		1FE5F8861883891D00CB4C09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		1FE5F8881883891D00CB4C09 /* FFFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFFirstViewController.h; sourceTree = "<group>"; };
 		1FE5F8891883891D00CB4C09 /* FFFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFFirstViewController.m; sourceTree = "<group>"; };
-		1FE5F88B1883891D00CB4C09 /* FFSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFSecondViewController.h; sourceTree = "<group>"; };
-		1FE5F88C1883891D00CB4C09 /* FFSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFSecondViewController.m; sourceTree = "<group>"; };
 		1FE5F88E1883891D00CB4C09 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1FE5F8941883891D00CB4C09 /* FFPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FFPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE5F8951883891D00CB4C09 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -86,23 +89,6 @@
 		1FE5F8B318838DA700CB4C09 /* KxMovieGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxMovieGLView.m; path = ../kxmovie/KxMovieGLView.m; sourceTree = "<group>"; };
 		1FE5F8B418838DA700CB4C09 /* KxMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxMovieViewController.h; path = ../kxmovie/KxMovieViewController.h; sourceTree = "<group>"; };
 		1FE5F8B518838DA700CB4C09 /* KxMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxMovieViewController.m; path = ../kxmovie/KxMovieViewController.m; sourceTree = "<group>"; };
-		1FE5F8BE18838E6A00CB4C09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		1FE5F8C018838E6A00CB4C09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
-		1FE5F8C218838E6A00CB4C09 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1FE5F8C318838E6A00CB4C09 /* FFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFAppDelegate.h; sourceTree = "<group>"; };
-		1FE5F8C418838E6A00CB4C09 /* FFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFAppDelegate.m; sourceTree = "<group>"; };
-		1FE5F8C518838E6A00CB4C09 /* FFFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFFirstViewController.h; sourceTree = "<group>"; };
-		1FE5F8C618838E6A00CB4C09 /* FFFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFFirstViewController.m; sourceTree = "<group>"; };
-		1FE5F8C718838E6A00CB4C09 /* FFPlayer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FFPlayer-Info.plist"; sourceTree = "<group>"; };
-		1FE5F8C818838E6A00CB4C09 /* FFPlayer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FFPlayer-Prefix.pch"; sourceTree = "<group>"; };
-		1FE5F8C918838E6A00CB4C09 /* FFSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFSecondViewController.h; sourceTree = "<group>"; };
-		1FE5F8CA18838E6A00CB4C09 /* FFSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFSecondViewController.m; sourceTree = "<group>"; };
-		1FE5F8CB18838E6A00CB4C09 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		1FE5F8CC18838E6A00CB4C09 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		1FE5F8CD18838E6A00CB4C09 /* FFPlayer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = FFPlayer.xcodeproj; sourceTree = "<group>"; };
-		1FE5F8D218838E6A00CB4C09 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1FE5F8D318838E6A00CB4C09 /* FFPlayerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FFPlayerTests-Info.plist"; sourceTree = "<group>"; };
-		1FE5F8D418838E6A00CB4C09 /* FFPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFPlayerTests.m; sourceTree = "<group>"; };
 		1FE5F8D518838E8600CB4C09 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = ../libs/libavcodec.a; sourceTree = "<group>"; };
 		1FE5F8D618838E8600CB4C09 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../libs/libavformat.a; sourceTree = "<group>"; };
 		1FE5F8D718838E8600CB4C09 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ../libs/libavutil.a; sourceTree = "<group>"; };
@@ -155,6 +141,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1FC0717F1883F25400ED63E8 /* GUI */ = {
+			isa = PBXGroup;
+			children = (
+				1FC071801883F36D00ED63E8 /* FFSettingViewController.h */,
+				1FC071811883F36D00ED63E8 /* FFSettingViewController.m */,
+				1FC0717C1883F24900ED63E8 /* FFAlertView.h */,
+				1FC0717D1883F24900ED63E8 /* FFAlertView.m */,
+			);
+			name = GUI;
+			sourceTree = "<group>";
+		};
 		1FE5F8641883891D00CB4C09 = {
 			isa = PBXGroup;
 			children = (
@@ -191,7 +188,6 @@
 				1FE5F8D718838E8600CB4C09 /* libavutil.a */,
 				1FE5F8D818838E8600CB4C09 /* libswresample.a */,
 				1FE5F8D918838E8600CB4C09 /* libswscale.a */,
-				1FE5F8BB18838E6A00CB4C09 /* FFPlayer */,
 				1FE5F8701883891D00CB4C09 /* Foundation.framework */,
 				1FE5F8721883891D00CB4C09 /* CoreGraphics.framework */,
 				1FE5F8741883891D00CB4C09 /* UIKit.framework */,
@@ -203,14 +199,13 @@
 		1FE5F8761883891D00CB4C09 /* FFPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				1FC0717F1883F25400ED63E8 /* GUI */,
 				1FE5F87F1883891D00CB4C09 /* FFAppDelegate.h */,
 				1FE5F8801883891D00CB4C09 /* FFAppDelegate.m */,
 				1FE5F8821883891D00CB4C09 /* Main_iPhone.storyboard */,
 				1FE5F8851883891D00CB4C09 /* Main_iPad.storyboard */,
 				1FE5F8881883891D00CB4C09 /* FFFirstViewController.h */,
 				1FE5F8891883891D00CB4C09 /* FFFirstViewController.m */,
-				1FE5F88B1883891D00CB4C09 /* FFSecondViewController.h */,
-				1FE5F88C1883891D00CB4C09 /* FFSecondViewController.m */,
 				1FE5F88E1883891D00CB4C09 /* Images.xcassets */,
 				1FE5F8771883891D00CB4C09 /* Supporting Files */,
 			);
@@ -261,51 +256,6 @@
 				1FE5F8B518838DA700CB4C09 /* KxMovieViewController.m */,
 			);
 			name = kxmovie;
-			sourceTree = "<group>";
-		};
-		1FE5F8BB18838E6A00CB4C09 /* FFPlayer */ = {
-			isa = PBXGroup;
-			children = (
-				1FE5F8BC18838E6A00CB4C09 /* FFPlayer */,
-				1FE5F8CD18838E6A00CB4C09 /* FFPlayer.xcodeproj */,
-				1FE5F8D018838E6A00CB4C09 /* FFPlayerTests */,
-			);
-			name = FFPlayer;
-			sourceTree = "<group>";
-		};
-		1FE5F8BC18838E6A00CB4C09 /* FFPlayer */ = {
-			isa = PBXGroup;
-			children = (
-				1FE5F8BD18838E6A00CB4C09 /* Main_iPad.storyboard */,
-				1FE5F8BF18838E6A00CB4C09 /* Main_iPhone.storyboard */,
-				1FE5F8C118838E6A00CB4C09 /* InfoPlist.strings */,
-				1FE5F8C318838E6A00CB4C09 /* FFAppDelegate.h */,
-				1FE5F8C418838E6A00CB4C09 /* FFAppDelegate.m */,
-				1FE5F8C518838E6A00CB4C09 /* FFFirstViewController.h */,
-				1FE5F8C618838E6A00CB4C09 /* FFFirstViewController.m */,
-				1FE5F8C718838E6A00CB4C09 /* FFPlayer-Info.plist */,
-				1FE5F8C818838E6A00CB4C09 /* FFPlayer-Prefix.pch */,
-				1FE5F8C918838E6A00CB4C09 /* FFSecondViewController.h */,
-				1FE5F8CA18838E6A00CB4C09 /* FFSecondViewController.m */,
-				1FE5F8CB18838E6A00CB4C09 /* Images.xcassets */,
-				1FE5F8CC18838E6A00CB4C09 /* main.m */,
-			);
-			path = FFPlayer;
-			sourceTree = "<group>";
-		};
-		1FE5F8CE18838E6A00CB4C09 /* Products */ = {
-			isa = PBXGroup;
-			name = Products;
-			sourceTree = "<group>";
-		};
-		1FE5F8D018838E6A00CB4C09 /* FFPlayerTests */ = {
-			isa = PBXGroup;
-			children = (
-				1FE5F8D118838E6A00CB4C09 /* InfoPlist.strings */,
-				1FE5F8D318838E6A00CB4C09 /* FFPlayerTests-Info.plist */,
-				1FE5F8D418838E6A00CB4C09 /* FFPlayerTests.m */,
-			);
-			path = FFPlayerTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -375,12 +325,6 @@
 			mainGroup = 1FE5F8641883891D00CB4C09;
 			productRefGroup = 1FE5F86E1883891D00CB4C09 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 1FE5F8CE18838E6A00CB4C09 /* Products */;
-					ProjectRef = 1FE5F8CD18838E6A00CB4C09 /* FFPlayer.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				1FE5F86C1883891D00CB4C09 /* FFPlayer */,
@@ -419,9 +363,10 @@
 			files = (
 				1FE5F8B618838DA700CB4C09 /* KxAudioManager.m in Sources */,
 				1FE5F8811883891D00CB4C09 /* FFAppDelegate.m in Sources */,
+				1FC0717E1883F24900ED63E8 /* FFAlertView.m in Sources */,
 				1FE5F87D1883891D00CB4C09 /* main.m in Sources */,
-				1FE5F88D1883891D00CB4C09 /* FFSecondViewController.m in Sources */,
 				1FE5F8BA18838DA700CB4C09 /* KxMovieViewController.m in Sources */,
+				1FC071821883F36D00ED63E8 /* FFSettingViewController.m in Sources */,
 				1FE5F8B918838DA700CB4C09 /* KxMovieGLView.m in Sources */,
 				1FE5F8B818838DA700CB4C09 /* KxMovieDecoder.m in Sources */,
 				1FE5F88A1883891D00CB4C09 /* FFFirstViewController.m in Sources */,
@@ -475,38 +420,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				1FE5F89F1883891D00CB4C09 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		1FE5F8BD18838E6A00CB4C09 /* Main_iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1FE5F8BE18838E6A00CB4C09 /* Base */,
-			);
-			name = Main_iPad.storyboard;
-			sourceTree = "<group>";
-		};
-		1FE5F8BF18838E6A00CB4C09 /* Main_iPhone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1FE5F8C018838E6A00CB4C09 /* Base */,
-			);
-			name = Main_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		1FE5F8C118838E6A00CB4C09 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1FE5F8C218838E6A00CB4C09 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		1FE5F8D118838E6A00CB4C09 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1FE5F8D218838E6A00CB4C09 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -591,6 +504,7 @@
 		1FE5F8A61883891D00CB4C09 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -608,7 +522,7 @@
 					../ffmpeg/libs,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3E789FC6-FF1F-40A5-9F4B-5592EA4A2866";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -616,6 +530,7 @@
 		1FE5F8A71883891D00CB4C09 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -633,7 +548,7 @@
 					../ffmpeg/libs,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3E789FC6-FF1F-40A5-9F4B-5592EA4A2866";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

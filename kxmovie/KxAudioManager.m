@@ -186,8 +186,8 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
     _numBytesPerSample = _outputFormat.mBitsPerChannel / 8;
     _numOutputChannels = _outputFormat.mChannelsPerFrame;
     
-    NSLog(@"Current output bytes per sample: %ld", _numBytesPerSample);
-    NSLog(@"Current output num channels: %ld", _numOutputChannels);
+    NSLog(@"Current output bytes per sample: %u", (unsigned int)_numBytesPerSample);
+    NSLog(@"Current output num channels: %u", (unsigned int)_numOutputChannels);
             
     // Slap a render callback on the unit
     AURenderCallbackStruct callbackStruct;
@@ -217,9 +217,9 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
     // Check the number of output channels.
     UInt32 newNumChannels;
     AVAudioSession * ses = [AVAudioSession sharedInstance];
-    newNumChannels = [ses outputNumberOfChannels];
+    newNumChannels = (UInt32)[ses outputNumberOfChannels];
     
-    NSLog(@"We've got %lu output channels", newNumChannels);
+    NSLog(@"We've got %u output channels", (unsigned int)newNumChannels);
     
     // Get the hardware sampling rate. This is settable, but here we're only reading.
     _samplingRate = [ses sampleRate];

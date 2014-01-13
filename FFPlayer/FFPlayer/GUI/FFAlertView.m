@@ -1,0 +1,82 @@
+//
+//  FFAlertView.m
+//  FFPlayer
+//
+//  Created by Coremail on 14-1-13.
+//  Copyright (c) 2014年 Coremail. All rights reserved.
+//
+
+#import "FFAlertView.h"
+
+@implementation FFAlertView
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+    }
+    return self;
+}
+
+- (void) dealloc
+{
+    _block = nil;
+}
+
++ (id)showWithTitle:(NSString *)title
+            message:(NSString *)message
+        defaultText:(NSString *)defaultText
+              style:(UIAlertViewStyle)style
+         usingBlock:(void (^)(NSUInteger btn, NSString *))block
+  cancelButtonTitle:(NSString *)cancelButtonTitle
+  otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION
+{
+    FFAlertView * alert = [[FFAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                    delegate:nil
+                                                    cancelButtonTitle:cancelButtonTitle
+                                                    otherButtonTitles:nil];
+    
+    alert.alertViewStyle = style;
+    alert.delegate = alert;
+    alert->_block = [block copy];
+    
+    va_list args;
+    va_start(args, otherButtonTitles);
+    for (NSString *buttonTitle = otherButtonTitles; buttonTitle != nil; buttonTitle = va_arg(args, NSString*))
+    {
+        [alert addButtonWithTitle:buttonTitle];
+    }
+    va_end(args);
+    
+    [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    if ( defaultText != nil )
+    {
+        UITextField* textField = [alert textFieldAtIndex:0];
+        textField.text = defaultText;
+    }
+    [alert show];
+    
+    return alert;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (_block)
+    {
+        UITextField *tf=[alertView textFieldAtIndex:0];
+        _block( buttonIndex, tf.text );
+    }
+}
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect
+{
+    // Drawing code
+}
+*/
+
+@end

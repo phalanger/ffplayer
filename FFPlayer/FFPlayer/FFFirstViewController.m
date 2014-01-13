@@ -26,19 +26,10 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-    }
-    return self;
-}
-
 - (void)loadView
 {
     self.title = @"Movies";
-    self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemFeatured tag: 0];
-    
+//    self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemFeatured tag: 0];
     _remoteMovies = @[
                       
                       @"http://eric.cast.ro/stream2.flv",

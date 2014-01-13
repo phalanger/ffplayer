@@ -33,7 +33,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     s = s % 60;
     m = m % 60;
     
-    return [NSString stringWithFormat:@"%@%d:%0.2d:%0.2d", isLeft ? @"-" : @"", h,m,s];
+    return [NSString stringWithFormat:@"%@%ld:%02ld:%02ld", isLeft ? @"-" : @"", (long)h,(long)m,(long)s];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1427,7 +1427,7 @@ static NSMutableDictionary * gHistory;
 
 #ifdef DEBUG
     const NSTimeInterval timeSinceStart = [NSDate timeIntervalSinceReferenceDate] - _debugStartTime;
-    NSString *subinfo = _decoder.validSubtitles ? [NSString stringWithFormat: @" %d",_subtitles.count] : @"";
+    NSString *subinfo = _decoder.validSubtitles ? [NSString stringWithFormat: @" %lu",(unsigned long)_subtitles.count] : @"";
     
     NSString *audioStatus;
     
@@ -1443,9 +1443,9 @@ static NSMutableDictionary * gHistory;
     else if (_debugAudioStatus == 3) audioStatus = @"\n(audio silence)";
     else audioStatus = @"";
     
-    _messageLabel.text = [NSString stringWithFormat:@"%d %d%@ %c - %@ %@ %@\n%@",
-                          _videoFrames.count,
-                          _audioFrames.count,
+    _messageLabel.text = [NSString stringWithFormat:@"%lu %lu%@ %c - %@ %@ %@\n%@",
+                          (unsigned long)_videoFrames.count,
+                          (unsigned long)_audioFrames.count,
                           subinfo,
                           self.decoding ? 'D' : ' ',
                           formatTimeInterval(timeSinceStart, NO),

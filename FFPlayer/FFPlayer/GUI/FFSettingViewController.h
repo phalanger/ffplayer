@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FFSecondViewController : UIViewController
+@interface FFSettingViewController : UITableViewController
 
 @end

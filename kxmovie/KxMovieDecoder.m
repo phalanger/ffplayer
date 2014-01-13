@@ -336,13 +336,13 @@ static int interrupt_callback(void *ctx);
 	   
     if (_videoStream != -1) {
         int64_t ts = (int64_t)(seconds / _videoTimeBase);
-        avformat_seek_file(_formatCtx, _videoStream, ts, ts, ts, AVSEEK_FLAG_FRAME);
+        avformat_seek_file(_formatCtx, (int)_videoStream, ts, ts, ts, AVSEEK_FLAG_FRAME);
         avcodec_flush_buffers(_videoCodecCtx);
     }
     
     if (_audioStream != -1) {
         int64_t ts = (int64_t)(seconds / _audioTimeBase);
-        avformat_seek_file(_formatCtx, _audioStream, ts, ts, ts, AVSEEK_FLAG_FRAME);
+        avformat_seek_file(_formatCtx, (int)_audioStream, ts, ts, ts, AVSEEK_FLAG_FRAME);
         avcodec_flush_buffers(_audioCodecCtx);
     }
 }
@@ -727,9 +727,9 @@ static int interrupt_callback(void *ctx);
     AVStream *st = _formatCtx->streams[_videoStream];
     avStreamFPSTimeBase(st, 0.04, &_fps, &_videoTimeBase);
     
-    NSLog(@"video codec size: %d:%d fps: %.3f tb: %f",
-          self.frameWidth,
-          self.frameHeight,
+    NSLog(@"video codec size: %lu:%lu fps: %.3f tb: %f",
+          (unsigned long)self.frameWidth,
+          (unsigned long)self.frameHeight,
           _fps,
           _videoTimeBase);
     
@@ -1082,7 +1082,7 @@ static int interrupt_callback(void *ctx);
         
         const int bufSize = av_samples_get_buffer_size(NULL,
                                                        audioManager.numOutputChannels,
-                                                       _audioFrame->nb_samples * ratio,
+                                                       (int)(_audioFrame->nb_samples * ratio),
                                                        AV_SAMPLE_FMT_S16,
                                                        1);
         
@@ -1095,7 +1095,7 @@ static int interrupt_callback(void *ctx);
         
         numFrames = swr_convert(_swrContext,
                                 outbuf,
-                                _audioFrame->nb_samples * ratio,
+                                (int)(_audioFrame->nb_samples * ratio),
                                 (const uint8_t **)_audioFrame->data,
                                 _audioFrame->nb_samples);
         
