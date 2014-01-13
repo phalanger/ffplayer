@@ -230,7 +230,6 @@ static NSMutableDictionary * gHistory;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     if (_dispatchQueue) {
-        dispatch_release(_dispatchQueue);
         _dispatchQueue = NULL;
     }
     

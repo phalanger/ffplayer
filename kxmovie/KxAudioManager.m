@@ -16,6 +16,7 @@
 #import "KxAudioManager.h"
 #import "TargetConditionals.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import <AVFoundation/AVFoundation.h>
 #import <Accelerate/Accelerate.h>
 
 static BOOL checkError(OSStatus error, const char *operation);

@@ -1,8 +1,8 @@
 #! /bin/sh
 
-PWD=`pwd`
+MYPWD=`pwd`
 
-if [ !-f /usr/bin/gas-preprocessor.pl ];then
+if [ ! -f /usr/bin/gas-preprocessor.pl ];then
 	echo "Installing gas-preprocessor ..."
 	sudo cp gas-preprocessor/gas-preprocessor.pl /usr/bin
 	sudo chmod a+x gas-preprocessor/gas-preprocessor.pl
@@ -14,3 +14,9 @@ echo "Install ffmpeg ..."
 chmod a+x build-ffmpeg.sh
 ./build-ffmpeg.sh
 
+cd $MYPWD
+echo "Link the libs ..."
+rm -rf "./ffmpeg/libs"
+rm -rf "./ffmpeg/include"
+ln -s "$MYPWD/ffmpeg/build/built/universal/lib" "./ffmpeg/libs"
+ln -s "$MYPWD/ffmpeg/build/built/universal/include" "./ffmpeg/include"
