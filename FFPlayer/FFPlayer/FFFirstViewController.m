@@ -30,33 +30,33 @@
 {
     self = [super init];
     if (self) {
-        self.title = @"Movies";
-        self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemFeatured tag: 0];
-        
-        _remoteMovies = @[
-                          
-                          @"http://eric.cast.ro/stream2.flv",
-                          @"http://liveipad.wasu.cn/cctv2_ipad/z.m3u8",
-                          @"http://www.wowza.com/_h264/BigBuckBunny_175k.mov",
-                          // @"http://www.wowza.com/_h264/BigBuckBunny_115k.mov",
-                          @"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov",
-                          @"http://santai.tv/vod/test/test_format_1.3gp",
-                          @"http://santai.tv/vod/test/test_format_1.mp4",
-                          
-                          //@"rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov",
-                          //@"http://santai.tv/vod/test/BigBuckBunny_175k.mov",
-                          
-                          @"rtmp://aragontvlivefs.fplive.net/aragontvlive-live/stream_normal_abt",
-                          @"rtmp://ucaster.eu:1935/live/_definst_/discoverylacajatv",
-                          @"rtmp://edge01.fms.dutchview.nl/botr/bunny.flv"
-                          ];
-        
     }
     return self;
 }
 
 - (void)loadView
 {
+    self.title = @"Movies";
+    self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemFeatured tag: 0];
+    
+    _remoteMovies = @[
+                      
+                      @"http://eric.cast.ro/stream2.flv",
+                      @"http://liveipad.wasu.cn/cctv2_ipad/z.m3u8",
+                      @"http://www.wowza.com/_h264/BigBuckBunny_175k.mov",
+                      // @"http://www.wowza.com/_h264/BigBuckBunny_115k.mov",
+                      @"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov",
+                      @"http://santai.tv/vod/test/test_format_1.3gp",
+                      @"http://santai.tv/vod/test/test_format_1.mp4",
+                      
+                      //@"rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov",
+                      //@"http://santai.tv/vod/test/BigBuckBunny_175k.mov",
+                      
+                      @"rtmp://aragontvlivefs.fplive.net/aragontvlive-live/stream_normal_abt",
+                      @"rtmp://ucaster.eu:1935/live/_definst_/discoverylacajatv",
+                      @"rtmp://edge01.fms.dutchview.nl/botr/bunny.flv"
+                      ];
+
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.backgroundColor = [UIColor whiteColor];

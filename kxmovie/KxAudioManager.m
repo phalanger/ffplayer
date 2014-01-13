@@ -20,10 +20,7 @@
 #import <Accelerate/Accelerate.h>
 
 static BOOL checkError(OSStatus error, const char *operation);
-static void sessionPropertyListener(void *inClientData, AudioSessionPropertyID inID, UInt32 inDataSize, const void *inData);
-static void sessionInterruptionListener(void *inClientData, UInt32 inInterruption);
 static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioActionFlags, const AudioTimeStamp * inTimeStamp, UInt32 inOutputBusNumber, UInt32 inNumberFrames, AudioBufferList* ioData);
-
 
 @interface KxAudioManagerImpl : KxAudioManager<KxAudioManager> {
     
@@ -98,65 +95,50 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
 - (BOOL) checkAudioRoute
 {
     // Check what the audio route is.
-    UInt32 propertySize = sizeof(CFStringRef);
-    CFStringRef route;
-    if (checkError(AudioSessionGetProperty(kAudioSessionProperty_AudioRoute,
-                                           &propertySize,
-                                           &route),
-                   "Couldn't check the audio route"))
-        return NO;
-    
-    _audioRoute = CFBridgingRelease(route);
-    NSLog(@"AudioRoute: %@", _audioRoute);        
-    return YES;
+    AVAudioSession * ses = [AVAudioSession sharedInstance];
+    return ses.currentRoute.outputs.count > 0;
 }
 
 - (BOOL) setupAudio
 {
     // --- Audio Session Setup ---
-        
-    UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
-    //UInt32 sessionCategory = kAudioSessionCategory_PlayAndRecord;
-    if (checkError(AudioSessionSetProperty(kAudioSessionProperty_AudioCategory,
-                                           sizeof(sessionCategory),
-                                           &sessionCategory),
-                   "Couldn't set audio category"))
+    NSError * err = nil;
+    AVAudioSession * ses = [AVAudioSession sharedInstance];
+    [ses setCategory:AVAudioSessionCategoryPlayback error:&err];
+    if ( err != nil ) {
+        NSLog(@"Set Category playback error: %@", err);
         return NO;
-    
-    
-    if (checkError(AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange,
-                                                   sessionPropertyListener,
-                                                   (__bridge void *)(self)),
-                   "Couldn't add audio session property listener"))
-    {
-        // just warning
     }
     
-    if (checkError(AudioSessionAddPropertyListener(kAudioSessionProperty_CurrentHardwareOutputVolume,
-                                                   sessionPropertyListener,
-                                                   (__bridge void *)(self)),
-                   "Couldn't add audio session property listener"))
-    {
-        // just warning
-    }
+    //see https://github.com/adriantofan/SoundWaveVisualiser/blob/master/DemoApp/ATSoundDemoViewController.m
+    //see http://www.apeth.com/iOSBook/ch27.html
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(handleRouteChange:)
+                                                 name: AVAudioSessionRouteChangeNotification
+                                               object: ses];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(handleVolumnChange:)
+                                                 name: @"AVSystemController_SystemVolumeDidChangeNotification"
+                                               object: ses];
+    //if (checkError(AudioSessionAddPropertyListener(kAudioSessionProperty_CurrentHardwareOutputVolume,
     
     // Set the buffer size, this will affect the number of samples that get rendered every time the audio callback is fired
     // A small number will get you lower latency audio, but will make your processor work harder
     
 #if !TARGET_IPHONE_SIMULATOR
     Float32 preferredBufferSize = 0.0232;
-    if (checkError(AudioSessionSetProperty(kAudioSessionProperty_PreferredHardwareIOBufferDuration,
-                                            sizeof(preferredBufferSize),
-                                            &preferredBufferSize),
-                    "Couldn't set the preferred buffer duration")) {
-        
-        // just warning
+    [ses setPreferredIOBufferDuration:preferredBufferSize error:&err];
+    if ( err != nil ) {
+        NSLog(@"Set preferredBufferSize error: %@", err);
     }
 #endif
-        
-    if (checkError(AudioSessionSetActive(YES),
-                   "Couldn't activate the audio session"))
+    
+    [ses setActive:YES error:&err];
+    if ( err != nil ) {
+        NSLog(@"Couldn't activate the audio session: %@", err);
         return NO;
+    }
     
     [self checkSessionProperties];
     
@@ -234,34 +216,17 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
     
     // Check the number of output channels.
     UInt32 newNumChannels;
-    UInt32 size = sizeof(newNumChannels);
-    if (checkError(AudioSessionGetProperty(kAudioSessionProperty_CurrentHardwareOutputNumberChannels,
-                                           &size,
-                                           &newNumChannels),
-                   "Checking number of output channels"))
-        return NO;
+    AVAudioSession * ses = [AVAudioSession sharedInstance];
+    newNumChannels = [ses outputNumberOfChannels];
     
     NSLog(@"We've got %lu output channels", newNumChannels);
     
     // Get the hardware sampling rate. This is settable, but here we're only reading.
-    size = sizeof(_samplingRate);
-    if (checkError(AudioSessionGetProperty(kAudioSessionProperty_CurrentHardwareSampleRate,
-                                           &size,
-                                           &_samplingRate),
-                   "Checking hardware sampling rate"))
-        
-        return NO;
-    
+    _samplingRate = [ses sampleRate];
     NSLog(@"Current sampling rate: %f", _samplingRate);
     
-    size = sizeof(_outputVolume);
-    if (checkError(AudioSessionGetProperty(kAudioSessionProperty_CurrentHardwareOutputVolume,
-                                           &size,
-                                           &_outputVolume),
-                   "Checking current hardware output volume"))
-        return NO;
-    
-    NSLog(@"Current output volume: %f", _outputVolume);    
+    _outputVolume = [ses outputVolume];
+    NSLog(@"Current output volume: %f", _outputVolume);
     
     return YES;	
 }
@@ -320,12 +285,10 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
         
         if (!_initialized) {
             
-            if (checkError(AudioSessionInitialize(NULL,
-                                                  kCFRunLoopDefaultMode,
-                                                  sessionInterruptionListener,
-                                                  (__bridge void *)(self)),
-                           "Couldn't initialize audio session"))
-                return NO;
+            [[NSNotificationCenter defaultCenter] addObserver: self
+                                                     selector: @selector(handleInterruption:)
+                                                         name: AVAudioSessionInterruptionNotification
+                                                       object: nil];
             
             _initialized = YES;
         }
@@ -363,19 +326,18 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
                 
         checkError(AudioComponentInstanceDispose(_audioUnit),
                    "Couldn't dispose the output audio unit");
-                
-        checkError(AudioSessionSetActive(NO),
-                   "Couldn't deactivate the audio session");        
+    
+        NSError * err = nil;
+        if ( ![[AVAudioSession sharedInstance] setActive:NO error:&err] || err != nil )
+            NSLog(@"Couldn't deactivate the audio session: %@", err);
         
-        checkError(AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_AudioRouteChange,
-                                                                  sessionPropertyListener,
-                                                                  (__bridge void *)(self)),
-                   "Couldn't remove audio session property listener");
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
         
-        checkError(AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume,
-                                                                  sessionPropertyListener,
-                                                                  (__bridge void *)(self)),
-                   "Couldn't remove audio session property listener");
+        if ( _initialized ) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
+            _initialized = FALSE;
+        }
         
         _activated = NO;
     }
@@ -404,51 +366,43 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
     return _playing;
 }
 
-@end
-
-#pragma mark - callbacks
-
-static void sessionPropertyListener(void *                  inClientData,
-                                    AudioSessionPropertyID  inID,
-                                    UInt32                  inDataSize,
-                                    const void *            inData)
-{
-    KxAudioManagerImpl *sm = (__bridge KxAudioManagerImpl *)inClientData;
+-(void)handleRouteChange:(NSNotification*)notification{
     
-	if (inID == kAudioSessionProperty_AudioRouteChange) {
-        
-        if ([sm checkAudioRoute]) {
-            [sm checkSessionProperties];
-        }
-        
-    } else if (inID == kAudioSessionProperty_CurrentHardwareOutputVolume) {
-        
-        if (inData && inDataSize == 4) {
+    if ( [self checkAudioRoute] )
+        [self checkSessionProperties];
+}
 
-            sm.outputVolume = *(float *)inData;
+-(void)handleVolumnChange:(NSNotification*)notification{
+    float volume = [[[notification userInfo]
+                     objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"]
+                    floatValue];
+    self.outputVolume = volume;
+}
+
+-(void)handleInterruption:(NSNotification*)notification{
+    
+    NSInteger reason = 0;
+    if ([notification.name isEqualToString:@"AVAudioSessionInterruptionNotification"]) {
+        //Posted when an audio interruption occurs.
+        reason = [[[notification userInfo] objectForKey:@" AVAudioSessionInterruptionTypeKey"] integerValue];
+        if (reason == AVAudioSessionInterruptionTypeBegan) {
+            NSLog(@"Begin interuption");
+            self.playAfterSessionEndInterruption = self.playing;
+            [self pause];
+        }
+        if (reason == AVAudioSessionInterruptionTypeEnded) {
+            NSLog(@"End interuption");
+            if (self.playAfterSessionEndInterruption) {
+                self.playAfterSessionEndInterruption = NO;
+                [self play];
+            }
         }
     }
 }
 
-static void sessionInterruptionListener(void *inClientData, UInt32 inInterruption)
-{    
-    KxAudioManagerImpl *sm = (__bridge KxAudioManagerImpl *)inClientData;
-    
-	if (inInterruption == kAudioSessionBeginInterruption) {
-        
-		NSLog(@"Begin interuption");
-        sm.playAfterSessionEndInterruption = sm.playing;
-        [sm pause];
-                
-	} else if (inInterruption == kAudioSessionEndInterruption) {
-		
-        NSLog(@"End interuption");
-        if (sm.playAfterSessionEndInterruption) {
-            sm.playAfterSessionEndInterruption = NO;
-            [sm play];
-        }
-	}
-}
+@end
+
+#pragma mark - callbacks
 
 static OSStatus renderCallback (void						*inRefCon,
                                 AudioUnitRenderActionFlags	* ioActionFlags,

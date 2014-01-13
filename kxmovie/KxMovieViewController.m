@@ -170,7 +170,11 @@ static NSMutableDictionary * gHistory;
     
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        self.wantsFullScreenLayout = YES;
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+            self.edgesForExtendedLayout = UIRectEdgeNone;
+        //else
+        //    self.wantsFullScreenLayout = YES;
+        
         [self playMovieImp:path pos:0.0 parameters:parameters];
     }
     return self;
@@ -187,7 +191,11 @@ static NSMutableDictionary * gHistory;
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        self.wantsFullScreenLayout = YES;
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+            self.edgesForExtendedLayout = UIRectEdgeNone;
+        //else
+        //    self.wantsFullScreenLayout = YES;
+        
         self.delegate = delegate;
     }
     return self;
@@ -295,7 +303,7 @@ static NSMutableDictionary * gHistory;
     _progressLabel.backgroundColor = [UIColor clearColor];
     _progressLabel.opaque = NO;
     _progressLabel.adjustsFontSizeToFitWidth = NO;
-    _progressLabel.textAlignment = UITextAlignmentRight;
+    _progressLabel.textAlignment = NSTextAlignmentRight;
     _progressLabel.textColor = [UIColor whiteColor];
     _progressLabel.text = @"00:00:00";
     _progressLabel.font = [UIFont systemFontOfSize:12];
@@ -311,7 +319,7 @@ static NSMutableDictionary * gHistory;
     _leftLabel.backgroundColor = [UIColor clearColor];
     _leftLabel.opaque = NO;
     _leftLabel.adjustsFontSizeToFitWidth = NO;
-    _leftLabel.textAlignment = UITextAlignmentLeft;
+    _leftLabel.textAlignment = NSTextAlignmentLeft;
     _leftLabel.textColor = [UIColor whiteColor];
     _leftLabel.text = @"-99:59:59";
     _leftLabel.font = [UIFont systemFontOfSize:12];
@@ -878,7 +886,7 @@ static NSMutableDictionary * gHistory;
         _subtitlesLabel.backgroundColor = [UIColor clearColor];
         _subtitlesLabel.opaque = NO;
         _subtitlesLabel.adjustsFontSizeToFitWidth = NO;
-        _subtitlesLabel.textAlignment = UITextAlignmentCenter;
+        _subtitlesLabel.textAlignment = NSTextAlignmentCenter;
         _subtitlesLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _subtitlesLabel.textColor = [UIColor whiteColor];
         _subtitlesLabel.font = [UIFont systemFontOfSize:16];
@@ -1321,9 +1329,22 @@ static NSMutableDictionary * gHistory;
             if (![_subtitlesLabel.text isEqualToString:ms]) {
                 
                 CGSize viewSize = self.view.bounds.size;
+                
+                NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+                paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+                CGRect textRect = [ms boundingRectWithSize:CGSizeMake(viewSize.width, viewSize.height * 0.5)
+                                                     options:NSStringDrawingUsesLineFragmentOrigin
+                                                  attributes:@{
+                                                               NSFontAttributeName:_subtitlesLabel.font,
+                                                               NSParagraphStyleAttributeName:paragraphStyle
+                                                            }
+                                                     context:nil];
+
+                CGSize size = textRect.size;
+/*
                 CGSize size = [ms sizeWithFont:_subtitlesLabel.font
                              constrainedToSize:CGSizeMake(viewSize.width, viewSize.height * 0.5)
-                                 lineBreakMode:NSLineBreakByTruncatingTail];
+                                 lineBreakMode:NSLineBreakByTruncatingTail]; */
                 _subtitlesLabel.text = ms;
                 _subtitlesLabel.frame = CGRectMake(0, viewSize.height - size.height - 10,
                                                    viewSize.width, size.height);
