@@ -50,7 +50,6 @@
     }
     va_end(args);
     
-    [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
     if ( defaultText != nil )
     {
         UITextField* textField = [alert textFieldAtIndex:0];
@@ -65,8 +64,12 @@
 {
     if (_block)
     {
-        UITextField *tf=[alertView textFieldAtIndex:0];
-        _block( buttonIndex, tf.text );
+        NSString * strText = nil;
+        if ( alertView.alertViewStyle != UIAlertViewStyleDefault) {
+            UITextField *tf=[alertView textFieldAtIndex:0];
+            strText = tf.text;
+        }
+        _block( buttonIndex, strText );
     }
 }
 
