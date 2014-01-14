@@ -76,11 +76,11 @@
     NSString * path = item.url;
     
     if ([path.pathExtension isEqualToString:@"wmv"])
-        parameters[KxMovieParameterMinBufferedDuration] = @(5.0);
+        parameters[FFMovieParameterMinBufferedDuration] = @(5.0);
     
     // disable deinterlacing for iPhone, because it's complex operation can cause stuttering
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        parameters[KxMovieParameterDisableDeinterlacing] = @(YES);
+        parameters[FFMovieParameterDisableDeinterlacing] = @(YES);
     
 //    KxMovieViewController *vc = [KxMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
 //    vc.delegate = self;

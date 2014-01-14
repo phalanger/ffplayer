@@ -73,6 +73,7 @@
 		1FE5F8EA18838EDA00CB4C09 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8E918838EDA00CB4C09 /* OpenGLES.framework */; };
 		1FE5F8EC18838EEA00CB4C09 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8EB18838EEA00CB4C09 /* libz.dylib */; };
 		1FE5F8EE1883930D00CB4C09 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8ED1883930D00CB4C09 /* AVFoundation.framework */; };
+		4D0165C418856D650031DC71 /* FFInternalMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +181,8 @@
 		1FE5F8E918838EDA00CB4C09 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		1FE5F8EB18838EEA00CB4C09 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1FE5F8ED1883930D00CB4C09 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		4D0165C218856D650031DC71 /* FFInternalMoviePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFInternalMoviePlayerController.h; path = GUI/FFInternalMoviePlayerController.h; sourceTree = "<group>"; };
+		4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFInternalMoviePlayerController.m; path = GUI/FFInternalMoviePlayerController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,6 +233,8 @@
 				1FC071841884C82600ED63E8 /* FFLocalViewController.m */,
 				1FC071B5188518D900ED63E8 /* FFMovieViewController.h */,
 				1FC071B6188518D900ED63E8 /* FFMovieViewController.m */,
+				4D0165C218856D650031DC71 /* FFInternalMoviePlayerController.h */,
+				4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */,
 			);
 			name = GUI;
 			sourceTree = "<group>";
@@ -546,6 +551,7 @@
 				1FC071A41884FC6600ED63E8 /* AFURLConnectionOperation.m in Sources */,
 				1FC071851884C82600ED63E8 /* FFLocalViewController.m in Sources */,
 				1FC071A31884FC6600ED63E8 /* AFSecurityPolicy.m in Sources */,
+				4D0165C418856D650031DC71 /* FFInternalMoviePlayerController.m in Sources */,
 				1FE5F8B618838DA700CB4C09 /* KxAudioManager.m in Sources */,
 				1FC071B7188518D900ED63E8 /* FFMovieViewController.m in Sources */,
 				1FC071B418850D1F00ED63E8 /* ALMoviePlayerControls.m in Sources */,

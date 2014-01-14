@@ -29,8 +29,6 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 @property (nonatomic, assign) ALMoviePlayerControlsState state;
 @property (nonatomic, getter = isShowing) BOOL showing;
 
-@property (nonatomic, strong) NSTimer *durationTimer;
-
 @property (nonatomic, strong) UIView *activityBackgroundView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 
@@ -78,7 +76,6 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_durationTimer invalidate];
     [self nilDelegates];
 }
 
