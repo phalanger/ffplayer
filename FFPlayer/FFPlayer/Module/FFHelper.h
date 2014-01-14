@@ -12,6 +12,7 @@
 
 + (float)iOSVersion;
 +(BOOL) isSupportMidea:(NSString *)path;
++(BOOL) isInternalPlayerSupport:(NSString *)path;
 + (CGSize)sizeInOrientation:(UIInterfaceOrientation)orientation;
 +(BOOL) isIpad;
 

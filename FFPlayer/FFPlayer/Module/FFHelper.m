@@ -46,6 +46,7 @@
         [ext isEqualToString:@"ogg"] ||
         [ext isEqualToString:@"wma"] ||
         [ext isEqualToString:@"m4a"] ||
+        [ext isEqualToString:@"mpv"] ||
         [ext isEqualToString:@"m4v"] ||
         [ext isEqualToString:@"wmv"] ||
         [ext isEqualToString:@"3gp"] ||
@@ -57,6 +58,30 @@
         [ext isEqualToString:@"mpg"] ||
         [ext isEqualToString:@"flv"] ||
         [ext isEqualToString:@"vob"])
+        return YES;
+    
+    return NO;
+}
+
++(BOOL) isInternalPlayerSupport:(NSString *)path
+{
+    /*
+     This class plays any movie or audio file supported in iOS. This includes both streamed content and fixed-length files. For movie files, this typically means files with the extensions .mov, .mp4, .mpv, and .3gp and using one of the following compression standards:
+     
+     H.264 Baseline Profile Level 3.0 video, up to 640 x 480 at 30 fps. (The Baseline profile does not support B frames.)
+     MPEG-4 Part 2 video (Simple Profile)
+     If you use this class to play audio files, it displays a white screen with a QuickTime logo while the audio plays. For audio files, this class supports AAC-LC audio at up to 48 kHz, and MP3 (MPEG-1 Audio Layer 3) up to 48 kHz, stereo audio.
+     */
+
+    NSString *ext = path.pathExtension.lowercaseString;
+    
+    if (![[[FFSetting alloc] init] enableInternalPlayer])
+        return NO;
+    else if ([ext isEqualToString:@"mp3"] ||
+        [ext isEqualToString:@"mp4"] ||
+        [ext isEqualToString:@"mov"] ||
+        [ext isEqualToString:@"mpv"] ||
+        [ext isEqualToString:@"3gp"])
         return YES;
     
     return NO;

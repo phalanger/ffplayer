@@ -6,6 +6,7 @@
 //  Copyright (c) 2014年 Coremail. All rights reserved.
 //
 
+#import "FFHelper.h"
 #import "FFPlayer.h"
 #import "FFMovieViewController.h"
 #import "FFInternalMoviePlayerController.h"
@@ -85,10 +86,16 @@
 //    KxMovieViewController *vc = [KxMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
 //    vc.delegate = self;
     
-//    FFMovieViewController * vc = [FFMovieViewController movieViewControllerWithDelegate:self];
-    FFInternalMoviePlayerController * vc = [FFInternalMoviePlayerController movieViewControllerWithDelegate:self];
-    [vc playMovie:path pos:0.f parameters:parameters];
-    
+    UIViewController * vc = nil;
+    if ( [FFHelper isInternalPlayerSupport:path] ) {
+        FFInternalMoviePlayerController * vc1 = [FFInternalMoviePlayerController movieViewControllerWithDelegate:self];
+        [vc1 playMovie:path pos:0.f parameters:parameters];
+        vc = vc1;
+    } else {
+        FFMovieViewController * vc2 = [FFMovieViewController movieViewControllerWithDelegate:self];
+        [vc2 playMovie:path pos:0.f parameters:parameters];
+        vc = vc2;
+    }
     [_parentView presentViewController:vc animated:animated completion:nil];
     return vc;
 }
