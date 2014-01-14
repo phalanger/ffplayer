@@ -11,13 +11,15 @@
 #import "ALMoviePlayerControls.h"
 
 
-static const CGFloat movieBackgroundPadding = 20.f; //if we don't pad the movie's background view, the edges will appear jagged when rotating
+static const CGFloat movieBackgroundPadding = 0.f; //if we don't pad the movie's background view, the edges will appear jagged when rotating
 static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 @interface FFInternalMoviePlayerController () <ALMoviePlayerInterface>
 {
     MPMoviePlayerController * _player;
     ALMoviePlayerControls * _controls;
+    NSURL *                 _urlToPlay;
+    CGFloat                 _startPos;
 }
 
 @property (nonatomic, strong) NSTimer *durationTimer;
@@ -34,22 +36,29 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 - (id)initWithFrame:(CGRect)frame {
     if ( (self = [super init]) ) {
-        
-        self.view.frame = frame;
-        self.view.backgroundColor = [UIColor blackColor];
-
         _player = nil;
         _controls = nil;
         _movieBackgroundView = nil;
+        _urlToPlay = nil;
     }
     return self;
 }
 
 - (void) viewDidLoad
 {
-    _player = [[MPMoviePlayerController alloc] init];
-    [_player setControlStyle:MPMovieControlStyleNone];
     _movieFullscreen = YES;
+
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        // iOS 7
+        [self prefersStatusBarHidden];
+        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    }
+
+    _player = [[MPMoviePlayerController alloc] initWithContentURL:_urlToPlay ];
+    [_player setControlStyle:MPMovieControlStyleNone];
+    _player.view.frame = self.view.frame;
+    _player.view.backgroundColor = [UIColor blackColor];
+    [self setFullscreen:YES];
     [_player setFullscreen:YES animated:NO];
     [self.view addSubview:_player.view];
     
@@ -59,17 +68,37 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
         [_movieBackgroundView setBackgroundColor:[UIColor blackColor]];
     }
 
-    if ( _controls == nil ) {
-        _controls = [[ALMoviePlayerControls alloc] initWithMoviePlayer:self style:ALMoviePlayerControlsStyleFullscreen];
-        _controls.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-        [self.view addSubview:_controls];
+    _controls = [[ALMoviePlayerControls alloc] initWithMoviePlayer:self style:ALMoviePlayerControlsStyleFullscreen];
+    _controls.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:_controls];
+    
+    [self addNotifications];
+    
+    if ( _urlToPlay != nil ) {
+        [_player prepareToPlay];
+        [_player setCurrentPlaybackTime:_startPos];
+        [self play];
     }
 }
 
-- (void)dealloc {
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;//隐藏为YES，显示为NO
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [self setFrame:self.view.frame];
+}
+
+-(void)unload{
     _delegate = nil;
     [_durationTimer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)dealloc {
+    [self unload];
 }
 
 # pragma mark - Getters
@@ -89,57 +118,44 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 # pragma mark - Setters
 
 - (void)setFrame:(CGRect)frame {
-    [_player.view setFrame:frame];
+    
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
+    CGSize windowSize = [FFHelper sizeInOrientation:orientation];
+    CGRect backgroundFrame;
+    CGRect movieFrame;
+    switch (orientation) {
+        case UIInterfaceOrientationPortraitUpsideDown:
+            backgroundFrame = CGRectMake(-movieBackgroundPadding, -movieBackgroundPadding, windowSize.width + movieBackgroundPadding*2, windowSize.height + movieBackgroundPadding*2);
+            movieFrame = CGRectMake(movieBackgroundPadding, movieBackgroundPadding, backgroundFrame.size.width - movieBackgroundPadding*2, backgroundFrame.size.height - movieBackgroundPadding*2);
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+            backgroundFrame = CGRectMake([self statusBarHeightInOrientation:orientation] - movieBackgroundPadding, -movieBackgroundPadding, windowSize.height + movieBackgroundPadding*2, windowSize.width + movieBackgroundPadding*2);
+            movieFrame = CGRectMake(movieBackgroundPadding, movieBackgroundPadding, backgroundFrame.size.height - movieBackgroundPadding*2, backgroundFrame.size.width - movieBackgroundPadding*2);
+            break;
+        case UIInterfaceOrientationLandscapeRight:
+            backgroundFrame = CGRectMake(-movieBackgroundPadding, -movieBackgroundPadding, windowSize.height + movieBackgroundPadding*2, windowSize.width + movieBackgroundPadding*2);
+            movieFrame = CGRectMake(movieBackgroundPadding, movieBackgroundPadding, backgroundFrame.size.height - movieBackgroundPadding*2, backgroundFrame.size.width - movieBackgroundPadding*2);
+            break;
+        case UIInterfaceOrientationPortrait:
+        default:
+            backgroundFrame = CGRectMake(-movieBackgroundPadding, [self statusBarHeightInOrientation:orientation] - movieBackgroundPadding, windowSize.width + movieBackgroundPadding*2, windowSize.height + movieBackgroundPadding*2);
+            movieFrame = CGRectMake(movieBackgroundPadding, movieBackgroundPadding, backgroundFrame.size.width - movieBackgroundPadding*2, backgroundFrame.size.height - movieBackgroundPadding*2);
+            break;
+    }
+    
+    [_player.view setFrame:movieFrame];
     [_controls setFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+    [_controls layoutSubviews];
 }
 
 - (void)setFullscreen:(BOOL)fullscreen {
+    _movieFullscreen = fullscreen;
     [_player setFullscreen:fullscreen animated:NO];
 }
 
 - (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated {
     _movieFullscreen = fullscreen;
-    if (fullscreen) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:MPMoviePlayerWillEnterFullscreenNotification object:nil];
-        UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
-        if (!keyWindow) {
-            keyWindow = [[[UIApplication sharedApplication] windows] objectAtIndex:0];
-        }
-        if (CGRectEqualToRect(self.movieBackgroundView.frame, CGRectZero)) {
-            [self.movieBackgroundView setFrame:keyWindow.bounds];
-        }
-        [keyWindow addSubview:self.movieBackgroundView];
-        [UIView animateWithDuration:animated ? fullscreenAnimationDuration : 0.0 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-            self.movieBackgroundView.alpha = 1.f;
-        } completion:^(BOOL finished) {
-            self.view.alpha = 0.f;
-            [self.movieBackgroundView addSubview:self.view];
-            UIInterfaceOrientation currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-            [self rotateMoviePlayerForOrientation:currentOrientation animated:NO completion:^{
-                [UIView animateWithDuration:animated ? fullscreenAnimationDuration : 0.0 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-                    self.view.alpha = 1.f;
-                } completion:^(BOOL finished) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:MPMoviePlayerDidEnterFullscreenNotification object:nil];
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarOrientationWillChange:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
-                }];
-            }];
-        }];
-        
-    } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:MPMoviePlayerWillExitFullscreenNotification object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
-        [UIView animateWithDuration:animated ? fullscreenAnimationDuration : 0.0 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-            self.view.alpha = 0.f;
-        } completion:^(BOOL finished) {
-            self.view.alpha = 1.f;
-            [UIView animateWithDuration:animated ? fullscreenAnimationDuration : 0.0 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-                self.movieBackgroundView.alpha = 0.f;
-            } completion:^(BOOL finished) {
-                [self.movieBackgroundView removeFromSuperview];
-                [[NSNotificationCenter defaultCenter] postNotificationName:MPMoviePlayerDidExitFullscreenNotification object:nil];
-            }];
-        }];
-    }
+    [_player setFullscreen:fullscreen animated:animated];
 }
 
 #pragma mark - Notifications
@@ -197,6 +213,10 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 }
 
 /////////////////////////////////////////////////////////////////////
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self setFrame:self.view.frame];
+}
 
 - (void)addNotifications {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlaybackStateDidChange:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
@@ -303,10 +323,17 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 -(void) playMovie:(NSString *)path pos:(CGFloat)pos parameters: (NSDictionary *) parameters
 {
-    [self setFullscreen:YES];
-    [_player setContentURL:[NSURL URLWithString:path]];
-    [_player setCurrentPlaybackTime:pos];
-    [_player play];
+    NSURL * url = [NSURL fileURLWithPath:path];
+    if ( _player == nil ) {
+        _urlToPlay = url;
+        _startPos = pos;
+    } else {
+        [_player setContentURL:url];
+        [_player prepareToPlay];
+        [_player.view setFrame: self.view.bounds];
+        [_player setCurrentPlaybackTime:pos];
+        [self play];
+    }
 }
 
 # pragma mark - Internal Methods
@@ -361,7 +388,7 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 -(void) setCurrentPlaybackTime:(CGFloat)pos
 {
-    [_player setCurrentPlaybackTime:floor(pos)];
+    [_player setCurrentPlaybackTime:pos];
     [_player play];
 }
 
@@ -406,6 +433,7 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 -(void) onDone
 {
+    [self unload];
     if (self.presentingViewController || !self.navigationController)
         [self dismissViewControllerAnimated:YES completion:nil];
     else

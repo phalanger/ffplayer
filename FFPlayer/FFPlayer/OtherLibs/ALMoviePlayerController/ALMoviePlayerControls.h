@@ -139,9 +139,9 @@ typedef enum {
 
 -(BOOL) hasNext;
 -(BOOL) hasPre;
--(void) onNext:(id<ALMoviePlayerInterface>)control curPos:(CGFloat)curPos;
--(void) onPre:(id<ALMoviePlayerInterface>)control curPos:(CGFloat)curPos;
--(void) onFinish:(id<ALMoviePlayerInterface>)control curPos:(CGFloat)curPos;
+-(void) onNext:(UIViewController *)control curPos:(CGFloat)curPos;
+-(void) onPre:(UIViewController *)control curPos:(CGFloat)curPos;
+-(void) onFinish:(UIViewController *)control curPos:(CGFloat)curPos;
 
 @end
 

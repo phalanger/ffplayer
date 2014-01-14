@@ -7,8 +7,8 @@
 //
 
 #import "FFPlayer.h"
-#import "KxMovieViewController.h"
 #import "FFMovieViewController.h"
+#import "FFInternalMoviePlayerController.h"
 #import "ALMoviePlayerControls.h"
 
 @implementation FFPlayItem
@@ -84,18 +84,21 @@
     
 //    KxMovieViewController *vc = [KxMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
 //    vc.delegate = self;
-    FFMovieViewController * vc = [FFMovieViewController movieViewControllerWithDelegate:self];
+    
+//    FFMovieViewController * vc = [FFMovieViewController movieViewControllerWithDelegate:self];
+    FFInternalMoviePlayerController * vc = [FFInternalMoviePlayerController movieViewControllerWithDelegate:self];
     [vc playMovie:path pos:0.f parameters:parameters];
+    
     [_parentView presentViewController:vc animated:animated completion:nil];
     return vc;
 }
 
--(void) onFinish:(id<ALMoviePlayerInterface>)control curPos:(CGFloat)curPos
+-(void) onFinish:(UIViewController *)control curPos:(CGFloat)curPos
 {
     
 }
 
--(void) onNext:(KxMovieViewController *)control curPos:(CGFloat)curPos
+-(void) onNext:(UIViewController *)control curPos:(CGFloat)curPos
 {
     if ( [self hasNext] ) {
         [control dismissViewControllerAnimated:NO completion:nil];
@@ -105,7 +108,7 @@
         [control dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void) onPre:(KxMovieViewController *)control curPos:(CGFloat)curPos
+-(void) onPre:(UIViewController *)control curPos:(CGFloat)curPos
 {
     if ( [self hasPre] ) {
         [control dismissViewControllerAnimated:NO completion:nil];

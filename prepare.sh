@@ -2,8 +2,6 @@
 
 MYPWD=`pwd`
 
-sudo gem install cocoapods
-
 if [ ! -f /usr/bin/gas-preprocessor.pl ];then
 	echo "Installing gas-preprocessor ..."
 	sudo cp gas-preprocessor/gas-preprocessor.pl /usr/bin
