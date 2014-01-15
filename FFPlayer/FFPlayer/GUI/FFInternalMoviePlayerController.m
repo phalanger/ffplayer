@@ -72,8 +72,6 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     _controls.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     [self.view addSubview:_controls];
     
-    [self addNotifications];
-    
     if ( _urlToPlay != nil ) {
         [_player prepareToPlay];
         [_player setCurrentPlaybackTime:_startPos];
@@ -88,11 +86,11 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [self addNotifications];
     [self setFrame:self.view.frame];
 }
 
 -(void)unload{
-    _delegate = nil;
     [_durationTimer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -433,6 +431,7 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 -(void) onDone
 {
+    [_player stop];
     [self unload];
     if (self.presentingViewController || !self.navigationController)
         [self dismissViewControllerAnimated:YES completion:nil];

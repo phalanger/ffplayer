@@ -139,4 +139,18 @@
     [_setting synchronize];
 }
 
+-(int) seekDelta
+{
+    int n = [_setting integerForKey:@"seek_delta"];
+    if ( n == 0 )
+        n = 10;
+    return n;
+}
+
+-(void) setSeekDelta:(int) n
+{
+    [_setting setInteger:n forKey:@"seek_delta"];
+    [_setting synchronize];
+}
+
 @end

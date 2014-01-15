@@ -23,6 +23,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 @interface ALMoviePlayerControls () <ALAirplayViewDelegate, ALButtonDelegate> {
     @private
     int windowSubviews;
+    CGFloat _seekDelta;
 }
 
 @property (nonatomic, weak) id<ALMoviePlayerInterface>  moviePlayer;
@@ -44,6 +45,9 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 @property (nonatomic, strong) ALButton *seekForwardButton;
 @property (nonatomic, strong) ALButton *seekBackwardButton;
 @property (nonatomic, strong) ALButton *scaleButton;
+
+@property (nonatomic,strong)  CAGradientLayer * topGradient;
+@property (nonatomic,strong)  CAGradientLayer * bottomGradient;
 
 @end
 
@@ -205,40 +209,39 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 
     // gradients
     
-    CAGradientLayer *gradient;
-    
-    gradient = [CAGradientLayer layer];
-    gradient.frame = _bottomBar.bounds;
-    gradient.cornerRadius = 5;
-    gradient.masksToBounds = YES;
-    gradient.borderColor = [UIColor darkGrayColor].CGColor;
-    gradient.borderWidth = 1.0f;
-    gradient.colors = [NSArray arrayWithObjects:
+    _bottomGradient = [CAGradientLayer layer];
+    _bottomGradient.frame = _bottomBar.bounds;
+    _bottomGradient.cornerRadius = 5;
+    _bottomGradient.masksToBounds = YES;
+    _bottomGradient.borderColor = [UIColor darkGrayColor].CGColor;
+    _bottomGradient.borderWidth = 1.0f;
+    _bottomGradient.colors = [NSArray arrayWithObjects:
                        (id)[[UIColor whiteColor] colorWithAlphaComponent:0.4].CGColor,
                        (id)[[UIColor lightGrayColor] colorWithAlphaComponent:0.4].CGColor,
                        (id)[[UIColor darkGrayColor] colorWithAlphaComponent:0.4].CGColor,
                        (id)[[UIColor blackColor] colorWithAlphaComponent:0.4].CGColor,
                        nil];
-    gradient.locations = [NSArray arrayWithObjects:
+    _bottomGradient.locations = [NSArray arrayWithObjects:
                           [NSNumber numberWithFloat:0.0f],
                           [NSNumber numberWithFloat:0.1f],
                           [NSNumber numberWithFloat:0.5],
                           [NSNumber numberWithFloat:0.9],
                           nil];
-    [_bottomBar.layer insertSublayer:gradient atIndex:0];
+    [_bottomBar.layer insertSublayer:_bottomGradient atIndex:0];
     
-    
-    gradient = [CAGradientLayer layer];
-    gradient.frame = _topBar.bounds;
-    gradient.colors = [NSArray arrayWithObjects:
+    _topGradient = [CAGradientLayer layer];
+    _topGradient.frame = _topBar.bounds;
+    _topGradient.colors = [NSArray arrayWithObjects:
                        (id)[[UIColor lightGrayColor] colorWithAlphaComponent:0.7].CGColor,
                        (id)[[UIColor darkGrayColor] colorWithAlphaComponent:0.7].CGColor,
                        nil];
-    gradient.locations = [NSArray arrayWithObjects:
+    _topGradient.locations = [NSArray arrayWithObjects:
                           [NSNumber numberWithFloat:0.0f],
                           [NSNumber numberWithFloat:0.5],
                           nil];
-    [_topBar.layer insertSublayer:gradient atIndex:0];
+    [_topBar.layer insertSublayer:_topGradient atIndex:0];
+    
+    _seekDelta = [[[FFSetting alloc] init] seekDelta];
 }
 
 - (void)resetViews {
@@ -442,21 +445,23 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 }
 
 - (void)seekForwardPressed:(UIButton *)button {
+    [self.moviePlayer onForward: _seekDelta];
     //self.moviePlayer.currentPlaybackRate = !button.selected ? self.seekRate : 1.f;
-    button.selected = !button.selected;
-    self.seekBackwardButton.selected = NO;
-    if (!button.selected) {
-        [self performSelector:@selector(hideControls:) withObject:nil afterDelay:self.fadeDelay];
-    }
+    //button.selected = !button.selected;
+    //self.seekBackwardButton.selected = NO;
+    //if (!button.selected) {
+    //    [self performSelector:@selector(hideControls:) withObject:nil afterDelay:self.fadeDelay];
+    //}
 }
 
 - (void)seekBackwardPressed:(UIButton *)button {
+    [self.moviePlayer onRewind: _seekDelta];
     //self.moviePlayer.currentPlaybackRate = !button.selected ? -self.seekRate : 1.f;
-    button.selected = !button.selected;
-    self.seekForwardButton.selected = NO;
-    if (!button.selected) {
-        [self performSelector:@selector(hideControls:) withObject:nil afterDelay:self.fadeDelay];
-    }
+    //button.selected = !button.selected;
+    //self.seekForwardButton.selected = NO;
+    //if (!button.selected) {
+    //    [self performSelector:@selector(hideControls:) withObject:nil afterDelay:self.fadeDelay];
+    //}
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -517,7 +522,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 
 -(void) updatePlayState:(BOOL)playing hasNext:(BOOL)hasNext hasPrev:(BOOL)hasPrev
 {
-    [self.playPauseButton setSelected:playing];
+    [self.playPauseButton setSelected:!playing];
 }
 
 -(BOOL) isLoadingIndicators {
@@ -664,6 +669,9 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         self.timeRemainingLabel.frame = CGRectMake(self.airplayView.frame.origin.x - paddingBetweenButtons - labelWidth, 0, labelWidth, self.barHeight);
     }
     
+    _topGradient.frame = _topBar.bounds;
+    _bottomGradient.frame = _bottomBar.bounds;
+
     //duration slider
     CGFloat timeRemainingX = self.timeRemainingLabel.frame.origin.x;
     CGFloat timeElapsedX = self.timeElapsedLabel.frame.origin.x;

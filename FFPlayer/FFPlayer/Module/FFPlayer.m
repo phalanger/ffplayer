@@ -33,6 +33,7 @@
     NSArray * _playList;
     int         _curIndex;
     __weak UIViewController *  _parentView;
+    UIViewController *         _lastController;
 }
 @end
 
@@ -45,6 +46,7 @@
         self->_playList = nil;
         self->_curIndex  = 0;
         self->_parentView = nil;
+        self->_lastController = nil;
     }
     
     return self;
@@ -71,46 +73,67 @@
     return _curIndex > 0;
 }
 
--(UIViewController *) play:(FFPlayItem *)item animated:(BOOL)animated
++(UIViewController *) playInController:(UIViewController *)vc item:(FFPlayItem *)item
 {
     NSMutableDictionary * parameters = [[NSMutableDictionary alloc] init];
     NSString * path = item.url;
     
-    if ([path.pathExtension isEqualToString:@"wmv"])
-        parameters[FFMovieParameterMinBufferedDuration] = @(5.0);
-    
-    // disable deinterlacing for iPhone, because it's complex operation can cause stuttering
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        parameters[FFMovieParameterDisableDeinterlacing] = @(YES);
-    
-//    KxMovieViewController *vc = [KxMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
-//    vc.delegate = self;
-    
-    UIViewController * vc = nil;
-    if ( [FFHelper isInternalPlayerSupport:path] ) {
-        FFInternalMoviePlayerController * vc1 = [FFInternalMoviePlayerController movieViewControllerWithDelegate:self];
+    if ( [vc isKindOfClass:[FFInternalMoviePlayerController class]] ) {
+        FFInternalMoviePlayerController * vc1 = (FFInternalMoviePlayerController *)vc;
         [vc1 playMovie:path pos:0.f parameters:parameters];
-        vc = vc1;
+    } else {
+        FFMovieViewController * vc2 = (FFMovieViewController *)vc;
+        
+        if ([path.pathExtension isEqualToString:@"wmv"])
+            parameters[FFMovieParameterMinBufferedDuration] = @(5.0);
+        
+        // disable deinterlacing for iPhone, because it's complex operation can cause stuttering
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+            parameters[FFMovieParameterDisableDeinterlacing] = @(YES);
+        
+        [vc2 playMovie:path pos:0.f parameters:parameters];
+    }
+    
+    return vc;
+}
+
+-(UIViewController *) play:(FFPlayItem *)item animated:(BOOL)animated
+{
+    if ( [FFHelper isInternalPlayerSupport:item.url] ) {
+        
+        if ( _lastController != nil && [_lastController isKindOfClass:[FFInternalMoviePlayerController class]]) {
+            [FFPlayer playInController:_lastController item:item];
+        } else {
+            FFInternalMoviePlayerController * vc1 = [FFInternalMoviePlayerController movieViewControllerWithDelegate:self];
+            _lastController = [FFPlayer playInController:vc1 item:item];
+        }
     } else {
         FFMovieViewController * vc2 = [FFMovieViewController movieViewControllerWithDelegate:self];
-        [vc2 playMovie:path pos:0.f parameters:parameters];
-        vc = vc2;
+        _lastController = [FFPlayer playInController:vc2 item:item];
     }
-    [_parentView presentViewController:vc animated:animated completion:nil];
-    return vc;
+    
+    [_parentView presentViewController:_lastController animated:animated completion:nil];
+    return _lastController;
 }
 
 -(void) onFinish:(UIViewController *)control curPos:(CGFloat)curPos
 {
-    
+    if ( [[[FFSetting alloc] init] autoPlayNext] )
+        [self onNext:control curPos:curPos];
+    else
+        [control dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void) onNext:(UIViewController *)control curPos:(CGFloat)curPos
 {
     if ( [self hasNext] ) {
-        [control dismissViewControllerAnimated:NO completion:nil];
         ++_curIndex;
-        [self play:_playList[_curIndex] animated:NO];
+        if ( control != nil && [control isKindOfClass:[FFInternalMoviePlayerController class]]) {
+            [FFPlayer playInController:control item:_playList[_curIndex]];
+        } else {
+            [control dismissViewControllerAnimated:NO completion:nil];
+            [self play:_playList[_curIndex] animated:NO];
+        }
     } else
         [control dismissViewControllerAnimated:YES completion:nil];
 }
@@ -118,9 +141,14 @@
 -(void) onPre:(UIViewController *)control curPos:(CGFloat)curPos
 {
     if ( [self hasPre] ) {
-        [control dismissViewControllerAnimated:NO completion:nil];
         --_curIndex;
-        [self play:_playList[_curIndex] animated:NO];
+        if ( control != nil && [control isKindOfClass:[FFInternalMoviePlayerController class]]) {
+            [FFPlayer playInController:control item:_playList[_curIndex]];
+        } else {
+            [control dismissViewControllerAnimated:NO completion:nil];
+            [self play:_playList[_curIndex] animated:NO];
+        }
+            
     } else
         [control dismissViewControllerAnimated:YES completion:nil];
 }

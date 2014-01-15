@@ -209,8 +209,15 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     return YES;//隐藏为YES，显示为NO
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+-(void) updateControlsFrame
+{
+    CGRect frame = self.view.frame;
+    [_controls setFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
     [_controls layoutSubviews];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self updateControlsFrame];
 }
 
 - (void)viewDidLoad
@@ -261,9 +268,9 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     // NSLog(@"viewDidAppear");
     
     [super viewDidAppear:animated];
-    
     if (self.presentingViewController)
         [self fullscreenMode:YES];
+    [self updateControlsFrame];
     
     _savedIdleTimer = [[UIApplication sharedApplication] isIdleTimerDisabled];
     
