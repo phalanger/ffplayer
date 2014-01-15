@@ -10,6 +10,7 @@
 #import "KxMovieViewController.h"
 #import "FFHelper.h"
 #import "FFPlayer.h"
+#import "FFAlertView.h"
 
 @interface FFLocalItem : NSObject
 @property (retain,atomic)   NSString *  fullPath;
@@ -90,6 +91,18 @@
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     
     _ffplayer = [[FFPlayer alloc] init];
+    
+    UIBarButtonItem * flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+    UIBarButtonItem * btnAddFolder = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addFolder:)];
+    UIBarButtonItem * btnEdit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editItem:)];
+    UIBarButtonItem * btnMove = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(moveItem:)];
+    UIBarButtonItem * btnDelete = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(deletItem:)];
+
+    self.toolbarItems = [ NSArray arrayWithObjects: flex,btnAddFolder,
+                                                    flex,btnEdit,
+                                                    flex,btnMove,
+                                                    flex,btnDelete,
+                                                    flex,nil ];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -109,7 +122,6 @@
     [super viewWillAppear:animated];
     
     [self reloadMovies];
-    [self.tableView reloadData];
 }
 
 - (void) reloadMovies
@@ -158,12 +170,70 @@
         [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"fullPath" ascending:(nSort == SORT_BY_NAME)]];
     
     _localMovies = [[ma sortedArrayUsingDescriptors:arySort] copy];
+    [self.tableView reloadData];
 }
 
 -(void) switchEditMode:(id)sender
 {
     self.tableView.editing = !self.tableView.editing;
     self.navigationItem.rightBarButtonItem = self.tableView.editing ? btnDone : btnEdit;
+    [self.navigationController setToolbarHidden:!self.tableView.editing];
+}
+
+-(void) addFolder:(id)sender
+{
+    __weak FFLocalViewController * weakSelf = self;
+    [FFAlertView showWithTitle:NSLocalizedString(@"Create Folder", nil)
+                       message:nil
+                   defaultText:@""
+                         style:UIAlertViewStylePlainTextInput
+                    usingBlock:^(NSUInteger btn, NSString * folder) {
+                        if ( btn == 0 )
+                            return;
+                        NSString * trimFolder = [folder stringByReplacingOccurrencesOfString:@"/" withString:@""];
+                        if ([trimFolder hasPrefix:@"."])
+                            trimFolder = [trimFolder stringByReplacingCharactersInRange:NSMakeRange(0,1)  withString:@"_"];
+                        NSFileManager * mgr = [NSFileManager defaultManager];
+                        
+                        NSString * root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                                                NSUserDomainMask,
+                                                                                YES) lastObject];
+                        if ( _currentPath != nil && _currentPath.length > 0 ) {
+                            root = [root stringByAppendingPathComponent:_currentPath];
+                        }
+                        NSString * strFullPath = [root stringByAppendingPathComponent:folder];
+                        NSError * err = nil;
+                        [mgr createDirectoryAtPath:strFullPath withIntermediateDirectories:NO attributes:nil error:&err];
+                        if ( err != nil ) {
+                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
+                                                        message:NSLocalizedString(@"Create folder fail!", nil)
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                                              otherButtonTitles:nil] show];
+                        } else {
+                            FFLocalViewController * strongSelf = weakSelf;
+                            [strongSelf reloadMovies];
+                        }
+                        
+                    }
+             cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+             otherButtonTitles:NSLocalizedString(@"Create", nil), nil
+     ];
+}
+
+-(void) deletItem:(id)sender
+{
+    
+}
+
+-(void) editItem:(id)sender
+{
+    
+}
+
+-(void) moveItem:(id)sender
+{
+    
 }
 
 #pragma mark - Table view data source
@@ -235,7 +305,6 @@
                     _currentPath = [_currentPath stringByAppendingPathComponent:item.fileName];
             }
             [self reloadMovies];
-            [self.tableView reloadData];
         } else {
             NSMutableArray  * aryList = [[NSMutableArray alloc] init];
             int index = 0, i = 0;
