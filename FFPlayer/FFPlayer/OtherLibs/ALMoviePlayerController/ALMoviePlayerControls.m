@@ -44,6 +44,8 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 @property (nonatomic, strong) UILabel *timeRemainingLabel;
 @property (nonatomic, strong) ALButton *seekForwardButton;
 @property (nonatomic, strong) ALButton *seekBackwardButton;
+@property (nonatomic, strong) ALButton *nextButton;
+@property (nonatomic, strong) ALButton *prevButton;
 @property (nonatomic, strong) ALButton *scaleButton;
 
 @property (nonatomic,strong)  CAGradientLayer * topGradient;
@@ -147,8 +149,8 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         
         _scaleButton = [[ALButton alloc] init];
         _scaleButton.delegate = self;
-        [_scaleButton setImage:[UIImage imageNamed:@"movieFullscreen.png"] forState:UIControlStateNormal];
-        [_scaleButton setImage:[UIImage imageNamed:@"movieEndFullscreen.png"] forState:UIControlStateSelected];
+        [_scaleButton setImage:[UIImage imageNamed:@"movieFullscreen"] forState:UIControlStateNormal];
+        [_scaleButton setImage:[UIImage imageNamed:@"movieEndFullscreen"] forState:UIControlStateSelected];
         [_scaleButton addTarget:self action:@selector(scalePressed:) forControlEvents:UIControlEventTouchUpInside];
         [_topBar addSubview:_scaleButton];
         
@@ -158,18 +160,32 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         [_bottomBar addSubview:_volumeView];
         
         _seekForwardButton = [[ALButton alloc] init];
-        [_seekForwardButton setImage:[UIImage imageNamed:@"movieForward.png"] forState:UIControlStateNormal];
-        [_seekForwardButton setImage:[UIImage imageNamed:@"movieForwardSelected.png"] forState:UIControlStateSelected];
+        [_seekForwardButton setImage:[UIImage imageNamed:@"movieForward"] forState:UIControlStateNormal];
+        [_seekForwardButton setImage:[UIImage imageNamed:@"movieForwardSelected"] forState:UIControlStateSelected];
         _seekForwardButton.delegate = self;
         [_seekForwardButton addTarget:self action:@selector(seekForwardPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_bottomBar addSubview:_seekForwardButton];
         
         _seekBackwardButton = [[ALButton alloc] init];
-        [_seekBackwardButton setImage:[UIImage imageNamed:@"movieBackward.png"] forState:UIControlStateNormal];
-        [_seekBackwardButton setImage:[UIImage imageNamed:@"movieBackwardSelected.png"] forState:UIControlStateSelected];
+        [_seekBackwardButton setImage:[UIImage imageNamed:@"movieBackward"] forState:UIControlStateNormal];
+        [_seekBackwardButton setImage:[UIImage imageNamed:@"movieBackwardSelected"] forState:UIControlStateSelected];
         _seekBackwardButton.delegate = self;
         [_seekBackwardButton addTarget:self action:@selector(seekBackwardPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_bottomBar addSubview:_seekBackwardButton];
+
+    
+        _prevButton = [[ALButton alloc] init];
+        [_prevButton setImage:[UIImage imageNamed:@"moviePrev"] forState:UIControlStateNormal];
+        _prevButton.delegate = self;
+        [_prevButton addTarget:self action:@selector(prevPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [_bottomBar addSubview:_prevButton];
+    
+        _nextButton = [[ALButton alloc] init];
+        [_nextButton setImage:[UIImage imageNamed:@"movieNext"] forState:UIControlStateNormal];
+        _nextButton.delegate = self;
+        [_nextButton addTarget:self action:@selector(nextPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [_bottomBar addSubview:_nextButton];
+
     }
     
     else if (_style == ALMoviePlayerControlsStyleEmbedded || (_style == ALMoviePlayerControlsStyleDefault && ![_moviePlayer isFullscreen])) {
@@ -464,6 +480,14 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
     //}
 }
 
+- (void)prevPressed:(UIButton *)button {
+    [self.moviePlayer onPrev];
+}
+
+- (void)nextPressed:(UIButton *)button {
+    [self.moviePlayer onNext];
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if (self.style == ALMoviePlayerControlsStyleNone)
         return;
@@ -523,6 +547,8 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 -(void) updatePlayState:(BOOL)playing hasNext:(BOOL)hasNext hasPrev:(BOOL)hasPrev
 {
     [self.playPauseButton setSelected:!playing];
+    self.nextButton.hidden = !hasNext;
+    self.prevButton.hidden = !hasPrev;
 }
 
 -(BOOL) isLoadingIndicators {
@@ -633,8 +659,8 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         self.topBar.frame = rect;
         self.doneButton.frame = CGRectMake(paddingFromBezel, self.barHeight/2 - fullscreenHeight/2, fullscreenWidth, fullscreenHeight);
         self.timeElapsedLabel.frame = CGRectMake(self.doneButton.frame.origin.x + self.doneButton.frame.size.width + paddingBetweenButtons, 0, labelWidth, self.barHeight);
-        self.scaleButton.frame = CGRectMake(self.topBar.frame.size.width - paddingFromBezel - scaleWidth, self.barHeight/2 - scaleHeight/2, scaleWidth, scaleHeight);
         self.timeRemainingLabel.frame = CGRectMake(self.scaleButton.frame.origin.x - paddingBetweenButtons - labelWidth, 0, labelWidth, self.barHeight);
+        self.scaleButton.frame = CGRectMake(self.topBar.frame.size.width - paddingFromBezel - scaleWidth, self.barHeight/2 - scaleHeight/2, scaleWidth, scaleHeight);
         
         //bottom bar
         CGRect rectBottom = CGRectMake(0, mainViewBounds.size.height - self.barHeight, mainViewBounds.size.width, self.barHeight);
@@ -642,6 +668,8 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         self.playPauseButton.frame = CGRectMake(self.bottomBar.frame.size.width/2 - playWidth/2, self.barHeight/2 - playHeight/2, playWidth, playHeight);
         self.seekForwardButton.frame = CGRectMake(self.playPauseButton.frame.origin.x + self.playPauseButton.frame.size.width + paddingBetweenPlaybackButtons, self.barHeight/2 - seekHeight/2 + 1.f, seekWidth, seekHeight);
         self.seekBackwardButton.frame = CGRectMake(self.playPauseButton.frame.origin.x - paddingBetweenPlaybackButtons - seekWidth, self.barHeight/2 - seekHeight/2 + 1.f, seekWidth, seekHeight);
+        self.prevButton.frame = CGRectMake(self.seekBackwardButton.frame.origin.x - paddingBetweenPlaybackButtons - seekWidth, self.barHeight/2 - seekHeight/2 + 1.f, seekWidth, seekHeight);
+        self.nextButton.frame = CGRectMake(self.seekForwardButton.frame.origin.x + self.seekForwardButton.frame.size.width + paddingBetweenPlaybackButtons, self.barHeight/2 - seekHeight/2 + 1.f, seekWidth, seekHeight);
         
         //hide volume view in iPhone's portrait orientation
         if (mainViewBounds.size.width <= iPhoneScreenPortraitWidth) {

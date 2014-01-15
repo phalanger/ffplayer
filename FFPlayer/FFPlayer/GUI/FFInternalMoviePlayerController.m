@@ -431,7 +431,7 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 -(void) onDone
 {
-    [_player stop];
+    [_player pause];
     [self unload];
     if (self.presentingViewController || !self.navigationController)
         [self dismissViewControllerAnimated:YES completion:nil];

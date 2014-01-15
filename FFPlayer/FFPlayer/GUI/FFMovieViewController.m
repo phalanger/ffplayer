@@ -300,12 +300,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     [_controls hideLoadingIndicators];
     
     if (_decoder) {
-        
         [self pause];
-        if (_moviePosition == 0 || _decoder.isEOF)
-            [self.delegate onFinish:self curPos:0.f];
-        else
-            [self.delegate onFinish:self curPos:_moviePosition];
     }
     
     if (_fullscreen)
@@ -869,6 +864,12 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
                 
                 [self pause];
                 [self updateHUD];
+                
+                if (_moviePosition == 0 || _decoder.isEOF)
+                    [self.delegate onFinish:self curPos:0.f];
+                else
+                    [self.delegate onFinish:self curPos:_moviePosition];
+
                 return;
             }
             

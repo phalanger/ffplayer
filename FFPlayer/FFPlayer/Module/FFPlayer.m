@@ -128,8 +128,9 @@
 {
     if ( [self hasNext] ) {
         ++_curIndex;
-        if ( control != nil && [control isKindOfClass:[FFInternalMoviePlayerController class]]) {
-            [FFPlayer playInController:control item:_playList[_curIndex]];
+        FFPlayItem * item = _playList[_curIndex];
+        if ( control != nil && [control isKindOfClass:[FFInternalMoviePlayerController class]] && [FFHelper isInternalPlayerSupport:item.url]) {
+            [FFPlayer playInController:control item:item];
         } else {
             [control dismissViewControllerAnimated:NO completion:nil];
             [self play:_playList[_curIndex] animated:NO];
@@ -142,8 +143,9 @@
 {
     if ( [self hasPre] ) {
         --_curIndex;
-        if ( control != nil && [control isKindOfClass:[FFInternalMoviePlayerController class]]) {
-            [FFPlayer playInController:control item:_playList[_curIndex]];
+        FFPlayItem * item = _playList[_curIndex];
+        if ( control != nil && [control isKindOfClass:[FFInternalMoviePlayerController class]] && [FFHelper isInternalPlayerSupport:item.url]) {
+            [FFPlayer playInController:control item:item];
         } else {
             [control dismissViewControllerAnimated:NO completion:nil];
             [self play:_playList[_curIndex] animated:NO];

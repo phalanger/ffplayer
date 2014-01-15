@@ -41,6 +41,10 @@
 		1FC071D61885366D00ED63E8 /* moviePause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071C61885366D00ED63E8 /* moviePause@2x.png */; };
 		1FC071D71885366D00ED63E8 /* moviePlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071C71885366D00ED63E8 /* moviePlay.png */; };
 		1FC071D81885366D00ED63E8 /* moviePlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071C81885366D00ED63E8 /* moviePlay@2x.png */; };
+		1FC071DD1886508200ED63E8 /* movieNext.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071D91886508200ED63E8 /* movieNext.png */; };
+		1FC071DE1886508200ED63E8 /* movieNext@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071DA1886508200ED63E8 /* movieNext@2x.png */; };
+		1FC071DF1886508200ED63E8 /* moviePrev.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071DB1886508200ED63E8 /* moviePrev.png */; };
+		1FC071E01886508200ED63E8 /* moviePrev@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071DC1886508200ED63E8 /* moviePrev@2x.png */; };
 		1FE5F8711883891D00CB4C09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8701883891D00CB4C09 /* Foundation.framework */; };
 		1FE5F8731883891D00CB4C09 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8721883891D00CB4C09 /* CoreGraphics.framework */; };
 		1FE5F8751883891D00CB4C09 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8741883891D00CB4C09 /* UIKit.framework */; };
@@ -140,6 +144,10 @@
 		1FC071C61885366D00ED63E8 /* moviePause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "moviePause@2x.png"; path = "Resource/moviePause@2x.png"; sourceTree = "<group>"; };
 		1FC071C71885366D00ED63E8 /* moviePlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moviePlay.png; path = Resource/moviePlay.png; sourceTree = "<group>"; };
 		1FC071C81885366D00ED63E8 /* moviePlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "moviePlay@2x.png"; path = "Resource/moviePlay@2x.png"; sourceTree = "<group>"; };
+		1FC071D91886508200ED63E8 /* movieNext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = movieNext.png; path = Resource/movieNext.png; sourceTree = "<group>"; };
+		1FC071DA1886508200ED63E8 /* movieNext@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "movieNext@2x.png"; path = "Resource/movieNext@2x.png"; sourceTree = "<group>"; };
+		1FC071DB1886508200ED63E8 /* moviePrev.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moviePrev.png; path = Resource/moviePrev.png; sourceTree = "<group>"; };
+		1FC071DC1886508200ED63E8 /* moviePrev@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "moviePrev@2x.png"; path = "Resource/moviePrev@2x.png"; sourceTree = "<group>"; };
 		1FE5F86D1883891D00CB4C09 /* FFPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE5F8701883891D00CB4C09 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1FE5F8721883891D00CB4C09 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -301,6 +309,10 @@
 		1FC071B81885361E00ED63E8 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				1FC071D91886508200ED63E8 /* movieNext.png */,
+				1FC071DA1886508200ED63E8 /* movieNext@2x.png */,
+				1FC071DB1886508200ED63E8 /* moviePrev.png */,
+				1FC071DC1886508200ED63E8 /* moviePrev@2x.png */,
 				1FC071B91885366D00ED63E8 /* movieBackward.png */,
 				1FC071BA1885366D00ED63E8 /* movieBackward@2x.png */,
 				1FC071BB1885366D00ED63E8 /* movieBackwardSelected.png */,
@@ -509,6 +521,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FC071CF1885366D00ED63E8 /* movieForward.png in Resources */,
+				1FC071DD1886508200ED63E8 /* movieNext.png in Resources */,
 				1FC071D21885366D00ED63E8 /* movieForwardSelected@2x.png in Resources */,
 				1FC071D71885366D00ED63E8 /* moviePlay.png in Resources */,
 				1FE5F8871883891D00CB4C09 /* Main_iPad.storyboard in Resources */,
@@ -520,15 +533,18 @@
 				1FE5F88F1883891D00CB4C09 /* Images.xcassets in Resources */,
 				1FC071CD1885366D00ED63E8 /* movieEndFullscreen.png in Resources */,
 				1FC071CA1885366D00ED63E8 /* movieBackward@2x.png in Resources */,
+				1FC071DF1886508200ED63E8 /* moviePrev.png in Resources */,
 				1FC071D01885366D00ED63E8 /* movieForward@2x.png in Resources */,
 				1FC071D31885366D00ED63E8 /* movieFullscreen.png in Resources */,
 				1FC071CB1885366D00ED63E8 /* movieBackwardSelected.png in Resources */,
 				1FC071C91885366D00ED63E8 /* movieBackward.png in Resources */,
 				1FC071CC1885366D00ED63E8 /* movieBackwardSelected@2x.png in Resources */,
 				1FE5F8841883891D00CB4C09 /* Main_iPhone.storyboard in Resources */,
+				1FC071E01886508200ED63E8 /* moviePrev@2x.png in Resources */,
 				1FC071D51885366D00ED63E8 /* moviePause.png in Resources */,
 				1FE5F87B1883891D00CB4C09 /* InfoPlist.strings in Resources */,
 				1FC071CE1885366D00ED63E8 /* movieEndFullscreen@2x.png in Resources */,
+				1FC071DE1886508200ED63E8 /* movieNext@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
