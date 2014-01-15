@@ -268,7 +268,10 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
         default:
             break;
     }
-    [_controls updatePlayState:[self isPlaying] hasNext:self.delegate != nil?[self.delegate hasNext]:FALSE hasPrev:self.delegate != nil?[self.delegate hasPre]:FALSE];
+    
+    BOOL boHasPrev = self.delegate != nil?[self.delegate hasPre]:FALSE;
+    BOOL boHasNext = self.delegate != nil?[self.delegate hasNext]:FALSE;
+    [_controls updatePlayState:self.playing hasNext:boHasNext hasPrev:boHasPrev scallingMod:_player.scalingMode];
 }
 
 - (void)movieDurationAvailable:(NSNotification *)note {
@@ -374,9 +377,20 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     [_player setCurrentPlaybackRate:v];
 }
 
--(void) setScalingMode:(int)mode
+-(void) switchScalingMode
 {
-    [_player setScalingMode:mode];
+    if ( [_player scalingMode] == MPMovieScalingModeAspectFit )
+        [_player setScalingMode:MPMovieScalingModeAspectFill];
+    else
+        [_player setScalingMode:MPMovieScalingModeAspectFit];
+}
+
+-(void) onHUD:(BOOL)display
+{
+    if ( display )
+        [self startDurationTimer];
+    else
+        [self stopDurationTimer];
 }
 
 -(void) onPause

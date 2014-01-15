@@ -60,7 +60,6 @@
 		1FE5F8A01883891D00CB4C09 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FE5F89E1883891D00CB4C09 /* InfoPlist.strings */; };
 		1FE5F8A21883891D00CB4C09 /* FFPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5F8A11883891D00CB4C09 /* FFPlayerTests.m */; };
 		1FE5F8B618838DA700CB4C09 /* KxAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5F8AD18838DA700CB4C09 /* KxAudioManager.m */; };
-		1FE5F8B718838DA700CB4C09 /* kxmovie.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1FE5F8AF18838DA700CB4C09 /* kxmovie.bundle */; };
 		1FE5F8B818838DA700CB4C09 /* KxMovieDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5F8B118838DA700CB4C09 /* KxMovieDecoder.m */; };
 		1FE5F8B918838DA700CB4C09 /* KxMovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5F8B318838DA700CB4C09 /* KxMovieGLView.m */; };
 		1FE5F8BA18838DA700CB4C09 /* KxMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5F8B518838DA700CB4C09 /* KxMovieViewController.m */; };
@@ -169,7 +168,6 @@
 		1FE5F8AC18838DA700CB4C09 /* KxAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxAudioManager.h; path = ../kxmovie/KxAudioManager.h; sourceTree = "<group>"; };
 		1FE5F8AD18838DA700CB4C09 /* KxAudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxAudioManager.m; path = ../kxmovie/KxAudioManager.m; sourceTree = "<group>"; };
 		1FE5F8AE18838DA700CB4C09 /* kxmovie-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "kxmovie-Prefix.pch"; path = "../kxmovie/kxmovie-Prefix.pch"; sourceTree = "<group>"; };
-		1FE5F8AF18838DA700CB4C09 /* kxmovie.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = kxmovie.bundle; path = ../kxmovie/kxmovie.bundle; sourceTree = "<group>"; };
 		1FE5F8B018838DA700CB4C09 /* KxMovieDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxMovieDecoder.h; path = ../kxmovie/KxMovieDecoder.h; sourceTree = "<group>"; };
 		1FE5F8B118838DA700CB4C09 /* KxMovieDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxMovieDecoder.m; path = ../kxmovie/KxMovieDecoder.m; sourceTree = "<group>"; };
 		1FE5F8B218838DA700CB4C09 /* KxMovieGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxMovieGLView.h; path = ../kxmovie/KxMovieGLView.h; sourceTree = "<group>"; };
@@ -429,7 +427,6 @@
 				1FE5F8AC18838DA700CB4C09 /* KxAudioManager.h */,
 				1FE5F8AD18838DA700CB4C09 /* KxAudioManager.m */,
 				1FE5F8AE18838DA700CB4C09 /* kxmovie-Prefix.pch */,
-				1FE5F8AF18838DA700CB4C09 /* kxmovie.bundle */,
 				1FE5F8B018838DA700CB4C09 /* KxMovieDecoder.h */,
 				1FE5F8B118838DA700CB4C09 /* KxMovieDecoder.m */,
 				1FE5F8B218838DA700CB4C09 /* KxMovieGLView.h */,
@@ -527,7 +524,6 @@
 				1FE5F8871883891D00CB4C09 /* Main_iPad.storyboard in Resources */,
 				1FC071D41885366D00ED63E8 /* movieFullscreen@2x.png in Resources */,
 				1FC071D61885366D00ED63E8 /* moviePause@2x.png in Resources */,
-				1FE5F8B718838DA700CB4C09 /* kxmovie.bundle in Resources */,
 				1FC071D81885366D00ED63E8 /* moviePlay@2x.png in Resources */,
 				1FC071D11885366D00ED63E8 /* movieForwardSelected.png in Resources */,
 				1FE5F88F1883891D00CB4C09 /* Images.xcassets in Resources */,

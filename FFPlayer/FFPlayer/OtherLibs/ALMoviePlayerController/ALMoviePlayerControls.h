@@ -18,7 +18,7 @@
 -(CGFloat) getDuration; //return the full time
 -(CGFloat) getCurrentPlaybackRate;
 -(void) setCurrentPlaybackRate:(CGFloat) v;
--(void) setScalingMode:(int)mode;
+-(void) switchScalingMode;
 
 -(void)setFullscreen:(BOOL)bo animated:(BOOL)animated;
 
@@ -30,6 +30,7 @@
 -(void) onNext;
 -(void) onPrev;
 -(void) onDone;
+-(void) onHUD:(BOOL)display;
 
 @end
 
@@ -126,7 +127,7 @@ typedef enum {
 -(void) updateMoviePlayback:(CGFloat)cur total:(CGFloat)totalTime;
 -(void) showControls:(void(^)(void))completion;
 -(void) hideControls:(void(^)(void))completion;
--(void) updatePlayState:(BOOL)playing hasNext:(BOOL)hasNext hasPrev:(BOOL)hasPrev;
+-(void) updatePlayState:(BOOL)playing hasNext:(BOOL)hasNext hasPrev:(BOOL)hasPrev scallingMod:(int)scallingMode;
 
 -(BOOL) isLoadingIndicators;
 -(void) showLoadingIndicators;

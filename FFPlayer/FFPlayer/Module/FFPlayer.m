@@ -11,6 +11,7 @@
 #import "FFMovieViewController.h"
 #import "FFInternalMoviePlayerController.h"
 #import "ALMoviePlayerControls.h"
+#import "KxMovieDecoder.h"
 
 @implementation FFPlayItem
 
@@ -34,6 +35,7 @@
     int         _curIndex;
     __weak UIViewController *  _parentView;
     UIViewController *         _lastController;
+    KxMovieDecoder *           _decoder;
 }
 @end
 
@@ -47,9 +49,24 @@
         self->_curIndex  = 0;
         self->_parentView = nil;
         self->_lastController = nil;
+        self->_decoder = nil;
     }
     
     return self;
+}
+
+-(NSArray *)getMediaInfo:(NSString *)url
+{
+    if ( _decoder == nil ) {
+        _decoder = [[KxMovieDecoder alloc] init];
+    }
+    NSError *error = nil;
+    [_decoder openFile:url error:&error];
+    if ( _decoder.isNetwork || error != nil )
+        return nil;
+    NSArray * aryResult = [_decoder.info copy];
+    [_decoder closeFile];
+    return aryResult;
 }
 
 -(UIViewController *)playList:(NSArray *)aryList curIndex:(int)curIndex parent:(UIViewController *)parent

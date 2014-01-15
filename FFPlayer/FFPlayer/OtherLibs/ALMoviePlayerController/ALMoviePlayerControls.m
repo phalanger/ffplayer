@@ -24,6 +24,10 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
     @private
     int windowSubviews;
     CGFloat _seekDelta;
+    
+    UITapGestureRecognizer *_tapGestureRecognizer;
+    UITapGestureRecognizer *_doubleTapGestureRecognizer;
+    UIPanGestureRecognizer *_panGestureRecognizer;
 }
 
 @property (nonatomic, weak) id<ALMoviePlayerInterface>  moviePlayer;
@@ -258,6 +262,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
     [_topBar.layer insertSublayer:_topGradient atIndex:0];
     
     _seekDelta = [[[FFSetting alloc] init] seekDelta];
+    [self registerGestureRecognizer];
 }
 
 - (void)resetViews {
@@ -452,7 +457,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         [self performSelector:@selector(hideControls:) withObject:nil afterDelay:self.fadeDelay];
     } else {
         button.selected = !button.selected;
-        [self.moviePlayer setScalingMode:button.selected ? MPMovieScalingModeAspectFill : MPMovieScalingModeAspectFit];
+        [self.moviePlayer switchScalingMode];
     }
 }
 
@@ -488,6 +493,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
     [self.moviePlayer onNext];
 }
 
+/*
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if (self.style == ALMoviePlayerControlsStyleNone)
         return;
@@ -498,6 +504,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         return;
     self.isShowing ? [self hideControls:nil] : [self showControls:nil];
 }
+*/
 
 # pragma mark - Internal Methods
 
@@ -515,6 +522,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
             self.bottomBar.alpha = 1.f;
         } completion:^(BOOL finished) {
             _showing = YES;
+            [self.moviePlayer onHUD:_showing];
             if (completion)
                 completion();
             [self performSelector:@selector(hideControls:) withObject:nil afterDelay:self.fadeDelay];
@@ -535,6 +543,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
             self.bottomBar.alpha = 0.f;
         } completion:^(BOOL finished) {
             _showing = NO;
+            [self.moviePlayer onHUD:_showing];
             if (completion)
                 completion();
         }];
@@ -544,11 +553,12 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
     }
 }
 
--(void) updatePlayState:(BOOL)playing hasNext:(BOOL)hasNext hasPrev:(BOOL)hasPrev
+-(void) updatePlayState:(BOOL)playing hasNext:(BOOL)hasNext hasPrev:(BOOL)hasPrev scallingMod:(int)scallingMode
 {
     [self.playPauseButton setSelected:!playing];
-    self.nextButton.hidden = !hasNext;
-    self.prevButton.hidden = !hasPrev;
+    self.nextButton.enabled = hasNext;
+    self.prevButton.enabled = hasPrev;
+    self.scaleButton.selected = scallingMode == UIViewContentModeScaleAspectFill;
 }
 
 -(BOOL) isLoadingIndicators {
@@ -709,6 +719,59 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
     if (self.state == ALMoviePlayerControlsStateLoading) {
         [_activityBackgroundView setFrame:CGRectMake(0, 0, mainViewBounds.size.width, mainViewBounds.size.height)];
         [_activityIndicator setFrame:CGRectMake((mainViewBounds.size.width / 2) - (activityIndicatorSize / 2), (mainViewBounds.size.height / 2) - (activityIndicatorSize / 2), activityIndicatorSize, activityIndicatorSize)];
+    }
+}
+
+-(void) registerGestureRecognizer
+{
+    _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    _tapGestureRecognizer.numberOfTapsRequired = 1;
+    
+    _doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    _doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+    
+    [_tapGestureRecognizer requireGestureRecognizerToFail: _doubleTapGestureRecognizer];
+    
+    [self addGestureRecognizer:_doubleTapGestureRecognizer];
+    [self addGestureRecognizer:_tapGestureRecognizer];
+    
+    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    
+    [self addGestureRecognizer:_panGestureRecognizer];
+}
+
+#pragma mark - gesture recognizer
+
+- (void) handleTap: (UITapGestureRecognizer *) sender
+{
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        
+        if (sender == _tapGestureRecognizer) {
+            if ( self.isShowing )
+                [self hideControls:nil];
+            else
+                [self showControls:nil];
+        } else if (sender == _doubleTapGestureRecognizer) {
+            [self.moviePlayer switchScalingMode];
+        }
+    }
+}
+
+- (void) handlePan: (UIPanGestureRecognizer *) sender
+{
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        
+        const CGPoint vt = [sender velocityInView:_panGestureRecognizer.view];
+        const CGPoint pt = [sender translationInView:_panGestureRecognizer.view];
+        const CGFloat sp = MAX(0.1, log10(fabsf(vt.x)) - 1.0);
+        const CGFloat sc = fabsf(pt.x) * 0.33 * sp;
+        if (sc > 10) {
+            if ( pt.x > 0 )
+                [self.moviePlayer onForward:MIN(sc, 600.0)];
+            else
+                [self.moviePlayer onRewind:MIN(sc, 600.0)];
+        }
+        NSLog(@"pan %.2f %.2f %.2f sec", pt.x, vt.x, sc);
     }
 }
 

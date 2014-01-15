@@ -20,5 +20,6 @@
 
 -(id) init;
 -(UIViewController *)playList:(NSArray *)aryList curIndex:(int)curIndex parent:(UIViewController *)parent;
+-(NSArray *)getMediaInfo:(NSString *)url;
 
 @end

@@ -64,10 +64,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     
     UILabel             *_subtitlesLabel;
     
-    UITapGestureRecognizer *_tapGestureRecognizer;
-    UITapGestureRecognizer *_doubleTapGestureRecognizer;
-    UIPanGestureRecognizer *_panGestureRecognizer;
-    
     ALMoviePlayerControls * _controls;
 #ifdef DEBUG
     UILabel             *_messageLabel;
@@ -328,46 +324,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     NSLog(@"applicationWillResignActive");
 }
 
-#pragma mark - gesture recognizer
-
-- (void) handleTap: (UITapGestureRecognizer *) sender
-{
-    if (sender.state == UIGestureRecognizerStateEnded) {
-        
-        if (sender == _tapGestureRecognizer) {
-            
-            [self showHUD: _hiddenHUD];
-            
-        } else if (sender == _doubleTapGestureRecognizer) {
-            
-            UIView *frameView = [self frameView];
-            
-            if (frameView.contentMode == UIViewContentModeScaleAspectFit)
-                frameView.contentMode = UIViewContentModeScaleAspectFill;
-            else
-                frameView.contentMode = UIViewContentModeScaleAspectFit;
-            
-        }
-    }
-}
-
-- (void) handlePan: (UIPanGestureRecognizer *) sender
-{
-    if (sender.state == UIGestureRecognizerStateEnded) {
-        
-        const CGPoint vt = [sender velocityInView:self.view];
-        const CGPoint pt = [sender translationInView:self.view];
-        const CGFloat sp = MAX(0.1, log10(fabsf(vt.x)) - 1.0);
-        const CGFloat sc = fabsf(pt.x) * 0.33 * sp;
-        if (sc > 10) {
-            
-            const CGFloat ff = pt.x > 0 ? 1.0 : -1.0;
-            [self setMoviePosition: _moviePosition + ff * MIN(sc, 600.0)];
-        }
-        //NSLog(@"pan %.2f %.2f %.2f sec", pt.x, vt.x, sc);
-    }
-}
-
 #pragma mark - public
 
 -(void) play
@@ -580,22 +536,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 {
     UIView * view = [self frameView];
     view.userInteractionEnabled = YES;
-    
-    _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    _tapGestureRecognizer.numberOfTapsRequired = 1;
-    
-    _doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    _doubleTapGestureRecognizer.numberOfTapsRequired = 2;
-    
-    [_tapGestureRecognizer requireGestureRecognizerToFail: _doubleTapGestureRecognizer];
-    
-    [view addGestureRecognizer:_doubleTapGestureRecognizer];
-    [view addGestureRecognizer:_tapGestureRecognizer];
-    
-    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-    _panGestureRecognizer.enabled = YES;//NO;
-    
-    [view addGestureRecognizer:_panGestureRecognizer];
 }
 
 - (UIView *) frameView
@@ -1087,7 +1027,9 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 
 - (void) updatePlayButton
 {
-    [_controls updatePlayState:self.playing hasNext:self.delegate != nil?[self.delegate hasNext]:FALSE hasPrev:self.delegate != nil?[self.delegate hasPre]:FALSE];
+    BOOL boHasPrev = self.delegate != nil?[self.delegate hasPre]:FALSE;
+    BOOL boHasNext = self.delegate != nil?[self.delegate hasNext]:FALSE;
+    [_controls updatePlayState:self.playing hasNext:boHasNext hasPrev:boHasPrev scallingMod:[self frameView].contentMode];
 }
 
 - (void) updateHUD
@@ -1133,12 +1075,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 
 - (void) showHUD: (BOOL) show
 {
-    _hiddenHUD = !show;
-    _panGestureRecognizer.enabled = _hiddenHUD;
-    
-    [[UIApplication sharedApplication] setIdleTimerDisabled:_hiddenHUD];
-    
-    if ( _hiddenHUD )
+    if ( !show )
         [_controls hideControls:nil];
     else
         [_controls showControls:nil];
@@ -1284,7 +1221,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 {
 }
 
--(void) setScalingMode:(int)mode
+-(void) switchScalingMode
 {
     UIView *frameView = [self frameView];
     
@@ -1306,6 +1243,12 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 -(void) setCurrentPlaybackTime:(CGFloat)pos
 {
     [self setMoviePosition:pos];
+}
+
+-(void) onHUD:(BOOL)display
+{
+    _hiddenHUD = !display;
+    [[UIApplication sharedApplication] setIdleTimerDisabled:_hiddenHUD];
 }
 
 -(void) onPlay
