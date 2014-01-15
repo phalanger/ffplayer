@@ -34,7 +34,7 @@ enum {
                                     nil];
     
     sectionCellCount = [NSArray arrayWithObjects:[NSNumber numberWithInt:1]
-                                                , [NSNumber numberWithInt:2]
+                                                , [NSNumber numberWithInt:3]
                                                 , [NSNumber numberWithInt:1], nil];
 }
 
@@ -66,6 +66,16 @@ enum {
     return str;
 }
 
+-(void) addSwitchToCell:(UITableViewCell *)cell withTag:(int)tag withValue:(BOOL)val
+{
+    cell.detailTextLabel.text = nil;
+    UISwitch *switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+    switchview.tag = tag;
+    switchview.on = val;
+    [switchview addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+    cell.accessoryView = switchview;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
@@ -76,27 +86,21 @@ enum {
         case 0:
             if (indexPath.row == 0) {
                 cell.textLabel.text = NSLocalizedString(@"Enable internal player", nil);
-                cell.detailTextLabel.text = nil;
-                UISwitch *switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-                switchview.tag = SWITCH_ENABLE_INTERNAL_PLAYER;
-                switchview.on = [setting enableInternalPlayer];
-                [switchview addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-                cell.accessoryView = switchview;
+                [self addSwitchToCell:cell withTag:SWITCH_ENABLE_INTERNAL_PLAYER withValue:[setting enableInternalPlayer]];
             }
             break;
         case 1:
             if (indexPath.row == 0) {
                 cell.textLabel.text = NSLocalizedString(@"Auto play next", nil);
-                cell.detailTextLabel.text = nil;
-                UISwitch *switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-                switchview.tag = SWITCH_AUTO_PLAY_NEXT;
-                switchview.on = [setting autoPlayNext];
-                [switchview addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-                cell.accessoryView = switchview;
+                [self addSwitchToCell:cell withTag:SWITCH_AUTO_PLAY_NEXT withValue:[setting autoPlayNext]];
             } else if (indexPath.row == 1) {
                 cell.textLabel.text = NSLocalizedString(@"Sort", nil);
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 cell.detailTextLabel.text = [FFSettingViewController getSortString:[setting sortType]];
+            } else if (indexPath.row == 2) {
+                cell.textLabel.text = NSLocalizedString(@"Seek delta", nil);
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%d(%@)",  [setting seekDelta], NSLocalizedString(@"sec",nil)];
             }
             break;
         case 2:
@@ -166,6 +170,27 @@ enum {
                                             ,NSLocalizedString(@"By Date", nil)
                                             ,NSLocalizedString(@"By Date Desc", nil)
                                             ,NSLocalizedString(@"Randon", nil)
+                                    , nil];
+            } else if ( indexPath.row == 2 ) {
+                [FFAlertView showWithTitle:NSLocalizedString(@"Seek delta seconds", nil)
+                                   message:nil
+                               defaultText:nil
+                                     style:UIAlertViewStyleDefault
+                                usingBlock:^(NSUInteger btn,NSString * text) {
+                                    int sec[] = { 0,5,10,20,60};
+                                    if ( btn == 0 )
+                                        return;
+                                    else
+                                        btn = sec[btn];
+                                    [[[FFSetting alloc] init] setSeekDelta:btn];
+                                    UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
+                                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d(%@)", btn, NSLocalizedString(@"sec",nil)];
+                                }
+                         cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                         otherButtonTitles: NSLocalizedString(@"5(s)", nil)
+                                            ,NSLocalizedString(@"10(s)", nil)
+                                            ,NSLocalizedString(@"20(s)", nil)
+                                            ,NSLocalizedString(@"60(s)", nil)
                                     , nil];
             }
             break;

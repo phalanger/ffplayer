@@ -61,6 +61,11 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     [self setFullscreen:YES];
     [_player setFullscreen:YES animated:NO];
     [self.view addSubview:_player.view];
+
+    if ( [[[FFSetting alloc] init] scalingModeFit] )
+        [_player setScalingMode:MPMovieScalingModeAspectFit];
+    else
+        [_player setScalingMode:MPMovieScalingModeAspectFill];
     
     if (!_movieBackgroundView) {
         _movieBackgroundView = [[UIView alloc] init];
@@ -377,12 +382,13 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     [_player setCurrentPlaybackRate:v];
 }
 
--(void) switchScalingMode
+-(int) switchScalingMode
 {
     if ( [_player scalingMode] == MPMovieScalingModeAspectFit )
         [_player setScalingMode:MPMovieScalingModeAspectFill];
     else
         [_player setScalingMode:MPMovieScalingModeAspectFit];
+    return [_player scalingMode];
 }
 
 -(void) onHUD:(BOOL)display

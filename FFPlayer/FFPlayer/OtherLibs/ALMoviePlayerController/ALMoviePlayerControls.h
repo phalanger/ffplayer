@@ -18,7 +18,7 @@
 -(CGFloat) getDuration; //return the full time
 -(CGFloat) getCurrentPlaybackRate;
 -(void) setCurrentPlaybackRate:(CGFloat) v;
--(void) switchScalingMode;
+-(int) switchScalingMode;
 
 -(void)setFullscreen:(BOOL)bo animated:(BOOL)animated;
 

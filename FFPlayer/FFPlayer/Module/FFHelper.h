@@ -45,4 +45,7 @@ enum SORT_TYPE
 -(int) seekDelta;
 -(void) setSeekDelta:(int) n;
 
+-(BOOL) scalingModeFit;
+-(void) setScalingMode:(int)n;
+
 @end

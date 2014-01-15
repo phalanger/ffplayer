@@ -204,6 +204,8 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         [_bottomBar addSubview:_scaleButton];
     }
     
+    self.scaleButton.selected = ![[[FFSetting alloc] init] scalingModeFit];
+    
     //static stuff
     _playPauseButton = [[ALButton alloc] init];
     [_playPauseButton setImage:[UIImage imageNamed:@"moviePause.png"] forState:UIControlStateNormal];
@@ -456,8 +458,9 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         [self.moviePlayer setFullscreen:!self.moviePlayer.isFullscreen animated:YES];
         [self performSelector:@selector(hideControls:) withObject:nil afterDelay:self.fadeDelay];
     } else {
-        button.selected = !button.selected;
-        [self.moviePlayer switchScalingMode];
+        int nScalingMode = [self.moviePlayer switchScalingMode];
+        [[[FFSetting alloc] init] setScalingMode:nScalingMode];
+        self.scaleButton.selected = nScalingMode == UIViewContentModeScaleAspectFill;
     }
 }
 
@@ -752,7 +755,9 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
             else
                 [self showControls:nil];
         } else if (sender == _doubleTapGestureRecognizer) {
-            [self.moviePlayer switchScalingMode];
+            int nScalingMode = [self.moviePlayer switchScalingMode];
+            [[[FFSetting alloc] init] setScalingMode:nScalingMode];
+            self.scaleButton.selected = nScalingMode == UIViewContentModeScaleAspectFill;
         }
     }
 }

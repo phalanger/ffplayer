@@ -153,4 +153,15 @@
     [_setting synchronize];
 }
 
+-(BOOL) scalingModeFit
+{
+    return [_setting integerForKey:@"scaling_mode"] != 2;
+}
+
+-(void) setScalingMode:(int)n
+{
+    [_setting setInteger:n forKey:@"scaling_mode"];
+    [_setting synchronize];
+}
+
 @end

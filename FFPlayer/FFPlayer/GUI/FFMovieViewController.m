@@ -497,6 +497,11 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     frameView.contentMode = UIViewContentModeScaleAspectFit;
     frameView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     
+    if ( [[[FFSetting alloc] init] scalingModeFit] )
+        frameView.contentMode = UIViewContentModeScaleAspectFit;
+    else
+        frameView.contentMode = UIViewContentModeScaleAspectFill;
+
     [self.view insertSubview:frameView atIndex:0];
     
     if (_decoder.validVideo) {
@@ -1221,7 +1226,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 {
 }
 
--(void) switchScalingMode
+-(int) switchScalingMode
 {
     UIView *frameView = [self frameView];
     
@@ -1229,6 +1234,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
         frameView.contentMode = UIViewContentModeScaleAspectFill;
     else
         frameView.contentMode = UIViewContentModeScaleAspectFit;
+    
+    return frameView.contentMode;
 }
 
 -(void)setFullscreen:(BOOL)bo animated:(BOOL)animated
