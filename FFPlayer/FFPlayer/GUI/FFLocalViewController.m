@@ -91,7 +91,12 @@ typedef enum {
 
 @end
 
-////////////////////////////////////////
+///////////////////////////////////////////
+
+enum {
+    IN_LOCAL,
+    IN_SECRET,
+};
 
 @interface FFLocalViewController ()
 {
@@ -102,7 +107,7 @@ typedef enum {
     FFPlayer *                  _ffplayer;
     
     NSArray *                   itemToMove;
-    BOOL                        currentInLock;
+    int                         currentState;
 }
 @end
 
@@ -127,7 +132,8 @@ typedef enum {
     [super viewDidLoad];
 
     [[NSFileManager defaultManager] createDirectoryAtPath:[self getSecretRootPath] withIntermediateDirectories:NO attributes:nil error:nil];
-
+    currentState = IN_LOCAL;
+    
     if ( itemToMove != nil ) {
         self.title = self.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"Move to %@", nil), _currentPath == nil ? @"/" : _currentPath];
         btnEdit = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(exitMove:)];
@@ -195,7 +201,7 @@ typedef enum {
 
 -(NSString *) getCurrentFullPath
 {
-    NSString * root = currentInLock ? [self getSecretRootPath] : [self getRootFullPath];
+    NSString * root = (currentState == IN_SECRET) ? [self getSecretRootPath] : [self getRootFullPath];
     if ( _currentPath != nil && _currentPath.length > 0 ) {
         root = [root stringByAppendingPathComponent:_currentPath];
     }
@@ -210,9 +216,9 @@ typedef enum {
     
     if ( _currentPath != nil && _currentPath.length > 0 ) {
         [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_PARENT]];
-    } else if ( !currentInLock && [[FFSetting default] unlock] ) {
+    } else if ( currentState == IN_LOCAL && [[FFSetting default] unlock] ) {
         [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_SECRETE]];
-    } else if ( currentInLock )
+    } else if ( currentState == IN_SECRET )
         [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_PARENT]];
     
     NSArray *contents = [fm contentsOfDirectoryAtPath:folder error:nil];
@@ -251,18 +257,18 @@ typedef enum {
 
     NSString * strTitle = nil;
     if ( itemToMove != nil ) {
-        if ( currentInLock )
+        if ( currentState == IN_SECRET )
             strTitle = [NSString stringWithFormat:NSLocalizedString(@"Move to %@ (Secret)", nil), _currentPath == nil ? @"/" : _currentPath];
         else
             strTitle = [NSString stringWithFormat:NSLocalizedString(@"Move to %@", nil), _currentPath == nil ? @"/" : _currentPath];
     } else    {
         if ( _currentPath == nil ) {
-            if ( currentInLock )
+            if ( currentState == IN_SECRET )
                 strTitle = NSLocalizedString(@"Secret", nil);
             else
                 strTitle = NSLocalizedString(@"Local", @"Local Files");
         } else {
-            if ( currentInLock )
+            if ( currentState == IN_SECRET )
                 strTitle = [NSString stringWithFormat:@"%@ (%@)", _currentPath, NSLocalizedString(@"Secret", nil)];
             else
                 strTitle = _currentPath;
@@ -501,6 +507,10 @@ typedef enum {
         cell.textLabel.font = [UIFont boldSystemFontOfSize:20];
         cell.detailTextLabel.text = nil;
         cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor blackColor];
+        if ( item.type == LIT_SECRETE )
+            cell.imageView.image = [UIImage imageNamed:@"padlock"];
+        else
+            cell.imageView.image = [UIImage imageNamed:@"folder"];
         
         if ( item.type == LIT_DIR && itemToMove != nil )  {   //in Moveing mode
             for (FFLocalItem * check in itemToMove) {
@@ -526,6 +536,11 @@ typedef enum {
         } else {
             cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor blackColor];
         }
+        
+        if (item.type == LIT_MIDEA )
+            cell.imageView.image = [UIImage imageNamed:@"movie"];
+        else
+            cell.imageView.image = [UIImage imageNamed:@"disk"];
     }
     return cell;
 }
@@ -540,8 +555,8 @@ typedef enum {
         switch (item.type) {
             case LIT_PARENT:
             {
-                if ( _currentPath == nil && currentInLock ) {
-                    currentInLock = FALSE;
+                if ( _currentPath == nil && currentState == IN_SECRET ) {
+                    currentState = IN_LOCAL;
                 } else {
                     _currentPath = [_currentPath stringByDeletingLastPathComponent];
                     if ( _currentPath.length == 0 )
@@ -551,7 +566,7 @@ typedef enum {
             }break;
             case LIT_SECRETE:
             {
-                currentInLock = YES;
+                currentState = IN_SECRET;
                 [self reloadMovies];
             }break;
             case LIT_DIR:
@@ -587,8 +602,8 @@ typedef enum {
 -(void) unlock:(BOOL) bo
 {
     [[FFSetting default] setUnlock:bo];
-    if ( !bo && currentInLock ) {
-        currentInLock = FALSE;
+    if ( !bo && currentState == IN_SECRET ) {
+        currentState = IN_LOCAL;
         _currentPath = nil;
     }
     [self reloadMovies];

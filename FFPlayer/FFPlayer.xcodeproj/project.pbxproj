@@ -78,6 +78,19 @@
 		1FE5F8EC18838EEA00CB4C09 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8EB18838EEA00CB4C09 /* libz.dylib */; };
 		1FE5F8EE1883930D00CB4C09 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8ED1883930D00CB4C09 /* AVFoundation.framework */; };
 		4D0165C418856D650031DC71 /* FFInternalMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */; };
+		4DBD97F8188814D000C71747 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F6188814D000C71747 /* folder.png */; };
+		4DBD97F9188814D000C71747 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F7188814D000C71747 /* folder@2x.png */; };
+		4DBD97FC1888156D00C71747 /* movie.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97FA1888156D00C71747 /* movie.png */; };
+		4DBD97FD1888156D00C71747 /* movie@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97FB1888156D00C71747 /* movie@2x.png */; };
+		4DBD9800188815FD00C71747 /* padlock.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97FE188815FD00C71747 /* padlock.png */; };
+		4DBD9801188815FD00C71747 /* padlock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97FF188815FD00C71747 /* padlock@2x.png */; };
+		4DBD98041888168400C71747 /* disk.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD98021888168400C71747 /* disk.png */; };
+		4DBD98051888168400C71747 /* disk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD98031888168400C71747 /* disk@2x.png */; };
+		4DBD981018882A0600C71747 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBD980818882A0600C71747 /* GCDWebServer.m */; };
+		4DBD981118882A0600C71747 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBD980A18882A0600C71747 /* GCDWebServerConnection.m */; };
+		4DBD981218882A0600C71747 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBD980D18882A0600C71747 /* GCDWebServerRequest.m */; };
+		4DBD981318882A0600C71747 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBD980F18882A0600C71747 /* GCDWebServerResponse.m */; };
+		4DBD981618882FA100C71747 /* FFWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBD981518882FA100C71747 /* FFWebServer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,6 +205,25 @@
 		1FE5F8ED1883930D00CB4C09 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4D0165C218856D650031DC71 /* FFInternalMoviePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFInternalMoviePlayerController.h; path = GUI/FFInternalMoviePlayerController.h; sourceTree = "<group>"; };
 		4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFInternalMoviePlayerController.m; path = GUI/FFInternalMoviePlayerController.m; sourceTree = "<group>"; };
+		4DBD97F6188814D000C71747 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folder.png; path = Resource/folder.png; sourceTree = "<group>"; };
+		4DBD97F7188814D000C71747 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resource/folder@2x.png"; sourceTree = "<group>"; };
+		4DBD97FA1888156D00C71747 /* movie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = movie.png; path = Resource/movie.png; sourceTree = "<group>"; };
+		4DBD97FB1888156D00C71747 /* movie@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "movie@2x.png"; path = "Resource/movie@2x.png"; sourceTree = "<group>"; };
+		4DBD97FE188815FD00C71747 /* padlock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = padlock.png; path = Resource/padlock.png; sourceTree = "<group>"; };
+		4DBD97FF188815FD00C71747 /* padlock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "padlock@2x.png"; path = "Resource/padlock@2x.png"; sourceTree = "<group>"; };
+		4DBD98021888168400C71747 /* disk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = disk.png; path = Resource/disk.png; sourceTree = "<group>"; };
+		4DBD98031888168400C71747 /* disk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disk@2x.png"; path = "Resource/disk@2x.png"; sourceTree = "<group>"; };
+		4DBD980718882A0600C71747 /* GCDWebServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDWebServer.h; path = OtherLibs/CGDWebServer/GCDWebServer.h; sourceTree = "<group>"; };
+		4DBD980818882A0600C71747 /* GCDWebServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDWebServer.m; path = OtherLibs/CGDWebServer/GCDWebServer.m; sourceTree = "<group>"; };
+		4DBD980918882A0600C71747 /* GCDWebServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDWebServerConnection.h; path = OtherLibs/CGDWebServer/GCDWebServerConnection.h; sourceTree = "<group>"; };
+		4DBD980A18882A0600C71747 /* GCDWebServerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerConnection.m; path = OtherLibs/CGDWebServer/GCDWebServerConnection.m; sourceTree = "<group>"; };
+		4DBD980B18882A0600C71747 /* GCDWebServerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDWebServerPrivate.h; path = OtherLibs/CGDWebServer/GCDWebServerPrivate.h; sourceTree = "<group>"; };
+		4DBD980C18882A0600C71747 /* GCDWebServerRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDWebServerRequest.h; path = OtherLibs/CGDWebServer/GCDWebServerRequest.h; sourceTree = "<group>"; };
+		4DBD980D18882A0600C71747 /* GCDWebServerRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerRequest.m; path = OtherLibs/CGDWebServer/GCDWebServerRequest.m; sourceTree = "<group>"; };
+		4DBD980E18882A0600C71747 /* GCDWebServerResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDWebServerResponse.h; path = OtherLibs/CGDWebServer/GCDWebServerResponse.h; sourceTree = "<group>"; };
+		4DBD980F18882A0600C71747 /* GCDWebServerResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerResponse.m; path = OtherLibs/CGDWebServer/GCDWebServerResponse.m; sourceTree = "<group>"; };
+		4DBD981418882FA100C71747 /* FFWebServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFWebServer.h; path = Module/FFWebServer.h; sourceTree = "<group>"; };
+		4DBD981518882FA100C71747 /* FFWebServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFWebServer.m; path = Module/FFWebServer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,6 +289,8 @@
 				1FC071881884CDAE00ED63E8 /* FFHelper.m */,
 				1FC071A81884FCC200ED63E8 /* FFPlayer.h */,
 				1FC071A91884FCC200ED63E8 /* FFPlayer.m */,
+				4DBD981418882FA100C71747 /* FFWebServer.h */,
+				4DBD981518882FA100C71747 /* FFWebServer.m */,
 			);
 			name = Module;
 			sourceTree = "<group>";
@@ -264,6 +298,7 @@
 		1FC0718A1884FC3B00ED63E8 /* OtherLibs */ = {
 			isa = PBXGroup;
 			children = (
+				4DBD9806188829F800C71747 /* CGDWebServer */,
 				1FC071AB18850CF800ED63E8 /* ALMoviePlayerController */,
 				1FC0718B1884FC4800ED63E8 /* AFNetworking */,
 			);
@@ -312,6 +347,14 @@
 		1FC071B81885361E00ED63E8 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				4DBD98021888168400C71747 /* disk.png */,
+				4DBD98031888168400C71747 /* disk@2x.png */,
+				4DBD97FE188815FD00C71747 /* padlock.png */,
+				4DBD97FF188815FD00C71747 /* padlock@2x.png */,
+				4DBD97FA1888156D00C71747 /* movie.png */,
+				4DBD97FB1888156D00C71747 /* movie@2x.png */,
+				4DBD97F6188814D000C71747 /* folder.png */,
+				4DBD97F7188814D000C71747 /* folder@2x.png */,
 				1FC071D91886508200ED63E8 /* movieNext.png */,
 				1FC071DA1886508200ED63E8 /* movieNext@2x.png */,
 				1FC071DB1886508200ED63E8 /* moviePrev.png */,
@@ -442,6 +485,22 @@
 			name = kxmovie;
 			sourceTree = "<group>";
 		};
+		4DBD9806188829F800C71747 /* CGDWebServer */ = {
+			isa = PBXGroup;
+			children = (
+				4DBD980718882A0600C71747 /* GCDWebServer.h */,
+				4DBD980818882A0600C71747 /* GCDWebServer.m */,
+				4DBD980918882A0600C71747 /* GCDWebServerConnection.h */,
+				4DBD980A18882A0600C71747 /* GCDWebServerConnection.m */,
+				4DBD980B18882A0600C71747 /* GCDWebServerPrivate.h */,
+				4DBD980C18882A0600C71747 /* GCDWebServerRequest.h */,
+				4DBD980D18882A0600C71747 /* GCDWebServerRequest.m */,
+				4DBD980E18882A0600C71747 /* GCDWebServerResponse.h */,
+				4DBD980F18882A0600C71747 /* GCDWebServerResponse.m */,
+			);
+			name = CGDWebServer;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -524,6 +583,7 @@
 			files = (
 				1FC071CF1885366D00ED63E8 /* movieForward.png in Resources */,
 				1FC071DD1886508200ED63E8 /* movieNext.png in Resources */,
+				4DBD97FC1888156D00C71747 /* movie.png in Resources */,
 				1FC071D21885366D00ED63E8 /* movieForwardSelected@2x.png in Resources */,
 				1FC071D71885366D00ED63E8 /* moviePlay.png in Resources */,
 				1FE5F8871883891D00CB4C09 /* Main_iPad.storyboard in Resources */,
@@ -532,16 +592,23 @@
 				1FC071D81885366D00ED63E8 /* moviePlay@2x.png in Resources */,
 				1FC071D11885366D00ED63E8 /* movieForwardSelected.png in Resources */,
 				1FE5F88F1883891D00CB4C09 /* Images.xcassets in Resources */,
+				4DBD9801188815FD00C71747 /* padlock@2x.png in Resources */,
 				1FC071CD1885366D00ED63E8 /* movieEndFullscreen.png in Resources */,
 				1FC071CA1885366D00ED63E8 /* movieBackward@2x.png in Resources */,
 				1FC071DF1886508200ED63E8 /* moviePrev.png in Resources */,
+				4DBD98041888168400C71747 /* disk.png in Resources */,
 				1FC071D01885366D00ED63E8 /* movieForward@2x.png in Resources */,
 				1FC071D31885366D00ED63E8 /* movieFullscreen.png in Resources */,
 				1FC071CB1885366D00ED63E8 /* movieBackwardSelected.png in Resources */,
+				4DBD98051888168400C71747 /* disk@2x.png in Resources */,
+				4DBD97F9188814D000C71747 /* folder@2x.png in Resources */,
 				1FC071C91885366D00ED63E8 /* movieBackward.png in Resources */,
 				1FC071CC1885366D00ED63E8 /* movieBackwardSelected@2x.png in Resources */,
 				1FE5F8841883891D00CB4C09 /* Main_iPhone.storyboard in Resources */,
+				4DBD97FD1888156D00C71747 /* movie@2x.png in Resources */,
+				4DBD97F8188814D000C71747 /* folder.png in Resources */,
 				1FC071E01886508200ED63E8 /* moviePrev@2x.png in Resources */,
+				4DBD9800188815FD00C71747 /* padlock.png in Resources */,
 				1FC071D51885366D00ED63E8 /* moviePause.png in Resources */,
 				1FE5F87B1883891D00CB4C09 /* InfoPlist.strings in Resources */,
 				1FC071CE1885366D00ED63E8 /* movieEndFullscreen@2x.png in Resources */,
@@ -569,6 +636,7 @@
 				1FC071851884C82600ED63E8 /* FFLocalViewController.m in Sources */,
 				1FC071A31884FC6600ED63E8 /* AFSecurityPolicy.m in Sources */,
 				4D0165C418856D650031DC71 /* FFInternalMoviePlayerController.m in Sources */,
+				4DBD981018882A0600C71747 /* GCDWebServer.m in Sources */,
 				1FE5F8B618838DA700CB4C09 /* KxAudioManager.m in Sources */,
 				1FC071B7188518D900ED63E8 /* FFMovieViewController.m in Sources */,
 				1FC071B418850D1F00ED63E8 /* ALMoviePlayerControls.m in Sources */,
@@ -580,16 +648,20 @@
 				1FE5F8BA18838DA700CB4C09 /* KxMovieViewController.m in Sources */,
 				1FC071AA1884FCC200ED63E8 /* FFPlayer.m in Sources */,
 				1FC071A71884FC6600ED63E8 /* AFURLSessionManager.m in Sources */,
+				4DBD981318882A0600C71747 /* GCDWebServerResponse.m in Sources */,
+				4DBD981618882FA100C71747 /* FFWebServer.m in Sources */,
 				1FC071A61884FC6600ED63E8 /* AFURLResponseSerialization.m in Sources */,
 				1FC071821883F36D00ED63E8 /* FFSettingViewController.m in Sources */,
 				1FC071B218850D1F00ED63E8 /* ALAirplayView.m in Sources */,
 				1FE5F8B918838DA700CB4C09 /* KxMovieGLView.m in Sources */,
 				1FC071A51884FC6600ED63E8 /* AFURLRequestSerialization.m in Sources */,
+				4DBD981118882A0600C71747 /* GCDWebServerConnection.m in Sources */,
 				1FC071A21884FC6600ED63E8 /* AFNetworkReachabilityManager.m in Sources */,
 				1FC071E31887B68A00ED63E8 /* FFTabViewController.m in Sources */,
 				1FE5F8B818838DA700CB4C09 /* KxMovieDecoder.m in Sources */,
 				1FC0719F1884FC6600ED63E8 /* AFHTTPRequestOperation.m in Sources */,
 				1FC071A11884FC6600ED63E8 /* AFHTTPSessionManager.m in Sources */,
+				4DBD981218882A0600C71747 /* GCDWebServerRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,16 +9,27 @@
 #import "FFSettingViewController.h"
 #import "FFHelper.h"
 #import "FFAlertView.h"
+#import "GCDWebServer.h"
+
+//https://github.com/swisspol/GCDWebServer
+//https://github.com/swisspol/ComicFlow
 
 enum {
-    SWITCH_ENABLE_INTERNAL_PLAYER = 0x01,
-    SWITCH_AUTO_PLAY_NEXT = 0x2,
+    SWITCH_ENABLE_INTERNAL_PLAYER,
+    MENU_RESET_PASSWORD,
+    SWITCH_AUTO_PLAY_NEXT,
+    MENU_SORT_TYPE,
+    MENU_SEEK_DELTA,
+    SWITCH_HTTP_UPLOAD,
+    MENU_ABOUT,
 };
 
-@interface FFSettingViewController ()
+@interface FFSettingViewController () <UITextFieldDelegate>
 {
     NSArray *sectionHeader;
     NSArray *sectionCellCount;
+    
+    GCDWebServer* webServer;
 }
 @end
 
@@ -29,13 +40,45 @@ enum {
     self.tabBarItem.title = self.title = self.navigationItem.title = NSLocalizedString(@"Setting", @"Setting title");
 
     sectionHeader = [NSArray arrayWithObjects:NSLocalizedString(@"Global Setting", nil),
+                                        NSLocalizedString(@"Upload", nil),
                                         NSLocalizedString(@"Movie player", nil),
                                         NSLocalizedString(@"Other", nil),
                                     nil];
     
-    sectionCellCount = [NSArray arrayWithObjects:[NSNumber numberWithInt:1 + ([[FFSetting default] unlock] ? 1 : 0) ]
-                                                , [NSNumber numberWithInt:3]
-                                                , [NSNumber numberWithInt:1], nil];
+    
+    webServer = [[GCDWebServer alloc] init];
+    
+    // Add a handler to respond to requests on any URL
+    [webServer addDefaultHandlerForMethod:@"GET"
+                             requestClass:[GCDWebServerRequest class]
+                             processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+                                 
+                                 return [GCDWebServerDataResponse responseWithHTML:@"<html><body><p>Hello World</p></body></html>"];
+                                 
+                             }];
+}
+
+-(void) reloadSetting
+{
+    NSMutableArray * aryGlobal = [@[ @(SWITCH_ENABLE_INTERNAL_PLAYER)
+                                
+                                ] mutableCopy];
+    
+    NSMutableArray * aryUpload = [@[ @(SWITCH_HTTP_UPLOAD)
+                                    ] mutableCopy];
+
+    NSMutableArray * aryMovie = [@[ @(SWITCH_AUTO_PLAY_NEXT)
+                                ,@(MENU_SORT_TYPE)
+                                ,@(MENU_SEEK_DELTA)
+                                ] mutableCopy];
+    NSMutableArray * aryOther = [@[ @(MENU_ABOUT)
+                                ] mutableCopy];
+    
+    if ( [[FFSetting default] unlock] )
+        [aryGlobal addObject:@(MENU_RESET_PASSWORD)];
+    
+    sectionCellCount = @[ aryGlobal, aryUpload, aryMovie, aryOther ];
+    [self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -45,7 +88,7 @@ enum {
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [(NSNumber *)sectionCellCount[section] integerValue];
+    return [(NSArray *)sectionCellCount[section] count];
 }
 
 +(NSString *)getSortString:(int)type
@@ -76,43 +119,71 @@ enum {
     cell.accessoryView = switchview;
 }
 
+-(void) addInputToCell:(UITableViewCell *)cell placeHolder:(NSString *)str withTag:(int)tag inFrame:(CGRect)rect
+{
+    UITextField *txtField=[[UITextField alloc]initWithFrame:rect];
+    txtField.tag = tag;
+    txtField.delegate = self;
+    txtField.enablesReturnKeyAutomatically = YES;
+    txtField.returnKeyType = UIReturnKeyDone;
+    txtField.autoresizingMask=UIViewAutoresizingFlexibleHeight;
+    txtField.autoresizesSubviews=YES;
+    txtField.layer.cornerRadius=10.0;
+    [txtField setBorderStyle:UITextBorderStyleRoundedRect];
+    [txtField setPlaceholder:str];
+    [cell.contentView addSubview:txtField];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
     cell = [tableView dequeueReusableCellWithIdentifier:@"SettingItem" forIndexPath:indexPath];
     FFSetting * setting = [FFSetting default];
-    
-    switch (indexPath.section) {
-        case 0:
-            if (indexPath.row == 0) {
-                cell.textLabel.text = NSLocalizedString(@"Enable internal player", nil);
-                [self addSwitchToCell:cell withTag:SWITCH_ENABLE_INTERNAL_PLAYER withValue:[setting enableInternalPlayer]];
-            } else if ( indexPath.row == 1 ) {
-                cell.textLabel.text = NSLocalizedString(@"Reset password", nil);
-                cell.detailTextLabel.text = nil;
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            }
-            break;
-        case 1:
-            if (indexPath.row == 0) {
-                cell.textLabel.text = NSLocalizedString(@"Auto play next", nil);
-                [self addSwitchToCell:cell withTag:SWITCH_AUTO_PLAY_NEXT withValue:[setting autoPlayNext]];
-            } else if (indexPath.row == 1) {
-                cell.textLabel.text = NSLocalizedString(@"Sort", nil);
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                cell.detailTextLabel.text = [FFSettingViewController getSortString:[setting sortType]];
-            } else if (indexPath.row == 2) {
-                cell.textLabel.text = NSLocalizedString(@"Seek delta", nil);
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%d(%@)",  [setting seekDelta], NSLocalizedString(@"sec",nil)];
-            }
-            break;
-        case 2:
-            if ( indexPath.row == 0 ) {
-                cell.textLabel.text = NSLocalizedString(@"Reset password", nil);
-                cell.detailTextLabel.text = nil;
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            }
+    NSArray * sec = sectionCellCount[indexPath.section];
+    NSNumber * nID = sec[indexPath.row];
+    switch ( [nID intValue] ) {
+        case SWITCH_ENABLE_INTERNAL_PLAYER: {
+            cell.textLabel.text = NSLocalizedString(@"Enable internal player", nil);
+            [self addSwitchToCell:cell withTag:SWITCH_ENABLE_INTERNAL_PLAYER withValue:[setting enableInternalPlayer]];
+        } break;
+
+        case MENU_RESET_PASSWORD: {
+            cell.textLabel.text = NSLocalizedString(@"Reset password", nil);
+            cell.detailTextLabel.text = nil;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        } break;
+
+        case SWITCH_HTTP_UPLOAD: {
+            cell.textLabel.text = NSLocalizedString(@"Open Web Server for upload", nil);
+            [self addSwitchToCell:cell withTag:SWITCH_HTTP_UPLOAD withValue:[webServer isRunning]];
+            [self addInputToCell:cell placeHolder:@"Port:8080" withTag:SWITCH_HTTP_UPLOAD inFrame:CGRectMake( 265, 3, 80, 38)];
+        } break;
+            
+        case SWITCH_AUTO_PLAY_NEXT: {
+            cell.textLabel.text = NSLocalizedString(@"Auto play next", nil);
+            [self addSwitchToCell:cell withTag:SWITCH_AUTO_PLAY_NEXT withValue:[setting autoPlayNext]];
+            
+        } break;
+            
+        case MENU_SORT_TYPE:{
+            cell.textLabel.text = NSLocalizedString(@"Sort", nil);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.detailTextLabel.text = [FFSettingViewController getSortString:[setting sortType]];
+        } break;
+            
+        case MENU_SEEK_DELTA: {
+            cell.textLabel.text = NSLocalizedString(@"Seek delta", nil);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d(%@)",  [setting seekDelta], NSLocalizedString(@"sec",nil)];
+        } break;
+            
+        case MENU_ABOUT: {
+            cell.textLabel.text = NSLocalizedString(@"About", nil);
+            cell.detailTextLabel.text = nil;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        } break;
+            
+        default:
             break;
     }
     
@@ -142,6 +213,13 @@ enum {
             break;
         case SWITCH_AUTO_PLAY_NEXT:
             [setting setAutoPlayNext:[aswitch isOn]];
+            break;
+        case SWITCH_HTTP_UPLOAD:
+            // Use convenience method that runs server on port 8080 until SIGINT received
+            if ( [aswitch isOn] )
+                [webServer runWithPort:8080];
+            else
+                [webServer stop];
             break;
         default:
             break;
@@ -194,14 +272,14 @@ enum {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    switch (indexPath.section) {
-        case 0:
-            if ( indexPath.row == 1 && [[FFSetting default] unlock] ) { //reset password
+    NSArray * sec = sectionCellCount[indexPath.section];
+    NSNumber * nID = sec[indexPath.row];
+    switch ( [nID intValue] ) {
+        case MENU_RESET_PASSWORD:
+            if ( [[FFSetting default] unlock] ) { //reset password
                 [self resetPassword];
-            }
-            break;
-        case 1:
-            if ( indexPath.row == 1 ) {
+            } break;
+        case MENU_SORT_TYPE: {
                 [FFAlertView showWithTitle:NSLocalizedString(@"Sort Type", nil)
                                    message:NSLocalizedString(@"Select sort type.", nil)
                                defaultText:nil
@@ -221,7 +299,9 @@ enum {
                                             ,NSLocalizedString(@"By Date Desc", nil)
                                             ,NSLocalizedString(@"Randon", nil)
                                     , nil];
-            } else if ( indexPath.row == 2 ) {
+        }break;
+            
+        case MENU_SEEK_DELTA: {
                 [FFAlertView showWithTitle:NSLocalizedString(@"Seek delta seconds", nil)
                                    message:nil
                                defaultText:nil
@@ -242,18 +322,39 @@ enum {
                                             ,NSLocalizedString(@"20(s)", nil)
                                             ,NSLocalizedString(@"60(s)", nil)
                                     , nil];
-            }
-            break;
-        case 2:
-            if ( indexPath.row == 0 ) {
-            }
+            } break;
+        default:
             break;
     }
 }
 
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if ( textField.tag == SWITCH_HTTP_UPLOAD ) {
+        
+    }
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    return TRUE;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    NSLog(@"%d", textField.tag);
+    NSInteger nextTag = textField.tag + 1;
+    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
+    if (nextResponder) {
+        [nextResponder becomeFirstResponder];
+    } else {
+        [textField resignFirstResponder];
+    }
+    return YES;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.tableView reloadData]; // to reload selected cell
+    [self reloadSetting]; // to reload selected cell
 }
 
 - (void)didReceiveMemoryWarning
