@@ -12,25 +12,40 @@
 #import "FFPlayer.h"
 #import "FFAlertView.h"
 
+typedef enum {
+    LIT_PARENT,
+    LIT_SECRETE,
+    LIT_DIR,
+    LIT_FOLDER_DEF_END,
+    
+    LIT_MIDEA,
+    LIT_PIC,
+    LIT_ZIP,
+    LIT_UNKNOWN
+} LOCAL_ITEM_TYPE;
+
 @interface FFLocalItem : NSObject
 @property (retain,atomic)   NSString *  fullPath;
 @property (retain,atomic)   NSString *  fileName;
 @property (retain,atomic)   NSDate *    modifyTime;
 @property (assign)  unsigned long long  size;
-@property (assign)   BOOL   isDir;
--(id) initWithPath:(NSString *)strPath isDir:(BOOL)isDir;
+@property (assign)  LOCAL_ITEM_TYPE     type;
+@property (readonly, getter = isDir)   BOOL   isDir;
+@property (readonly, getter = sortNameHelper)   int    sortNameHelper;
+@property (readonly)  BOOL          editable;
+-(id) initWithPath:(NSString *)strPath type:(LOCAL_ITEM_TYPE)type;
 -(id) initWithAttributes:(NSDictionary *) attrs path:(NSString *)strPath;
 @end
 
 @implementation FFLocalItem
 
--(id) initWithPath:(NSString *)strPath isDir:(BOOL)isDir
+-(id) initWithPath:(NSString *)strPath type:(LOCAL_ITEM_TYPE)type
 {
     self = [super init];
     if ( self ) {
         self.fullPath = strPath;
         self.fileName = [[strPath pathComponents] lastObject];
-        self.isDir = isDir;
+        self.type = type;
         self.size = 0;
         self.modifyTime = nil;
     }
@@ -45,11 +60,33 @@
         
         self.fullPath = strPath;
         self.fileName = [[strPath pathComponents] lastObject];
-        self.isDir = [fileType isEqual:NSFileTypeDirectory];
+        if ([fileType isEqual:NSFileTypeDirectory] )
+            self.type = LIT_DIR;
+        else if (  [FFHelper isSupportMidea:strPath] )
+            self.type = LIT_MIDEA;
+        else
+            self.type = LIT_UNKNOWN;
+        
         self.size = [[attr valueForKey:NSFileSize] longLongValue];
         self.modifyTime = [attr valueForKey:NSFileModificationDate];
     }
     return self;
+}
+
+-(BOOL) isDir{
+    return self.type < LIT_FOLDER_DEF_END;
+}
+
+-(int) sortNameHelper {
+    if ( self.type > LIT_FOLDER_DEF_END )
+        return LIT_FOLDER_DEF_END;
+    return self.type;
+}
+
+-(BOOL) editable {
+    return self.type != LIT_PARENT
+        && self.type != LIT_SECRETE
+        && self.fullPath != nil;
 }
 
 @end
@@ -63,6 +100,9 @@
     UIBarButtonItem *           btnEdit;
     UIBarButtonItem *           btnDone;
     FFPlayer *                  _ffplayer;
+    
+    NSArray *                   itemToMove;
+    BOOL                        currentInLock;
 }
 @end
 
@@ -77,15 +117,29 @@
     return self;
 }
 
+-(void) switchToSelectFolderAndMoveItems:(NSArray *)aryItemToMove
+{
+    itemToMove = aryItemToMove;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
-    self.tabBarItem.title = self.title = self.navigationItem.title = NSLocalizedString(@"Local", @"Local Files");
+    [[NSFileManager defaultManager] createDirectoryAtPath:[self getSecretRootPath] withIntermediateDirectories:NO attributes:nil error:nil];
 
-    btnEdit = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(switchEditMode:)];
-    btnDone = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(switchEditMode:)];
-    self.navigationItem.rightBarButtonItem = btnEdit;
+    if ( itemToMove != nil ) {
+        self.title = self.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"Move to %@", nil), _currentPath == nil ? @"/" : _currentPath];
+        btnEdit = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(exitMove:)];
+        btnDone = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(switchEditMode:)];
+        self.navigationItem.rightBarButtonItem = btnDone;
+        self.navigationItem.leftBarButtonItem = btnEdit;
+    } else {
+        self.title = self.navigationItem.title = NSLocalizedString(@"Local", @"Local Files");
+        btnEdit = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(switchEditMode:)];
+        btnDone = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(switchEditMode:)];
+        self.navigationItem.rightBarButtonItem = btnEdit;
+    }
 
     self.tableView.allowsSelectionDuringEditing = YES;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
@@ -120,7 +174,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     [self reloadMovies];
 }
 
@@ -132,9 +185,17 @@
     return root;
 }
 
+-(NSString *) getSecretRootPath
+{
+    NSString * root = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,
+                                                           NSUserDomainMask,
+                                                           YES) lastObject];
+    return [root stringByAppendingPathComponent:@"private"];
+}
+
 -(NSString *) getCurrentFullPath
 {
-    NSString * root = [self getRootFullPath];
+    NSString * root = currentInLock ? [self getSecretRootPath] : [self getRootFullPath];
     if ( _currentPath != nil && _currentPath.length > 0 ) {
         root = [root stringByAppendingPathComponent:_currentPath];
     }
@@ -148,8 +209,11 @@
     NSString *folder = [self getCurrentFullPath];
     
     if ( _currentPath != nil && _currentPath.length > 0 ) {
-        [ma addObject:[[FFLocalItem alloc] initWithPath:nil isDir:YES]];
-    }
+        [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_PARENT]];
+    } else if ( !currentInLock && [[FFSetting default] unlock] ) {
+        [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_SECRETE]];
+    } else if ( currentInLock )
+        [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_PARENT]];
     
     NSArray *contents = [fm contentsOfDirectoryAtPath:folder error:nil];
     
@@ -176,8 +240,8 @@
     }
     
     NSMutableArray * arySort = [[NSMutableArray alloc] init];
-    [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"isDir" ascending:NO]];
-    int nSort = [[[FFSetting alloc] init] sortType];
+    [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"sortNameHelper" ascending:YES]];
+    int nSort = [[FFSetting default] sortType];
     if ( nSort == SORT_BY_DATE || nSort == SORT_BY_DATE_DESC )
         [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"modifyTime" ascending:(nSort == SORT_BY_DATE)]];
     else if ( nSort == SORT_BY_NAME || nSort == SORT_BY_NAME_DESC )
@@ -186,19 +250,69 @@
     _localMovies = [[ma sortedArrayUsingDescriptors:arySort] copy];
 
     NSString * strTitle = nil;
-    if ( _currentPath == nil )
-        strTitle = NSLocalizedString(@"Local", @"Local Files");
-    else
-        strTitle = _currentPath;
-    self.tabBarItem.title = self.title = self.navigationItem.title = strTitle;
+    if ( itemToMove != nil ) {
+        if ( currentInLock )
+            strTitle = [NSString stringWithFormat:NSLocalizedString(@"Move to %@ (Secret)", nil), _currentPath == nil ? @"/" : _currentPath];
+        else
+            strTitle = [NSString stringWithFormat:NSLocalizedString(@"Move to %@", nil), _currentPath == nil ? @"/" : _currentPath];
+    } else    {
+        if ( _currentPath == nil ) {
+            if ( currentInLock )
+                strTitle = NSLocalizedString(@"Secret", nil);
+            else
+                strTitle = NSLocalizedString(@"Local", @"Local Files");
+        } else {
+            if ( currentInLock )
+                strTitle = [NSString stringWithFormat:@"%@ (%@)", _currentPath, NSLocalizedString(@"Secret", nil)];
+            else
+                strTitle = _currentPath;
+        }
+    }
+    self.title = self.navigationItem.title = strTitle;
     [self.tableView reloadData];
 }
 
 -(void) switchEditMode:(id)sender
 {
-    self.tableView.editing = !self.tableView.editing;
-    self.navigationItem.rightBarButtonItem = self.tableView.editing ? btnDone : btnEdit;
-    [self.navigationController setToolbarHidden:!self.tableView.editing];
+    if ( itemToMove != nil ) {
+        //Check taget is the same as select items;
+        FFLocalItem * item1 = [itemToMove firstObject];
+        NSString * strSrcPath = [item1.fullPath stringByDeletingLastPathComponent];
+        NSString * strTarPath = [self getCurrentFullPath];
+        if ( ![strTarPath isEqualToString:strSrcPath] ) {
+            NSFileManager * mgr = [NSFileManager defaultManager];
+            NSMutableArray * aryFailList = [[NSMutableArray alloc] init];
+            for (FFLocalItem * item in itemToMove) {
+                NSString * targetFull = [strTarPath stringByAppendingPathComponent:item.fileName];
+                if ( ![mgr moveItemAtPath:item.fullPath toPath:targetFull error:nil] ) {
+                    [aryFailList addObject:item.fileName];
+                }
+            }
+            [self exitMove:sender];
+            if ( aryFailList.count > 0 ) {
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
+                                            message:[NSString stringWithFormat:NSLocalizedString(@"Move %@ fail!", nil), [aryFailList componentsJoinedByString:@","]]
+                                           delegate:nil
+                                  cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                                  otherButtonTitles:nil] show];
+            }
+        }
+    } else {
+        self.tableView.editing = !self.tableView.editing;
+        self.navigationItem.rightBarButtonItem = self.tableView.editing ? btnDone : btnEdit;
+        [self.navigationController setToolbarHidden:!self.tableView.editing];
+    }
+}
+
+-(void) exitMove:(id)sender
+{
+    if ( itemToMove == nil )
+        return;
+    [self.navigationController setToolbarHidden:NO];
+    if (self.presentingViewController || !self.navigationController)
+        [self dismissViewControllerAnimated:YES completion:nil];
+    else
+        [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(NSString *)makeSureFileName:(NSString *)str
@@ -243,10 +357,30 @@
      ];
 }
 
+-(NSArray *)getAllSelected
+{
+    NSMutableArray * arySelectedItems = [[NSMutableArray alloc] init];
+    
+    size_t i = 0;
+    for ( FFLocalItem *item in _localMovies ) {
+        if ( item.editable ) {
+            UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            if ( cell.isSelected )
+                [arySelectedItems addObject:item];
+        }
+        ++i;
+    }
+    return arySelectedItems;
+}
+
 -(void) deletItem:(id)sender
 {
+    NSArray * arySelected = [self getAllSelected];
+    if ( arySelected.count == 0 )
+        return;
+    
     __weak FFLocalViewController * weakSelf = self;
-    [FFAlertView showWithTitle:NSLocalizedString(@"Delete Item(s)", nil)
+    [FFAlertView showWithTitle: (( arySelected.count == 1 ) ? NSLocalizedString(@"Delete Item ?", nil) : NSLocalizedString(@"Delete Items ?", nil))
                        message:nil
                    defaultText:nil
                          style:UIAlertViewStyleDefault
@@ -255,19 +389,14 @@
                             return;
                         FFLocalViewController * strongSelf = weakSelf;
                         NSFileManager * mgr = [NSFileManager defaultManager];
-                        size_t i = 0;
-                        for ( FFLocalItem *item in _localMovies ) {
-                            if ( item.fullPath != nil ) {
-                                UITableViewCell * cell = [strongSelf.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                                if ( cell.isSelected && ![mgr removeItemAtPath:item.fullPath error:nil] ) {
+                        for ( FFLocalItem *item in arySelected ) {
+                                if ( ![mgr removeItemAtPath:item.fullPath error:nil] ) {
                                     [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
                                                                 message:[NSString stringWithFormat:NSLocalizedString(@"Delete %@ fail!", nil),item.fileName]
                                                                delegate:nil
                                                       cancelButtonTitle:NSLocalizedString(@"Close", nil)
                                                       otherButtonTitles:nil] show];
                                 }
-                            }
-                            ++i;
                         }
                         [strongSelf reloadMovies];
                     }
@@ -278,48 +407,58 @@
 
 -(void) editItem:(id)sender
 {
-    __weak FFLocalViewController * weakSelf = self;
-    size_t i = 0;
-    for ( FFLocalItem *item in _localMovies ) {
-        if ( item.fullPath != nil ) {
-            UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            if ( cell.isSelected ) {
-                [FFAlertView showWithTitle:NSLocalizedString(@"Modify name", nil)
-                                   message:nil
-                               defaultText:item.fileName
-                                     style:UIAlertViewStylePlainTextInput
-                                usingBlock:^(NSUInteger btn, NSString * folder) {
-                                    if ( btn == 0 )
-                                        return;
-                                    NSString * strTrimPath = [self makeSureFileName:folder];
-                                    if ( !strTrimPath || [strTrimPath isEqualToString:item.fileName] )
-                                        return;
-                                    NSString * strNewPath = [[self getCurrentFullPath] stringByAppendingPathComponent:strTrimPath];
-                                    NSFileManager * mgr = [NSFileManager defaultManager];
-                                    if ( ![mgr moveItemAtPath:item.fullPath toPath:strNewPath error:nil] ) {
-                                        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
-                                                                    message:[NSString stringWithFormat:NSLocalizedString(@"Rename %@ -> %@ fail!", nil),item.fileName, strTrimPath]
-                                                                   delegate:nil
-                                                          cancelButtonTitle:NSLocalizedString(@"Close", nil)
-                                                          otherButtonTitles:nil] show];
-                                    } else {
-                                        FFLocalViewController * strongSelf = weakSelf;
-                                        [strongSelf reloadMovies];
-                                    }
-                                }
-                         cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-                         otherButtonTitles:NSLocalizedString(@"Modify", nil), nil
-                 ];
-                break;
-            }
-        }
-        ++i;
+    NSArray * arySelected = [self getAllSelected];
+    if ( arySelected.count == 0 )
+        return;
+    else if ( arySelected.count > 1 ) {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
+                                    message:NSLocalizedString(@"Only support rename one file/directory!", nil)
+                                   delegate:nil
+                          cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                          otherButtonTitles:nil] show];
+        return;
     }
+
+    __weak FFLocalViewController * weakSelf = self;
+    FFLocalItem *item = [arySelected firstObject];
+    [FFAlertView showWithTitle:NSLocalizedString(@"Modify name", nil)
+                       message:nil
+                   defaultText:item.fileName
+                         style:UIAlertViewStylePlainTextInput
+                    usingBlock:^(NSUInteger btn, NSString * folder) {
+                            if ( btn == 0 )
+                                return;
+                            NSString * strTrimPath = [self makeSureFileName:folder];
+                            if ( !strTrimPath || [strTrimPath isEqualToString:item.fileName] )
+                                return;
+                            NSString * strNewPath = [[self getCurrentFullPath] stringByAppendingPathComponent:strTrimPath];
+                            NSFileManager * mgr = [NSFileManager defaultManager];
+                            if ( ![mgr moveItemAtPath:item.fullPath toPath:strNewPath error:nil] ) {
+                                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
+                                                            message:[NSString stringWithFormat:NSLocalizedString(@"Rename %@ -> %@ fail!", nil),item.fileName, strTrimPath]
+                                                           delegate:nil
+                                                  cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                                                  otherButtonTitles:nil] show];
+                            } else {
+                                FFLocalViewController * strongSelf = weakSelf;
+                                [strongSelf reloadMovies];
+                            }
+                        }
+            cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+             otherButtonTitles:NSLocalizedString(@"Modify", nil), nil
+    ];
 }
 
 -(void) moveItem:(id)sender
 {
-    
+    NSArray * arySelected = [self getAllSelected];
+    if ( arySelected.count == 0 )
+        return;
+
+    FFLocalViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"LocalFile"];
+    [vc switchToSelectFolderAndMoveItems:arySelected];
+    [self.navigationController setToolbarHidden:YES];
+    [self.navigationController pushViewController:vc animated:TRUE];
 }
 
 #pragma mark - Table view data source
@@ -338,7 +477,8 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return UITableViewCellEditingStyleDelete;
+    FFLocalItem * item = _localMovies[indexPath.row];
+	return item.editable ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -348,13 +488,28 @@
     
     // Configure the cell...
     FFLocalItem * item = _localMovies[indexPath.row];
+    
     if ( item.isDir ) {
-        NSString * strPath = ( item.fullPath == nil )
-                                ? NSLocalizedString(@"Parent", nil)
-                                : item.fileName;
+        
+        NSString * strPath = item.fileName;
+        if ( item.type == LIT_PARENT )
+            strPath = NSLocalizedString(@"Parent", nil);
+        else if ( item.type == LIT_SECRETE )
+            strPath = NSLocalizedString(@"Secret", nil);
+        
         cell.textLabel.text = [NSString stringWithFormat:@"[%@]", strPath];
         cell.textLabel.font = [UIFont boldSystemFontOfSize:20];
         cell.detailTextLabel.text = nil;
+        cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor blackColor];
+        
+        if ( item.type == LIT_DIR && itemToMove != nil )  {   //in Moveing mode
+            for (FFLocalItem * check in itemToMove) {
+                if ( [check.fullPath isEqualToString:item.fullPath] ) {
+                    cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor grayColor];
+                    break;
+                }
+            }
+        }
     } else {
         cell.textLabel.text = item.fileName;
 
@@ -365,6 +520,12 @@
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];
         
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@", [dateFormatter stringFromDate:item.modifyTime], [byteCountFormatter stringFromByteCount:item.size]];
+        
+        if ( itemToMove != nil )  {   //in Moveing mode
+            cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor grayColor];
+        } else {
+            cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor blackColor];
+        }
     }
     return cell;
 }
@@ -376,36 +537,107 @@
     } else {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         FFLocalItem * item = _localMovies[indexPath.row];
-        if ( item.isDir ) {
-            if ( item.fullPath == nil ) {
-                NSMutableArray * aryHistory = [[_currentPath pathComponents] mutableCopy];
-                [aryHistory removeLastObject];
-                if ( [aryHistory count] == 0 )
-                    _currentPath = nil;
-                else
-                    _currentPath = [aryHistory componentsJoinedByString:@"/"];
-            } else {
+        switch (item.type) {
+            case LIT_PARENT:
+            {
+                if ( _currentPath == nil && currentInLock ) {
+                    currentInLock = FALSE;
+                } else {
+                    _currentPath = [_currentPath stringByDeletingLastPathComponent];
+                    if ( _currentPath.length == 0 )
+                        _currentPath = nil;
+                }
+                [self reloadMovies];
+            }break;
+            case LIT_SECRETE:
+            {
+                currentInLock = YES;
+                [self reloadMovies];
+            }break;
+            case LIT_DIR:
+            {
                 if ( _currentPath == nil )
                     _currentPath = item.fileName;
                 else
                     _currentPath = [_currentPath stringByAppendingPathComponent:item.fileName];
-            }
-            [self reloadMovies];
-        } else {
-            NSMutableArray  * aryList = [[NSMutableArray alloc] init];
-            int index = 0, i = 0;
-            for ( FFLocalItem * it in _localMovies) {
-                if  ( it.isDir )
-                    continue;
-                else if ( it == item )
-                    index = i;
-                [aryList addObject:[[FFPlayItem alloc] initWithPath:it.fullPath position:0.0]];
-                ++i;
+                [self reloadMovies];
+            }break;
+            case LIT_MIDEA:
+            {
+                NSMutableArray  * aryList = [[NSMutableArray alloc] init];
+                int index = 0, i = 0;
+                for ( FFLocalItem * it in _localMovies) {
+                    if  ( it.type != LIT_MIDEA )
+                        continue;
+                    else if ( it == item )
+                        index = i;
+                    [aryList addObject:[[FFPlayItem alloc] initWithPath:it.fullPath position:0.0]];
+                    ++i;
+                }
+                [_ffplayer playList:aryList curIndex:index parent:self];
+            }break;
+            default:
+            {
                 
-            }
-            [_ffplayer playList:aryList curIndex:index parent:self];
-        }
+            }break;
+        };
     }
+}
+
+-(void) unlock:(BOOL) bo
+{
+    [[FFSetting default] setUnlock:bo];
+    if ( !bo && currentInLock ) {
+        currentInLock = FALSE;
+        _currentPath = nil;
+    }
+    [self reloadMovies];
+}
+
+-(void) toggleLock
+{
+    if ( ![[FFSetting default] hasPassword] ) {
+        __weak FFLocalViewController * weakSelf = self;
+        return [FFAlertView inputPassword2: NSLocalizedString(@"Input unlock initial password", nil)
+                            message: NSLocalizedString(@"First input the password.", nil)
+                           message2:NSLocalizedString(@"Confirm the password", nil)
+                         usingBlock:^(BOOL notTheSame,NSString * pass) {
+                             if ( notTheSame ) {
+                                 [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
+                                                             message:NSLocalizedString(@"Password not the same!", nil)
+                                                            delegate:nil
+                                                   cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                                                   otherButtonTitles:nil] show];
+                             } else {
+                                 [[NSFileManager defaultManager] createDirectoryAtPath:[self getSecretRootPath] withIntermediateDirectories:YES attributes:nil error:nil];
+                                 [[FFSetting default] setPassword:pass];
+                                 FFLocalViewController * strongSelf = weakSelf;
+                                 [strongSelf unlock:YES];
+                             }
+                         }
+                  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                     okButtonTitles:NSLocalizedString(@"OK", nil)
+         ];
+    } else if ( [[FFSetting default] unlock] ) {
+        return [self unlock:FALSE];
+    }
+    
+    __weak FFLocalViewController * weakSelf = self;
+    [FFAlertView showWithTitle: NSLocalizedString(@"Input unlock password", nil)
+                       message:nil
+                   defaultText:@""
+                         style:UIAlertViewStyleSecureTextInput
+                    usingBlock:^(NSUInteger btn, NSString * pass) {
+                        if ( btn == 0 || !pass)
+                            return;
+                        else if ( [[FFSetting default] checkPassword:pass] ) {
+                            FFLocalViewController * strongSelf = weakSelf;
+                            return [strongSelf unlock:YES];
+                        }
+                    }
+             cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+             otherButtonTitles:NSLocalizedString(@"Unlock", nil), nil
+     ];
 }
 
 // Override to support conditional editing of the table view.
@@ -413,9 +645,7 @@
 {
     // Return NO if you do not want the specified item to be editable.
     FFLocalItem * item = _localMovies[indexPath.row];
-    if ( item.fullPath == nil )
-        return NO;
-    return YES;
+    return item.editable;
 }
 
 /*

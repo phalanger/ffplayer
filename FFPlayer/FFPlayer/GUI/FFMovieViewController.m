@@ -497,7 +497,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     frameView.contentMode = UIViewContentModeScaleAspectFit;
     frameView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     
-    if ( [[[FFSetting alloc] init] scalingModeFit] )
+    if ( [[FFSetting default] scalingModeFit] )
         frameView.contentMode = UIViewContentModeScaleAspectFit;
     else
         frameView.contentMode = UIViewContentModeScaleAspectFill;

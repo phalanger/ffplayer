@@ -23,4 +23,11 @@ typedef void (^InputBlock)(NSUInteger btn, NSString *);
   cancelButtonTitle:(NSString *)cancelButtonTitle
   otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
++(void) inputPassword2:(NSString *)title
+             message:(NSString *)message
+            message2:(NSString *)message2
+          usingBlock:(void (^)(BOOL notTheSame,NSString * pass)) finalBlock
+   cancelButtonTitle:(NSString *)cancelButtonTitle
+      okButtonTitles:(NSString *)okButtonTitles;
+
 @end

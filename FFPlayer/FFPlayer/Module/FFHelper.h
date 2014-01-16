@@ -15,6 +15,7 @@
 +(BOOL) isInternalPlayerSupport:(NSString *)path;
 + (CGSize)sizeInOrientation:(UIInterfaceOrientation)orientation;
 +(BOOL) isIpad;
++ (NSString *)md5HexDigest:(NSString*)input;
 
 @end
 
@@ -30,6 +31,8 @@ enum SORT_TYPE
 };
 
 @interface FFSetting : NSObject
+
++(FFSetting *)default;
 
 -(id) init;
 
@@ -47,5 +50,15 @@ enum SORT_TYPE
 
 -(BOOL) scalingModeFit;
 -(void) setScalingMode:(int)n;
+
+-(int) lastSelectedTab;
+-(void) setLastSelectedTab:(int)n;
+
+-(BOOL) hasPassword;
+-(BOOL) checkPassword:(NSString *)str;
+-(void) setPassword:(NSString *)str;
+
+-(BOOL) unlock;
+-(void) setUnlock:(BOOL) bo;
 
 @end

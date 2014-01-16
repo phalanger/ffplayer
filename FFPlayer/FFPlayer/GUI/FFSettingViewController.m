@@ -33,7 +33,7 @@ enum {
                                         NSLocalizedString(@"Other", nil),
                                     nil];
     
-    sectionCellCount = [NSArray arrayWithObjects:[NSNumber numberWithInt:1]
+    sectionCellCount = [NSArray arrayWithObjects:[NSNumber numberWithInt:1 + ([[FFSetting default] unlock] ? 1 : 0) ]
                                                 , [NSNumber numberWithInt:3]
                                                 , [NSNumber numberWithInt:1], nil];
 }
@@ -80,13 +80,17 @@ enum {
 {
     UITableViewCell *cell;
     cell = [tableView dequeueReusableCellWithIdentifier:@"SettingItem" forIndexPath:indexPath];
-    FFSetting * setting = [[FFSetting alloc] init];
+    FFSetting * setting = [FFSetting default];
     
     switch (indexPath.section) {
         case 0:
             if (indexPath.row == 0) {
                 cell.textLabel.text = NSLocalizedString(@"Enable internal player", nil);
                 [self addSwitchToCell:cell withTag:SWITCH_ENABLE_INTERNAL_PLAYER withValue:[setting enableInternalPlayer]];
+            } else if ( indexPath.row == 1 ) {
+                cell.textLabel.text = NSLocalizedString(@"Reset password", nil);
+                cell.detailTextLabel.text = nil;
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             }
             break;
         case 1:
@@ -129,7 +133,7 @@ enum {
 - (void)switchChanged:(id)sender {
     
     UISwitch* aswitch = sender;
-    FFSetting * setting = [[FFSetting alloc] init];
+    FFSetting * setting = [FFSetting default];
 
     switch (aswitch.tag)
     {
@@ -144,11 +148,57 @@ enum {
     }
 }
 
+-(void) resetPassword {
+    [FFAlertView inputPassword2: NSLocalizedString(@"Reset password", nil)
+                        message: NSLocalizedString(@"First input the password.", nil)
+                       message2:NSLocalizedString(@"Confirm the password", nil)
+                     usingBlock:^(BOOL notTheSame,NSString * pass) {
+                         if ( notTheSame ) {
+                             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
+                                                         message:NSLocalizedString(@"Password not the same!", nil)
+                                                        delegate:nil
+                                               cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                                               otherButtonTitles:nil] show];
+                         } else {
+                             [[FFSetting default] setPassword:pass];
+                         }
+                     }
+              cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                 okButtonTitles:NSLocalizedString(@"OK", nil)
+     ];
+}
+-(void) checkPasswordBeforeReset
+{
+    __weak FFSettingViewController * weakSelf = self;
+    [FFAlertView showWithTitle:NSLocalizedString(@"Input the old password", nil)
+                       message:nil
+                   defaultText:nil
+                         style:UIAlertViewStyleSecureTextInput
+                    usingBlock:^(NSUInteger btn, NSString * strPass) {
+                        if ( btn == 0 || !strPass)
+                            return;
+                        else if ( ![[FFSetting default] checkPassword:strPass] ) {
+                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
+                                                        message:NSLocalizedString(@"Password error!", nil)
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                                              otherButtonTitles:nil] show];
+                        } else {
+                            [weakSelf resetPassword];
+                        }
+                    }
+             cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+             otherButtonTitles:NSLocalizedString(@"OK", nil), nil];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.section) {
         case 0:
+            if ( indexPath.row == 1 && [[FFSetting default] unlock] ) { //reset password
+                [self resetPassword];
+            }
             break;
         case 1:
             if ( indexPath.row == 1 ) {
@@ -160,7 +210,7 @@ enum {
                                     if ( btn == 0 )
                                         return;
                                     --btn;
-                                    [[[FFSetting alloc] init] setSortType:btn];
+                                    [[FFSetting default] setSortType:btn];
                                     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
                                     cell.detailTextLabel.text = [FFSettingViewController getSortString:btn];
                                 }
@@ -182,7 +232,7 @@ enum {
                                         return;
                                     else
                                         btn = sec[btn];
-                                    [[[FFSetting alloc] init] setSeekDelta:btn];
+                                    [[FFSetting default] setSeekDelta:btn];
                                     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
                                     cell.detailTextLabel.text = [NSString stringWithFormat:@"%d(%@)", btn, NSLocalizedString(@"sec",nil)];
                                 }

@@ -45,6 +45,7 @@
 		1FC071DE1886508200ED63E8 /* movieNext@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071DA1886508200ED63E8 /* movieNext@2x.png */; };
 		1FC071DF1886508200ED63E8 /* moviePrev.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071DB1886508200ED63E8 /* moviePrev.png */; };
 		1FC071E01886508200ED63E8 /* moviePrev@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071DC1886508200ED63E8 /* moviePrev@2x.png */; };
+		1FC071E31887B68A00ED63E8 /* FFTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC071E21887B68A00ED63E8 /* FFTabViewController.m */; };
 		1FE5F8711883891D00CB4C09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8701883891D00CB4C09 /* Foundation.framework */; };
 		1FE5F8731883891D00CB4C09 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8721883891D00CB4C09 /* CoreGraphics.framework */; };
 		1FE5F8751883891D00CB4C09 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8741883891D00CB4C09 /* UIKit.framework */; };
@@ -147,6 +148,8 @@
 		1FC071DA1886508200ED63E8 /* movieNext@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "movieNext@2x.png"; path = "Resource/movieNext@2x.png"; sourceTree = "<group>"; };
 		1FC071DB1886508200ED63E8 /* moviePrev.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moviePrev.png; path = Resource/moviePrev.png; sourceTree = "<group>"; };
 		1FC071DC1886508200ED63E8 /* moviePrev@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "moviePrev@2x.png"; path = "Resource/moviePrev@2x.png"; sourceTree = "<group>"; };
+		1FC071E11887B68A00ED63E8 /* FFTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFTabViewController.h; path = GUI/FFTabViewController.h; sourceTree = "<group>"; };
+		1FC071E21887B68A00ED63E8 /* FFTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFTabViewController.m; path = GUI/FFTabViewController.m; sourceTree = "<group>"; };
 		1FE5F86D1883891D00CB4C09 /* FFPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE5F8701883891D00CB4C09 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1FE5F8721883891D00CB4C09 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -241,6 +244,8 @@
 				1FC071B6188518D900ED63E8 /* FFMovieViewController.m */,
 				4D0165C218856D650031DC71 /* FFInternalMoviePlayerController.h */,
 				4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */,
+				1FC071E11887B68A00ED63E8 /* FFTabViewController.h */,
+				1FC071E21887B68A00ED63E8 /* FFTabViewController.m */,
 			);
 			name = GUI;
 			sourceTree = "<group>";
@@ -581,6 +586,7 @@
 				1FE5F8B918838DA700CB4C09 /* KxMovieGLView.m in Sources */,
 				1FC071A51884FC6600ED63E8 /* AFURLRequestSerialization.m in Sources */,
 				1FC071A21884FC6600ED63E8 /* AFNetworkReachabilityManager.m in Sources */,
+				1FC071E31887B68A00ED63E8 /* FFTabViewController.m in Sources */,
 				1FE5F8B818838DA700CB4C09 /* KxMovieDecoder.m in Sources */,
 				1FC0719F1884FC6600ED63E8 /* AFHTTPRequestOperation.m in Sources */,
 				1FC071A11884FC6600ED63E8 /* AFHTTPSessionManager.m in Sources */,

@@ -73,6 +73,53 @@
     }
 }
 
++(void) inputPassword2_imp:(NSString *)title
+               message:(NSString *)message
+              message2:(NSString *)message2
+            usingBlock:(void (^)(BOOL notTheSame,NSString * pass)) finalBlock
+     cancelButtonTitle:(NSString *)cancelButtonTitle
+        okButtonTitles:(NSString *)okButtonTitles
+          lastPassword:(NSString *)lastPassword
+{
+    [FFAlertView showWithTitle: title
+                       message: lastPassword == nil ? message : message2
+                   defaultText:@""
+                         style:UIAlertViewStyleSecureTextInput
+                    usingBlock:^(NSUInteger btn, NSString * pass) {
+                        if ( btn == 0 )
+                            return;
+                        else if (lastPassword == nil ) {
+                            if ( !pass )
+                                return;
+                            return [FFAlertView inputPassword2_imp:title message:message message2:message2 usingBlock:finalBlock cancelButtonTitle:cancelButtonTitle okButtonTitles:okButtonTitles lastPassword:pass];
+                        } else if ( ![lastPassword isEqualToString:pass] ) {
+                            finalBlock(YES, nil);
+                        } else {
+                            finalBlock(NO,pass);
+                        }
+                    }
+             cancelButtonTitle:cancelButtonTitle
+             otherButtonTitles:okButtonTitles, nil
+     ];
+}
+
++(void) inputPassword2:(NSString *)title
+               message:(NSString *)message
+              message2:(NSString *)message2
+          usingBlock:(void (^)(BOOL notTheSame,NSString * pass)) finalBlock
+     cancelButtonTitle:(NSString *)cancelButtonTitle
+        okButtonTitles:(NSString *)okButtonTitles
+{
+    [FFAlertView inputPassword2_imp:title
+                            message:message
+                           message2:message2
+                         usingBlock:finalBlock
+                  cancelButtonTitle:cancelButtonTitle
+                     okButtonTitles:okButtonTitles
+                       lastPassword:nil];
+}
+
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

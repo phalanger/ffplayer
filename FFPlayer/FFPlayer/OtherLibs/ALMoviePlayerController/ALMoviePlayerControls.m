@@ -204,7 +204,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         [_bottomBar addSubview:_scaleButton];
     }
     
-    self.scaleButton.selected = ![[[FFSetting alloc] init] scalingModeFit];
+    self.scaleButton.selected = ![[FFSetting default] scalingModeFit];
     
     //static stuff
     _playPauseButton = [[ALButton alloc] init];
@@ -263,7 +263,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
                           nil];
     [_topBar.layer insertSublayer:_topGradient atIndex:0];
     
-    _seekDelta = [[[FFSetting alloc] init] seekDelta];
+    _seekDelta = [[FFSetting default] seekDelta];
     [self registerGestureRecognizer];
 }
 
@@ -459,7 +459,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         [self performSelector:@selector(hideControls:) withObject:nil afterDelay:self.fadeDelay];
     } else {
         int nScalingMode = [self.moviePlayer switchScalingMode];
-        [[[FFSetting alloc] init] setScalingMode:nScalingMode];
+        [[FFSetting default] setScalingMode:nScalingMode];
         self.scaleButton.selected = nScalingMode == UIViewContentModeScaleAspectFill;
     }
 }
@@ -756,7 +756,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
                 [self showControls:nil];
         } else if (sender == _doubleTapGestureRecognizer) {
             int nScalingMode = [self.moviePlayer switchScalingMode];
-            [[[FFSetting alloc] init] setScalingMode:nScalingMode];
+            [[FFSetting default] setScalingMode:nScalingMode];
             self.scaleButton.selected = nScalingMode == UIViewContentModeScaleAspectFill;
         }
     }

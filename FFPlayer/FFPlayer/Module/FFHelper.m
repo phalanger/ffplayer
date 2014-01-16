@@ -7,6 +7,7 @@
 //
 
 #import "FFHelper.h"
+#import <CommonCrypto/CommonDigest.h>
 
 @implementation FFHelper
 
@@ -75,7 +76,7 @@
 
     NSString *ext = path.pathExtension.lowercaseString;
     
-    if (![[[FFSetting alloc] init] enableInternalPlayer])
+    if (![[FFSetting default] enableInternalPlayer])
         return NO;
     else if ([ext isEqualToString:@"mp3"] ||
         [ext isEqualToString:@"mp4"] ||
@@ -87,6 +88,19 @@
     return NO;
 }
 
++ (NSString *)md5HexDigest:(NSString*)input
+{
+    const char* str = [input UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, strlen(str), result);
+    NSMutableString *ret = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH*2];//
+    
+    for(int i = 0; i<CC_MD5_DIGEST_LENGTH; i++) {
+        [ret appendFormat:@"%02x",result[i]];
+    }
+    return ret;
+}
+
 @end
 
 //////////////////////////////////////////////////////
@@ -94,6 +108,7 @@
 @interface FFSetting ()
 {
     NSUserDefaults * _setting;
+    BOOL            _unlock;
 }
 @end
 
@@ -103,7 +118,18 @@
 {
     self = [super init];
     self->_setting = [NSUserDefaults standardUserDefaults];
+    self->_unlock = FALSE;
     return self;
+}
+
++(FFSetting *)default
+{
+    static FFSetting * setting = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        setting = [[FFSetting alloc] init];
+    });
+    return setting;
 }
 
 -(BOOL) enableInternalPlayer
@@ -162,6 +188,47 @@
 {
     [_setting setInteger:n forKey:@"scaling_mode"];
     [_setting synchronize];
+}
+
+-(int) lastSelectedTab
+{
+    return [_setting integerForKey:@"last_tab"];
+}
+
+-(void) setLastSelectedTab:(int)n
+{
+    [_setting setInteger:n forKey:@"last_tab"];
+    [_setting synchronize];
+}
+
+-(BOOL) hasPassword
+{
+    return [_setting stringForKey:@"password"] != nil;
+}
+
+-(BOOL) checkPassword:(NSString *)str
+{
+    NSString * enc = [FFHelper md5HexDigest:str];
+    NSString * save = [_setting stringForKey:@"password"];
+    return ( [enc isEqualToString:save]);
+}
+
+-(void) setPassword:(NSString *)str
+{
+    if ( str == nil )
+        return;
+    [_setting setObject:[FFHelper md5HexDigest:str] forKey:@"password"];
+    [_setting synchronize];
+}
+
+-(BOOL) unlock
+{
+    return _unlock;
+}
+
+-(void) setUnlock:(BOOL) bo
+{
+    _unlock = bo;
 }
 
 @end

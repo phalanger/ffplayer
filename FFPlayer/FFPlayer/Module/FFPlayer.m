@@ -135,7 +135,7 @@
 
 -(void) onFinish:(UIViewController *)control curPos:(CGFloat)curPos
 {
-    if ( [[[FFSetting alloc] init] autoPlayNext] )
+    if ( [[FFSetting default] autoPlayNext] )
         [self onNext:control curPos:curPos];
     else
         [control dismissViewControllerAnimated:YES completion:nil];

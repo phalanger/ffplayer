@@ -62,7 +62,7 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     [_player setFullscreen:YES animated:NO];
     [self.view addSubview:_player.view];
 
-    if ( [[[FFSetting alloc] init] scalingModeFit] )
+    if ( [[FFSetting default] scalingModeFit] )
         [_player setScalingMode:MPMovieScalingModeAspectFit];
     else
         [_player setScalingMode:MPMovieScalingModeAspectFill];

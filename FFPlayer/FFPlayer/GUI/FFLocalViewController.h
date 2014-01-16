@@ -10,4 +10,7 @@
 
 @interface FFLocalViewController : UITableViewController
 
+-(void) switchToSelectFolderAndMoveItems:(NSArray *)itemToMove;
+-(void) toggleLock;
+
 @end
