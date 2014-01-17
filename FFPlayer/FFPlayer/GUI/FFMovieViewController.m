@@ -11,6 +11,7 @@
 #import "KxAudioManager.h"
 #import "KxMovieGLView.h"
 #import "FFHelper.h"
+#import "FFSetting.h"
 #import "ALMoviePlayerControls.h"
 
 NSString * const FFMovieParameterMinBufferedDuration = @"FFMovieParameterMinBufferedDuration";

@@ -8,8 +8,9 @@
 
 #import "FFSettingViewController.h"
 #import "FFHelper.h"
+#import "FFSetting.h"
 #import "FFAlertView.h"
-#import "GCDWebServer.h"
+#import "FFWebServer.h"
 
 //https://github.com/swisspol/GCDWebServer
 //https://github.com/swisspol/ComicFlow
@@ -46,9 +47,10 @@ enum {
                                     nil];
     
     
-    webServer = [[GCDWebServer alloc] init];
+    webServer = [[FFWebServer alloc] init];
     
     // Add a handler to respond to requests on any URL
+    /*
     [webServer addDefaultHandlerForMethod:@"GET"
                              requestClass:[GCDWebServerRequest class]
                              processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
@@ -56,6 +58,7 @@ enum {
                                  return [GCDWebServerDataResponse responseWithHTML:@"<html><body><p>Hello World</p></body></html>"];
                                  
                              }];
+     */
 }
 
 -(void) reloadSetting
@@ -134,6 +137,46 @@ enum {
     [cell.contentView addSubview:txtField];
 }
 
+-(void) addLabelToCell:(UITableViewCell *)cell text:(NSString *)text inFrame:(CGRect)rect
+{
+    UILabel * lab = [[UILabel alloc] initWithFrame:rect];
+    lab.text = text;
+    lab.autoresizesSubviews = YES;
+    [lab sizeToFit];
+    [cell.contentView addSubview:lab];
+}
+
+-(UITableViewCell *) findCellByID:(int)nID
+{
+    int i = 0,j = 0;
+    for (NSArray * ary in sectionCellCount) {
+        j = 0;
+        for ( NSNumber * num in ary) {
+            if ( [num intValue] == nID )
+                return [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:j inSection:i]];
+            j++;
+        }
+        ++i;
+    }
+    return nil;
+}
+
+-(NSString *) getWebURLs:(int) port
+{
+    NSMutableSet * setURLs = [[NSMutableSet alloc] init];
+    NSString * strIP1 = [FFHelper localIPAddress];
+    if ( strIP1 )
+        [setURLs addObject:strIP1];
+    strIP1 = [FFHelper localWiFiIPAddress];
+    if ( strIP1 )
+        [setURLs addObject:strIP1];
+    NSMutableArray * aryRes = [[NSMutableArray alloc] init];
+    for ( NSString * item in setURLs) {
+        [aryRes addObject:[NSString stringWithFormat:@"http://%@:%d", item, port]];
+    }
+    return [aryRes componentsJoinedByString:@","];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
@@ -156,7 +199,10 @@ enum {
         case SWITCH_HTTP_UPLOAD: {
             cell.textLabel.text = NSLocalizedString(@"Open Web Server for upload", nil);
             [self addSwitchToCell:cell withTag:SWITCH_HTTP_UPLOAD withValue:[webServer isRunning]];
-            [self addInputToCell:cell placeHolder:@"Port:8080" withTag:SWITCH_HTTP_UPLOAD inFrame:CGRectMake( 265, 3, 80, 38)];
+            int nWebPort = [[FFSetting default] webPort];
+            [self addInputToCell:cell placeHolder:[NSString stringWithFormat:@"%@:%d", NSLocalizedString(@"Port", nil), nWebPort]
+                         withTag:SWITCH_HTTP_UPLOAD inFrame:CGRectMake( 265, 3, 100, 38)];
+            cell.detailTextLabel.text = [self getWebURLs:nWebPort];
         } break;
             
         case SWITCH_AUTO_PLAY_NEXT: {
@@ -217,7 +263,7 @@ enum {
         case SWITCH_HTTP_UPLOAD:
             // Use convenience method that runs server on port 8080 until SIGINT received
             if ( [aswitch isOn] )
-                [webServer runWithPort:8080];
+                [webServer startWithPort:[[FFSetting default] webPort] bonjourName:@""];
             else
                 [webServer stop];
             break;
@@ -337,6 +383,28 @@ enum {
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
+    if ( textField.tag == SWITCH_HTTP_UPLOAD ) {
+        NSString * strText = textField.text;
+        if ( !strText || strText.length == 0 )
+            return TRUE;
+        int nNewPort = [strText intValue];
+        if ( nNewPort < 128 || nNewPort >= 65535 ) {
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
+                                        message:NSLocalizedString(@"Port number should between 128 ~ 65535!", nil)
+                                       delegate:nil
+                              cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                              otherButtonTitles:nil] show];
+            return FALSE;
+        }
+        [[FFSetting default] setWebPort:nNewPort];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([webServer isRunning]) {
+                [webServer stop];
+                [webServer startWithPort:nNewPort bonjourName:@""];
+            }
+            [self.tableView reloadData];
+        });
+    }
     return TRUE;
 }
 

@@ -20,7 +20,5 @@
 
 @interface FFWebServer : GCDWebServer
 @property (nonatomic, weak) id<FFWebServerDelegate> delegate;
-@end
 
-@interface FFWebServerConnection : GCDWebServerConnection
 @end

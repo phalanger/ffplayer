@@ -8,6 +8,7 @@
 
 #import "FFHelper.h"
 #import "FFPlayer.h"
+#import "FFSetting.h"
 #import "FFMovieViewController.h"
 #import "FFInternalMoviePlayerController.h"
 #import "ALMoviePlayerControls.h"

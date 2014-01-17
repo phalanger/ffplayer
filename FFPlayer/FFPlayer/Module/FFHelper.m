@@ -7,7 +7,15 @@
 //
 
 #import "FFHelper.h"
+#import "FFSetting.h"
 #import <CommonCrypto/CommonDigest.h>
+
+#import <arpa/inet.h>
+#import <netdb.h>
+#import <net/if.h>
+#import <ifaddrs.h>
+#import <unistd.h>
+#import <dlfcn.h>
 
 @implementation FFHelper
 
@@ -35,6 +43,95 @@
 +(BOOL) isIpad
 {
     return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
+}
+
++ (NSString *) hostname
+{
+	char baseHostName[256]; // Thanks, Gunnar Larisch
+	int success = gethostname(baseHostName, 255);
+	if (success != 0) return nil;
+	baseHostName[255] = '\0';
+	
+#if TARGET_IPHONE_SIMULATOR
+ 	return [NSString stringWithFormat:@"%s", baseHostName];
+#else
+	return [NSString stringWithFormat:@"%s.local", baseHostName];
+#endif
+}
+
++ (NSString *) getIPAddressForHost: (NSString *) theHost
+{
+	struct hostent *host = gethostbyname([theHost UTF8String]);
+    if (!host) {herror("resolv"); return NULL; }
+	struct in_addr **list = (struct in_addr **)host->h_addr_list;
+	NSString *addressString = [NSString stringWithCString:inet_ntoa(*list[0]) encoding:NSUTF8StringEncoding];
+	return addressString;
+}
+
++ (NSString *) localIPAddress
+{
+	struct hostent *host = gethostbyname([[self hostname] UTF8String]);
+    if (!host) {herror("resolv"); return nil;}
+    struct in_addr **list = (struct in_addr **)host->h_addr_list;
+	return [NSString stringWithCString:inet_ntoa(*list[0]) encoding:NSUTF8StringEncoding];
+}
+
+// Matt Brown's get WiFi IP addy solution
+// Author gave permission to use in Cookbook under cookbook license
+// http://mattbsoftware.blogspot.com/2009/04/how-to-get-ip-address-of-iphone-os-v221.html
+// Updates: changed en0 to en.
+// More updates: TBD
++ (NSString *) localWiFiIPAddress
+{
+	BOOL success;
+	struct ifaddrs * addrs;
+	const struct ifaddrs * cursor;
+	
+	success = getifaddrs(&addrs) == 0;
+	if (success) {
+		cursor = addrs;
+		while (cursor != NULL) {
+			// the second test keeps from picking up the loopback address
+			if (cursor->ifa_addr->sa_family == AF_INET && (cursor->ifa_flags & IFF_LOOPBACK) == 0)
+			{
+				NSString *name = [NSString stringWithUTF8String:cursor->ifa_name];
+				if ([name isEqualToString:@"en"])  // Wi-Fi adapter -- was en0
+					return [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)cursor->ifa_addr)->sin_addr)];
+			}
+			cursor = cursor->ifa_next;
+		}
+		freeifaddrs(addrs);
+	}
+	return nil;
+}
+
++ (NSArray *) localWiFiIPAddresses
+{
+	BOOL success;
+	struct ifaddrs * addrs;
+	const struct ifaddrs * cursor;
+	
+	NSMutableArray *array = [NSMutableArray array];
+	
+	success = getifaddrs(&addrs) == 0;
+	if (success) {
+		cursor = addrs;
+		while (cursor != NULL) {
+			// the second test keeps from picking up the loopback address
+			if (cursor->ifa_addr->sa_family == AF_INET && (cursor->ifa_flags & IFF_LOOPBACK) == 0)
+			{
+				NSString *name = [NSString stringWithUTF8String:cursor->ifa_name];
+				if ([name hasPrefix:@"en"])
+					[array addObject:[NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)cursor->ifa_addr)->sin_addr)]];
+			}
+			cursor = cursor->ifa_next;
+		}
+		freeifaddrs(addrs);
+	}
+	
+	if (array.count) return array;
+	
+	return nil;
 }
 
 +(BOOL) isSupportMidea:(NSString *)path
@@ -104,131 +201,3 @@
 @end
 
 //////////////////////////////////////////////////////
-
-@interface FFSetting ()
-{
-    NSUserDefaults * _setting;
-    BOOL            _unlock;
-}
-@end
-
-@implementation FFSetting
-
--(id) init
-{
-    self = [super init];
-    self->_setting = [NSUserDefaults standardUserDefaults];
-    self->_unlock = FALSE;
-    return self;
-}
-
-+(FFSetting *)default
-{
-    static FFSetting * setting = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        setting = [[FFSetting alloc] init];
-    });
-    return setting;
-}
-
--(BOOL) enableInternalPlayer
-{
-    return ![_setting integerForKey:@"forbit_internal_player"];
-}
-
--(void) setEnableInternalPlayer:(BOOL) bo
-{
-    [_setting setInteger:bo?0:1 forKey:@"forbit_internal_player"];
-    [_setting synchronize];
-}
-
--(BOOL) autoPlayNext
-{
-    return ![_setting integerForKey:@"pause_after_play"];
-}
-
--(void) setAutoPlayNext:(BOOL) bo
-{
-    [_setting setInteger:bo?0:1 forKey:@"pause_after_play"];
-    [_setting synchronize];
-}
-
--(int) sortType
-{
-    return [_setting integerForKey:@"sort_type"];
-}
-
--(void) setSortType:(int) type
-{
-    [_setting setInteger:type forKey:@"sort_type"];
-    [_setting synchronize];
-}
-
--(int) seekDelta
-{
-    int n = [_setting integerForKey:@"seek_delta"];
-    if ( n == 0 )
-        n = 10;
-    return n;
-}
-
--(void) setSeekDelta:(int) n
-{
-    [_setting setInteger:n forKey:@"seek_delta"];
-    [_setting synchronize];
-}
-
--(BOOL) scalingModeFit
-{
-    return [_setting integerForKey:@"scaling_mode"] != 2;
-}
-
--(void) setScalingMode:(int)n
-{
-    [_setting setInteger:n forKey:@"scaling_mode"];
-    [_setting synchronize];
-}
-
--(int) lastSelectedTab
-{
-    return [_setting integerForKey:@"last_tab"];
-}
-
--(void) setLastSelectedTab:(int)n
-{
-    [_setting setInteger:n forKey:@"last_tab"];
-    [_setting synchronize];
-}
-
--(BOOL) hasPassword
-{
-    return [_setting stringForKey:@"password"] != nil;
-}
-
--(BOOL) checkPassword:(NSString *)str
-{
-    NSString * enc = [FFHelper md5HexDigest:str];
-    NSString * save = [_setting stringForKey:@"password"];
-    return ( [enc isEqualToString:save]);
-}
-
--(void) setPassword:(NSString *)str
-{
-    if ( str == nil )
-        return;
-    [_setting setObject:[FFHelper md5HexDigest:str] forKey:@"password"];
-    [_setting synchronize];
-}
-
--(BOOL) unlock
-{
-    return _unlock;
-}
-
--(void) setUnlock:(BOOL) bo
-{
-    _unlock = bo;
-}
-
-@end

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1FBC5B091889176F005FB7DB /* Website in Resources */ = {isa = PBXBuildFile; fileRef = 1FBC5B081889176F005FB7DB /* Website */; };
+		1FBC5B0E188929BC005FB7DB /* GTMNSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B0D188929BC005FB7DB /* GTMNSString.m */; };
+		1FBC5B11188935EE005FB7DB /* FFLocalFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B10188935EE005FB7DB /* FFLocalFileManager.m */; };
 		1FC0717E1883F24900ED63E8 /* FFAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC0717D1883F24900ED63E8 /* FFAlertView.m */; };
 		1FC071821883F36D00ED63E8 /* FFSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC071811883F36D00ED63E8 /* FFSettingViewController.m */; };
 		1FC071851884C82600ED63E8 /* FFLocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC071841884C82600ED63E8 /* FFLocalViewController.m */; };
@@ -46,6 +49,7 @@
 		1FC071DF1886508200ED63E8 /* moviePrev.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071DB1886508200ED63E8 /* moviePrev.png */; };
 		1FC071E01886508200ED63E8 /* moviePrev@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC071DC1886508200ED63E8 /* moviePrev@2x.png */; };
 		1FC071E31887B68A00ED63E8 /* FFTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC071E21887B68A00ED63E8 /* FFTabViewController.m */; };
+		1FC071FB18890D4500ED63E8 /* FFSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC071FA18890D4500ED63E8 /* FFSetting.m */; };
 		1FE5F8711883891D00CB4C09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8701883891D00CB4C09 /* Foundation.framework */; };
 		1FE5F8731883891D00CB4C09 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8721883891D00CB4C09 /* CoreGraphics.framework */; };
 		1FE5F8751883891D00CB4C09 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8741883891D00CB4C09 /* UIKit.framework */; };
@@ -104,6 +108,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1FBC5B081889176F005FB7DB /* Website */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Website; path = FFPlayer/Resource/Website; sourceTree = "<group>"; };
+		1FBC5B0B188929BC005FB7DB /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMDefines.h; path = OtherLibs/GTMNSString/GTMDefines.h; sourceTree = "<group>"; };
+		1FBC5B0C188929BC005FB7DB /* GTMNSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMNSString.h; path = OtherLibs/GTMNSString/GTMNSString.h; sourceTree = "<group>"; };
+		1FBC5B0D188929BC005FB7DB /* GTMNSString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMNSString.m; path = OtherLibs/GTMNSString/GTMNSString.m; sourceTree = "<group>"; };
+		1FBC5B0F188935EE005FB7DB /* FFLocalFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFLocalFileManager.h; path = Module/FFLocalFileManager.h; sourceTree = "<group>"; };
+		1FBC5B10188935EE005FB7DB /* FFLocalFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFLocalFileManager.m; path = Module/FFLocalFileManager.m; sourceTree = "<group>"; };
 		1FC0717C1883F24900ED63E8 /* FFAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFAlertView.h; path = GUI/FFAlertView.h; sourceTree = "<group>"; };
 		1FC0717D1883F24900ED63E8 /* FFAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFAlertView.m; path = GUI/FFAlertView.m; sourceTree = "<group>"; };
 		1FC071801883F36D00ED63E8 /* FFSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFSettingViewController.h; path = GUI/FFSettingViewController.h; sourceTree = "<group>"; };
@@ -163,6 +173,8 @@
 		1FC071DC1886508200ED63E8 /* moviePrev@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "moviePrev@2x.png"; path = "Resource/moviePrev@2x.png"; sourceTree = "<group>"; };
 		1FC071E11887B68A00ED63E8 /* FFTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFTabViewController.h; path = GUI/FFTabViewController.h; sourceTree = "<group>"; };
 		1FC071E21887B68A00ED63E8 /* FFTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFTabViewController.m; path = GUI/FFTabViewController.m; sourceTree = "<group>"; };
+		1FC071F918890D4500ED63E8 /* FFSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFSetting.h; path = Module/FFSetting.h; sourceTree = "<group>"; };
+		1FC071FA18890D4500ED63E8 /* FFSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFSetting.m; path = Module/FFSetting.m; sourceTree = "<group>"; };
 		1FE5F86D1883891D00CB4C09 /* FFPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FE5F8701883891D00CB4C09 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1FE5F8721883891D00CB4C09 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -263,6 +275,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1FBC5B0A188929AA005FB7DB /* GTMNSString */ = {
+			isa = PBXGroup;
+			children = (
+				1FBC5B0B188929BC005FB7DB /* GTMDefines.h */,
+				1FBC5B0C188929BC005FB7DB /* GTMNSString.h */,
+				1FBC5B0D188929BC005FB7DB /* GTMNSString.m */,
+			);
+			name = GTMNSString;
+			sourceTree = "<group>";
+		};
 		1FC0717F1883F25400ED63E8 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,6 +313,10 @@
 				1FC071A91884FCC200ED63E8 /* FFPlayer.m */,
 				4DBD981418882FA100C71747 /* FFWebServer.h */,
 				4DBD981518882FA100C71747 /* FFWebServer.m */,
+				1FC071F918890D4500ED63E8 /* FFSetting.h */,
+				1FC071FA18890D4500ED63E8 /* FFSetting.m */,
+				1FBC5B0F188935EE005FB7DB /* FFLocalFileManager.h */,
+				1FBC5B10188935EE005FB7DB /* FFLocalFileManager.m */,
 			);
 			name = Module;
 			sourceTree = "<group>";
@@ -298,6 +324,7 @@
 		1FC0718A1884FC3B00ED63E8 /* OtherLibs */ = {
 			isa = PBXGroup;
 			children = (
+				1FBC5B0A188929AA005FB7DB /* GTMNSString */,
 				4DBD9806188829F800C71747 /* CGDWebServer */,
 				1FC071AB18850CF800ED63E8 /* ALMoviePlayerController */,
 				1FC0718B1884FC4800ED63E8 /* AFNetworking */,
@@ -382,6 +409,7 @@
 		1FE5F8641883891D00CB4C09 = {
 			isa = PBXGroup;
 			children = (
+				1FBC5B081889176F005FB7DB /* Website */,
 				1FE5F8AB18838D9100CB4C09 /* kxmovie */,
 				1FE5F8761883891D00CB4C09 /* FFPlayer */,
 				1FE5F89B1883891D00CB4C09 /* FFPlayerTests */,
@@ -581,6 +609,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FBC5B091889176F005FB7DB /* Website in Resources */,
 				1FC071CF1885366D00ED63E8 /* movieForward.png in Resources */,
 				1FC071DD1886508200ED63E8 /* movieNext.png in Resources */,
 				4DBD97FC1888156D00C71747 /* movie.png in Resources */,
@@ -632,6 +661,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FC071B318850D1F00ED63E8 /* ALButton.m in Sources */,
+				1FBC5B11188935EE005FB7DB /* FFLocalFileManager.m in Sources */,
 				1FC071A41884FC6600ED63E8 /* AFURLConnectionOperation.m in Sources */,
 				1FC071851884C82600ED63E8 /* FFLocalViewController.m in Sources */,
 				1FC071A31884FC6600ED63E8 /* AFSecurityPolicy.m in Sources */,
@@ -647,6 +677,7 @@
 				1FC071891884CDAE00ED63E8 /* FFHelper.m in Sources */,
 				1FE5F8BA18838DA700CB4C09 /* KxMovieViewController.m in Sources */,
 				1FC071AA1884FCC200ED63E8 /* FFPlayer.m in Sources */,
+				1FC071FB18890D4500ED63E8 /* FFSetting.m in Sources */,
 				1FC071A71884FC6600ED63E8 /* AFURLSessionManager.m in Sources */,
 				4DBD981318882A0600C71747 /* GCDWebServerResponse.m in Sources */,
 				4DBD981618882FA100C71747 /* FFWebServer.m in Sources */,
@@ -654,6 +685,7 @@
 				1FC071821883F36D00ED63E8 /* FFSettingViewController.m in Sources */,
 				1FC071B218850D1F00ED63E8 /* ALAirplayView.m in Sources */,
 				1FE5F8B918838DA700CB4C09 /* KxMovieGLView.m in Sources */,
+				1FBC5B0E188929BC005FB7DB /* GTMNSString.m in Sources */,
 				1FC071A51884FC6600ED63E8 /* AFURLRequestSerialization.m in Sources */,
 				4DBD981118882A0600C71747 /* GCDWebServerConnection.m in Sources */,
 				1FC071A21884FC6600ED63E8 /* AFNetworkReachabilityManager.m in Sources */,

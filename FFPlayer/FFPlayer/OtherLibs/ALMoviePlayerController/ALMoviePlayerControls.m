@@ -10,6 +10,7 @@
 #import "ALAirplayView.h"
 #import "ALButton.h"
 #import "FFHelper.h"
+#import "FFSetting.h"
 #import <tgmath.h>
 #import <QuartzCore/QuartzCore.h>
 

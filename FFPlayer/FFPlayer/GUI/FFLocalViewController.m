@@ -9,89 +9,10 @@
 #import "FFLocalViewController.h"
 #import "KxMovieViewController.h"
 #import "FFHelper.h"
+#import "FFSetting.h"
 #import "FFPlayer.h"
 #import "FFAlertView.h"
-
-typedef enum {
-    LIT_PARENT,
-    LIT_SECRETE,
-    LIT_DIR,
-    LIT_FOLDER_DEF_END,
-    
-    LIT_MIDEA,
-    LIT_PIC,
-    LIT_ZIP,
-    LIT_UNKNOWN
-} LOCAL_ITEM_TYPE;
-
-@interface FFLocalItem : NSObject
-@property (retain,atomic)   NSString *  fullPath;
-@property (retain,atomic)   NSString *  fileName;
-@property (retain,atomic)   NSDate *    modifyTime;
-@property (assign)  unsigned long long  size;
-@property (assign)  LOCAL_ITEM_TYPE     type;
-@property (readonly, getter = isDir)   BOOL   isDir;
-@property (readonly, getter = sortNameHelper)   int    sortNameHelper;
-@property (readonly)  BOOL          editable;
--(id) initWithPath:(NSString *)strPath type:(LOCAL_ITEM_TYPE)type;
--(id) initWithAttributes:(NSDictionary *) attrs path:(NSString *)strPath;
-@end
-
-@implementation FFLocalItem
-
--(id) initWithPath:(NSString *)strPath type:(LOCAL_ITEM_TYPE)type
-{
-    self = [super init];
-    if ( self ) {
-        self.fullPath = strPath;
-        self.fileName = [[strPath pathComponents] lastObject];
-        self.type = type;
-        self.size = 0;
-        self.modifyTime = nil;
-    }
-    return self;
-}
-
--(id) initWithAttributes:(NSDictionary *) attr path:(NSString *)strPath
-{
-    self = [super init];
-    if ( self ) {
-        id fileType = [attr valueForKey:NSFileType];
-        
-        self.fullPath = strPath;
-        self.fileName = [[strPath pathComponents] lastObject];
-        if ([fileType isEqual:NSFileTypeDirectory] )
-            self.type = LIT_DIR;
-        else if (  [FFHelper isSupportMidea:strPath] )
-            self.type = LIT_MIDEA;
-        else
-            self.type = LIT_UNKNOWN;
-        
-        self.size = [[attr valueForKey:NSFileSize] longLongValue];
-        self.modifyTime = [attr valueForKey:NSFileModificationDate];
-    }
-    return self;
-}
-
--(BOOL) isDir{
-    return self.type < LIT_FOLDER_DEF_END;
-}
-
--(int) sortNameHelper {
-    if ( self.type > LIT_FOLDER_DEF_END )
-        return LIT_FOLDER_DEF_END;
-    return self.type;
-}
-
--(BOOL) editable {
-    return self.type != LIT_PARENT
-        && self.type != LIT_SECRETE
-        && self.fullPath != nil;
-}
-
-@end
-
-///////////////////////////////////////////
+#import "FFLocalFileManager.h"
 
 enum {
     IN_LOCAL,
@@ -131,7 +52,7 @@ enum {
 {
     [super viewDidLoad];
 
-    [[NSFileManager defaultManager] createDirectoryAtPath:[self getSecretRootPath] withIntermediateDirectories:NO attributes:nil error:nil];
+    [[NSFileManager defaultManager] createDirectoryAtPath:[FFLocalFileManager getSecretRootPath] withIntermediateDirectories:NO attributes:nil error:nil];
     currentState = IN_LOCAL;
     
     if ( itemToMove != nil ) {
@@ -183,77 +104,14 @@ enum {
     [self reloadMovies];
 }
 
--(NSString *) getRootFullPath
-{
-    NSString * root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                           NSUserDomainMask,
-                                                           YES) lastObject];
-    return root;
-}
-
--(NSString *) getSecretRootPath
-{
-    NSString * root = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,
-                                                           NSUserDomainMask,
-                                                           YES) lastObject];
-    return [root stringByAppendingPathComponent:@"private"];
-}
-
 -(NSString *) getCurrentFullPath
 {
-    NSString * root = (currentState == IN_SECRET) ? [self getSecretRootPath] : [self getRootFullPath];
-    if ( _currentPath != nil && _currentPath.length > 0 ) {
-        root = [root stringByAppendingPathComponent:_currentPath];
-    }
-    return root;
+    return [FFLocalFileManager getCurrentFolder:_currentPath inSecret:(currentState == IN_SECRET)];
 }
 
 - (void) reloadMovies
 {
-    NSMutableArray *ma = [NSMutableArray array];
-    NSFileManager *fm = [[NSFileManager alloc] init];
-    NSString *folder = [self getCurrentFullPath];
-    
-    if ( _currentPath != nil && _currentPath.length > 0 ) {
-        [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_PARENT]];
-    } else if ( currentState == IN_LOCAL && [[FFSetting default] unlock] ) {
-        [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_SECRETE]];
-    } else if ( currentState == IN_SECRET )
-        [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_PARENT]];
-    
-    NSArray *contents = [fm contentsOfDirectoryAtPath:folder error:nil];
-    
-    for (NSString *filename in contents) {
-        
-        if (filename.length > 0 &&
-            [filename characterAtIndex:0] != '.') {
-            
-            NSString *path = [folder stringByAppendingPathComponent:filename];
-            NSDictionary *attr = [fm attributesOfItemAtPath:path error:nil];
-            if (attr) {
-                id fileType = [attr valueForKey:NSFileType];
-                if ([fileType isEqual: NSFileTypeRegular] ||
-                    [fileType isEqual: NSFileTypeSymbolicLink]) {
-                    
-                    if ( [FFHelper isSupportMidea:path] ) {
-                        [ma addObject:[[FFLocalItem alloc] initWithAttributes:attr path:path]];
-                    }
-                } else if ( [fileType isEqual:NSFileTypeDirectory] ) {
-                    [ma addObject:[[FFLocalItem alloc] initWithAttributes:attr path:path]];
-                }
-            }
-        }
-    }
-    
-    NSMutableArray * arySort = [[NSMutableArray alloc] init];
-    [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"sortNameHelper" ascending:YES]];
-    int nSort = [[FFSetting default] sortType];
-    if ( nSort == SORT_BY_DATE || nSort == SORT_BY_DATE_DESC )
-        [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"modifyTime" ascending:(nSort == SORT_BY_DATE)]];
-    else if ( nSort == SORT_BY_NAME || nSort == SORT_BY_NAME_DESC )
-        [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"fullPath" ascending:(nSort == SORT_BY_NAME)]];
-    
-    _localMovies = [[ma sortedArrayUsingDescriptors:arySort] copy];
+    _localMovies = [FFLocalFileManager listCurrentFolder:_currentPath inSecret:(currentState == IN_SECRET)];
 
     NSString * strTitle = nil;
     if ( itemToMove != nil ) {
@@ -624,7 +482,6 @@ enum {
                                                    cancelButtonTitle:NSLocalizedString(@"Close", nil)
                                                    otherButtonTitles:nil] show];
                              } else {
-                                 [[NSFileManager defaultManager] createDirectoryAtPath:[self getSecretRootPath] withIntermediateDirectories:YES attributes:nil error:nil];
                                  [[FFSetting default] setPassword:pass];
                                  FFLocalViewController * strongSelf = weakSelf;
                                  [strongSelf unlock:YES];

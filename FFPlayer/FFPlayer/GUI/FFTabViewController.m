@@ -10,6 +10,7 @@
 #import "FFLocalViewController.h"
 #import "FFSettingViewController.h"
 #import "FFHelper.h"
+#import "FFSetting.h"
 
 @interface FFTabViewController ()
 {
