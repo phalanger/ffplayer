@@ -123,9 +123,7 @@
                 if ([fileType isEqual: NSFileTypeRegular] ||
                     [fileType isEqual: NSFileTypeSymbolicLink]) {
                     
-                    if ( [FFHelper isSupportMidea:path] ) {
-                        [ma addObject:[[FFLocalItem alloc] initWithAttributes:attr path:path]];
-                    }
+                    [ma addObject:[[FFLocalItem alloc] initWithAttributes:attr path:path]];
                 } else if ( [fileType isEqual:NSFileTypeDirectory] ) {
                     [ma addObject:[[FFLocalItem alloc] initWithAttributes:attr path:path]];
                 }

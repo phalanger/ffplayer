@@ -13,11 +13,15 @@
   <script type="text/javascript">
       var fftarget="%uploadPath%";
       
-      function updateHeight() {
+      function updateHeight () {
+          var main = $(window.parent.document).find("#main");
+          var thisheight = $(document).height()+30;
+          main.height(thisheight);
+      }
+  
+      function updateOnLoad() {
           $(window.parent.document).find("#main").load(function(){
-                                                       var main = $(window.parent.document).find("#main");
-                                                       var thisheight = $(document).height()+30;
-                                                       main.height(thisheight);
+                                                       updateHeight();
                                                        });
       }
   </script>
@@ -61,7 +65,7 @@
   </table>
   
   <script type="text/javascript">
-      updateHeight();
+      updateOnLoad();
   </script>
 
 </body>

@@ -147,13 +147,15 @@ static dispatch_queue_t _connectionQueue = NULL;
         [FFWebServer getFolderContent:path.path content:content inSecret:path.inSecret];
         [variables setObject:content forKey:@"content"];
         [variables setObject:[FFWebServer convertPathToURL:path.path inSecret:path.inSecret] forKey:@"uploadPath"];
-        [variables setObject:path.path == nil ? @"/" : path.path forKey:@"currentPath"];
+        NSString * strCurrentPath = path.path == nil ? @"/" : path.path;
+        if ( path.inSecret )
+            strCurrentPath = [NSString stringWithFormat:@"%@ (Secret)", strCurrentPath];
+        [variables setObject:strCurrentPath forKey:@"currentPath"];
 
         response = [GCDWebServerDataResponse responseWithHTMLTemplate:[websitePath stringByAppendingPathComponent:request.path] variables:variables];
         return response;
     }];
     
-    __weak FFWebServer * weakSelf = self;
     [self addHandlerForMethod:@"GET" path:@"/download" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
         // Called from GCD thread

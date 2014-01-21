@@ -33,6 +33,7 @@ YUI({filter:"raw"}).use("uploader", function(Y) {
         "<td class='size'>" + Math.round(fileInstance.get("size") / (1024 * 1024) * 10) / 10 + " MB</td>" +
         "<td class='status'>Pending Upload</td>");
       });
+      updateHeight();
     });
     
     uploader.on("uploadstart", function (event) {
