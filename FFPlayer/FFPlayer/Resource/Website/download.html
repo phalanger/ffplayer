@@ -6,9 +6,48 @@
   <link rel="stylesheet" href="normalize.css">
   <link rel="stylesheet" href="base.css">
   <link rel="stylesheet" href="download.css">
+  <link rel="stylesheet" href="upload.css">
+  <link rel="stylesheet" href="cssbutton-min.css">
+  <script src="yui-min.js"></script>
+  <script type="text/javascript" src="jquery.min.js"></script>
+  <script type="text/javascript">
+      var fftarget="%uploadPath%";
+      
+      function updateHeight() {
+          $(window.parent.document).find("#main").load(function(){
+                                                       var main = $(window.parent.document).find("#main");
+                                                       var thisheight = $(document).height()+30;
+                                                       main.height(thisheight);
+                                                       });
+      }
+  </script>
+  <script src="upload.js"></script>
 </head>
 <body>
+    
+    <div>
+        <strong>Current Path : %currentPath%</strong>
+    </div>
+
+  <table class="list" id="fileList">
+      <thead>
+          <tr><th id="name">File Name</th><th id="size">File Size</th><th id="status">Status</th></tr>
+      </thead>
+      <tbody>
+      </tbody>
+      <tfoot>
+          <tr><td colspan="3">Select or drag and drop files here.</td></tr>
+      </tfoot>
+  </table>
   
+  <div id="uploaderContainer" width="100%">
+      <div id="selectFilesButtonContainer">
+      </div>
+      <div id="uploadFilesButtonContainer">
+          <button type="button" id="uploadFilesButton" class="yui3-button" style="width:250px; height:35px;">Upload Files</button>
+      </div>
+  </div>
+
   <table class="list" id="fileList">
     <thead>
       <tr><th id="file">File Name</th><th id="collection">Size</th></tr>
@@ -21,5 +60,9 @@
     </tfoot>
   </table>
   
+  <script type="text/javascript">
+      updateHeight();
+  </script>
+
 </body>
 </html>

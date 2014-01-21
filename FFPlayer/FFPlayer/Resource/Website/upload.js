@@ -60,11 +60,7 @@ YUI({filter:"raw"}).use("uploader", function(Y) {
     function upload() {
       if (!uploadDone && uploader.get("fileList").length > 0) {
         var variables = {};
-        var collection = Y.one("#collection").get('value');
-        if (collection) {
-          variables.collection = collection;
-        }
-        uploader.uploadAll("upload", variables);
+        uploader.uploadAll("upload" + "?" + fftarget, variables);
       }
     }
     
