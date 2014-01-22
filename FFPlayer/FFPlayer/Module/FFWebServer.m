@@ -81,6 +81,17 @@ static dispatch_queue_t _connectionQueue = NULL;
     }
 }
 
++(NSString *)normalizedPath:(NSString *)subPath
+{
+    if ( subPath != nil ) {
+        NSRange r;
+        while ( (r=[subPath rangeOfString:@"../"]).location == 0 )
+            subPath = [subPath substringFromIndex:3];
+        subPath = [subPath stringByReplacingOccurrencesOfString:@"/../" withString:@"/"];
+    }
+    return subPath;
+}
+
 +(FFURLPath *) getInputPath:(NSDictionary *)dic
 {
     FFURLPath * url = [[FFURLPath alloc] init];
@@ -88,12 +99,7 @@ static dispatch_queue_t _connectionQueue = NULL;
     url.path = nil;
     if ( dic != nil ) {
         NSString * subPath = [[dic objectForKey:@"id"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        if ( subPath != nil ) {
-            NSRange r;
-            while ( (r=[subPath rangeOfString:@"../"]).location == 0 )
-                subPath = [subPath substringFromIndex:3];
-            subPath = [subPath stringByReplacingOccurrencesOfString:@"/../" withString:@"/"];
-        }
+        subPath = [FFWebServer normalizedPath:subPath];
         if ( subPath != nil && subPath.length == 0 )
             subPath = nil;
         
@@ -165,6 +171,26 @@ static dispatch_queue_t _connectionQueue = NULL;
         NSString * path = [strRoot stringByAppendingPathComponent:url.path];
         if ( [[NSFileManager defaultManager]  fileExistsAtPath:path] ) {
             response = [GCDWebServerFileResponse responseWithFile:path isAttachment:YES];
+        } else {
+            response = [GCDWebServerResponse responseWithStatusCode:404];
+        }
+        return response;
+    }];
+    
+    [self addHandlerForMethod:@"GET" path:@"/createFolder" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+        GCDWebServerResponse* response = nil;
+        FFURLPath * url = [FFWebServer getInputPath:request.query];
+        NSString * strRoot = url.inSecret ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];
+        NSString * path = [strRoot stringByAppendingPathComponent:url.path];
+        NSString * newPath = [request.query objectForKey:@"name"];
+        if ( [[NSFileManager defaultManager]  fileExistsAtPath:path] && newPath != nil && newPath.length > 0 ) {
+            path = [path stringByAppendingPathComponent:[FFWebServer normalizedPath:newPath]];
+            if ( ![[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil] )
+                response = [GCDWebServerDataResponse responseWithHTML:NSLocalizedString(@"Create folder error", nil)];
+            else
+                response = [GCDWebServerResponse responseWithRedirect:[NSURL URLWithString:
+                                                                        [NSString stringWithFormat:@"/download.html?%@",[FFWebServer convertPathToURL:url.path inSecret:url.inSecret] ]
+                                                                       ] permanent:NO];
         } else {
             response = [GCDWebServerResponse responseWithStatusCode:404];
         }

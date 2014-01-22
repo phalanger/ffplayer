@@ -11,10 +11,10 @@
   color: #F20;
 }
 
-#collectionName {
+#createFolder {
   margin-top: 15px;
   padding: 5px;
-  width: 588px;
+  width: 100%;
   background: #42A7C9;
   border: 1px solid #1198BF;
   color: white;
