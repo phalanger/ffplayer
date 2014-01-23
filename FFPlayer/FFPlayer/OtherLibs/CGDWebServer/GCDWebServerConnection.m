@@ -395,6 +395,8 @@ static dispatch_queue_t _formatterQueue = NULL;
         requestQuery = GCDWebServerParseURLEncodedForm(queryString);
         DCHECK(requestQuery);
       }
+        if ( [requestMethod isEqualToString:@"PROPFIND"])
+            NSLog(@"Method:%@ URL:%@ Path:%@", requestMethod, requestURL, requestPath);
       NSDictionary* requestHeaders = ARC_BRIDGE_RELEASE(CFHTTPMessageCopyAllHeaderFields(_requestMessage));
       DCHECK(requestHeaders);
       for (_handler in _server.handlers) {

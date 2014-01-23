@@ -11,6 +11,7 @@
 #import "FFHelper.h"
 #import "FFSetting.h"
 #import "FFLocalFileManager.h"
+#import "XMLDictionary.h"
 
 static NSString* _serverName = nil;
 static dispatch_queue_t _connectionQueue = NULL;
@@ -23,6 +24,32 @@ static dispatch_queue_t _connectionQueue = NULL;
 @implementation FFURLPath
 @end
 
+////////////////////////////////////////////
+
+@interface GCDWebServerDataResponse (XMLExtensions)
++ (GCDWebServerDataResponse*)responseWithXML:(NSDictionary*)text withStatusCode:(NSInteger)statusCode;
+- (id)initWithXML:(NSDictionary*)text withStatusCode:(NSInteger)statusCode;
+@end
+
+@implementation GCDWebServerDataResponse (XMLExtensions)
+
++ (GCDWebServerDataResponse*)responseWithXML:(NSDictionary*)text withStatusCode:(NSInteger)statusCode
+{
+    return [[self alloc] initWithXML:text withStatusCode:statusCode];
+}
+
+- (id)initWithXML:(NSDictionary*)text withStatusCode:(NSInteger)statusCode
+{
+    NSData* data = [[text XMLString] dataUsingEncoding:NSUTF8StringEncoding];
+    if (data == nil) {
+        return nil;
+    }
+    self = [self initWithData:data contentType:@"text/xml; charset=utf-8"];
+    self.statusCode = statusCode;
+    return self;
+}
+
+@end
 
 ////////////////////////////////////////////
 
@@ -53,7 +80,7 @@ static dispatch_queue_t _connectionQueue = NULL;
     return self;
 }
 
-+(void) getFolderContent:(NSString *)subPath content:(NSMutableString *)content inSecret:(BOOL)inSecret
+-(void) getFolderContent:(NSString *)subPath content:(NSMutableString *)content inSecret:(BOOL)inSecret
 {
     NSByteCountFormatter *byteCountFormatter = [[NSByteCountFormatter alloc] init];
     [byteCountFormatter setAllowedUnits:NSByteCountFormatterUseMB];
@@ -81,7 +108,41 @@ static dispatch_queue_t _connectionQueue = NULL;
     }
 }
 
-+(NSString *)normalizedPath:(NSString *)subPath
+-(void) getFolderContentInXML:(NSString *)subPath data:(NSMutableDictionary *)data inSecret:(BOOL)inSecret parentURL:(NSString *)parentURL
+{
+//    NSString * strRoot = inSecret ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];
+    
+    NSMutableDictionary * root = [[NSMutableDictionary alloc] init];
+    [root setObject:@{ @"xmlns:d" : @"DAV:" } forKey:XMLDictionaryAttributesKey];
+    [data setObject:root forKey:@"d:multistatus"];
+    NSMutableArray * aryResponse = [[NSMutableArray alloc] init];
+    [root setObject:aryResponse forKey:@"d:response"];
+    
+    NSArray * ary = [FFLocalFileManager listCurrentFolder:subPath inSecret:inSecret];
+    for ( FFLocalItem * item in ary ) {
+        if ( item.type == LIT_PARENT || item.type == LIT_SECRETE )
+            continue;
+        else {
+            NSMutableDictionary * response = [[NSMutableDictionary alloc] init];
+            NSMutableDictionary * propstat = [[NSMutableDictionary alloc] init];
+            NSMutableDictionary * prop = [[NSMutableDictionary alloc] init];
+
+            [aryResponse addObject:response];
+                [response setObject:[parentURL stringByAppendingPathComponent:item.fileName] forKey:@"d:href"];
+                [response setObject:propstat forKey:@"d:propstat"];
+                    [propstat setObject:@"HTTP/1.1 200 OK" forKey:@"d:status"];
+                    [propstat setObject:prop forKey:@"d:prop"];
+                        [prop setObject:item.fileName forKey:@"d:displayname"];
+                        [prop setObject:item.fileName forKey:@"d:name"];
+                        if ( item.type == LIT_DIR )
+                            [prop setObject:@{ @"d:collection" : @{} } forKey:@"d:resourcetype"];
+                        else
+                            [prop setObject:@{} forKey:@"d:resourcetype"];
+        }
+    }
+}
+
+-(NSString *)normalizedPath:(NSString *)subPath
 {
     if ( subPath != nil ) {
         NSRange r;
@@ -92,19 +153,44 @@ static dispatch_queue_t _connectionQueue = NULL;
     return subPath;
 }
 
-+(FFURLPath *) getInputPath:(NSDictionary *)dic
+-(FFURLPath *) getInputPath:(NSDictionary *)dic
 {
     FFURLPath * url = [[FFURLPath alloc] init];
     url.inSecret = NO;
     url.path = nil;
     if ( dic != nil ) {
         NSString * subPath = [[dic objectForKey:@"id"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        subPath = [FFWebServer normalizedPath:subPath];
+        subPath = [self normalizedPath:subPath];
         if ( subPath != nil && subPath.length == 0 )
             subPath = nil;
         
         url.path = subPath;
         url.inSecret = ([[dic objectForKey:@"sec"] intValue] != 0) && [[FFSetting default] unlock];
+    }
+    return url;
+}
+
+-(FFURLPath *) getInputPathByURLPath:(NSString *)urlInput
+{
+    FFURLPath * url = [[FFURLPath alloc] init];
+    url.inSecret = NO;
+    url.path = nil;
+    if ( urlInput != nil ) {
+        NSMutableArray * aryPath = [[urlInput pathComponents] mutableCopy];
+        if ( aryPath.count > 0 ) {
+            if ( [aryPath[0] isEqualToString:@"/"] )
+                [aryPath removeObjectAtIndex:0];
+            if ( aryPath.count > 0 ) {
+                if ( [aryPath[0] isEqualToString:@"sec"] && [[FFSetting default] unlock] )
+                    url.inSecret = YES;
+                [aryPath removeObjectAtIndex:0];
+            }
+            NSString * subPath = [NSString pathWithComponents:aryPath];
+            subPath = [self normalizedPath:subPath];
+            if ( subPath != nil && subPath.length == 0 )
+                subPath = nil;
+            url.path = subPath;
+        }
     }
     return url;
 }
@@ -124,6 +210,16 @@ static dispatch_queue_t _connectionQueue = NULL;
     return str;
 }
 
+- (NSString *)DAVClass
+{
+    return(@"1,2");
+}
+
+- (NSArray *)allowedMethods
+{
+    return([NSArray arrayWithObjects:@"OPTIONS", @"GET", @"HEAD", @"PUT", @"POST", @"COPY", @"PROPFIND", @"DELETE", @"MKCOL", @"MOVE", @"PROPPATCH", @"LOCK", @"UNLOCK", NULL]);
+}
+
 -(void) initHandle {
     
     NSString* websitePath = [[NSBundle mainBundle] pathForResource:@"Website" ofType:nil];
@@ -131,9 +227,46 @@ static dispatch_queue_t _connectionQueue = NULL;
                         [[UIDevice currentDevice] name],
                         [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
     NSDictionary* baseVariables = [NSDictionary dictionaryWithObjectsAndKeys:footer, @"footer", nil];
+    __weak FFWebServer * weakSelf = self;
     
     [self addHandlerForBasePath:@"/" localPath:websitePath indexFilename:nil cacheAge:3600];
     
+    [self addHandlerForMethod:@"PROPFIND" pathRegex:@"/.*" requestClass:[GCDWebServerDataRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+        GCDWebServerDataRequest * requestData = (GCDWebServerDataRequest *)request;
+        
+        NSInteger theDepth = -1;
+        NSString *theDepthString = [requestData.headers objectForKey:@"Depth"];
+        if (theDepthString != NULL)
+        {
+            if ([theDepthString isEqualToString:@"0"])
+                theDepth = 0;
+            else if ([theDepthString isEqualToString:@"1"])
+                theDepth = 1;
+            else if ([theDepthString isEqualToString:@"infinity"])
+                theDepth = -1;
+            else
+                return [GCDWebServerDataResponse responseWithXML:@{} withStatusCode:400];
+        }
+        
+        NSString *theRootPath = [request.URL.path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        FFURLPath * path = [weakSelf getInputPathByURLPath:theRootPath];
+        
+        NSMutableDictionary * dicData = [[NSMutableDictionary alloc] init];
+        [weakSelf getFolderContentInXML:path.path data:dicData inSecret:path.inSecret parentURL:theRootPath];
+        
+        return [GCDWebServerDataResponse responseWithXML:dicData withStatusCode:200];
+    }];
+    
+    [self addHandlerForMethod:@"OPTIONS" pathRegex:@"/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+        
+        GCDWebServerResponse * response = [GCDWebServerResponse responseWithStatusCode:200];
+        [response setValue:[weakSelf DAVClass] forAdditionalHeader:@"DAV"];
+        [response setValue:[[weakSelf allowedMethods] componentsJoinedByString:@","] forAdditionalHeader:@"Allow"];
+        
+        return response;
+        
+    }];
+
     [self addHandlerForMethod:@"GET" path:@"/" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         return [GCDWebServerResponse responseWithRedirect:[NSURL URLWithString:@"index.html" relativeToURL:request.URL] permanent:NO];
         
@@ -148,9 +281,9 @@ static dispatch_queue_t _connectionQueue = NULL;
         NSMutableDictionary* variables = [NSMutableDictionary dictionaryWithDictionary:baseVariables];
         
         NSMutableString* content = [[NSMutableString alloc] init];
-        FFURLPath * path = [FFWebServer getInputPath:request.query];
+        FFURLPath * path = [weakSelf getInputPath:request.query];
         
-        [FFWebServer getFolderContent:path.path content:content inSecret:path.inSecret];
+        [weakSelf getFolderContent:path.path content:content inSecret:path.inSecret];
         [variables setObject:content forKey:@"content"];
         [variables setObject:[FFWebServer convertPathToURL:path.path inSecret:path.inSecret] forKey:@"uploadPath"];
         NSString * strCurrentPath = path.path == nil ? @"/" : path.path;
@@ -166,7 +299,7 @@ static dispatch_queue_t _connectionQueue = NULL;
         
         // Called from GCD thread
         GCDWebServerResponse* response = nil;
-        FFURLPath * url = [FFWebServer getInputPath:request.query];
+        FFURLPath * url = [weakSelf getInputPath:request.query];
         NSString * strRoot = url.inSecret ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];
         NSString * path = [strRoot stringByAppendingPathComponent:url.path];
         if ( [[NSFileManager defaultManager]  fileExistsAtPath:path] ) {
@@ -179,12 +312,12 @@ static dispatch_queue_t _connectionQueue = NULL;
     
     [self addHandlerForMethod:@"GET" path:@"/createFolder" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         GCDWebServerResponse* response = nil;
-        FFURLPath * url = [FFWebServer getInputPath:request.query];
+        FFURLPath * url = [weakSelf getInputPath:request.query];
         NSString * strRoot = url.inSecret ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];
         NSString * path = [strRoot stringByAppendingPathComponent:url.path];
         NSString * newPath = [request.query objectForKey:@"name"];
         if ( [[NSFileManager defaultManager]  fileExistsAtPath:path] && newPath != nil && newPath.length > 0 ) {
-            path = [path stringByAppendingPathComponent:[FFWebServer normalizedPath:newPath]];
+            path = [path stringByAppendingPathComponent:[weakSelf normalizedPath:newPath]];
             if ( ![[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil] )
                 response = [GCDWebServerDataResponse responseWithHTML:NSLocalizedString(@"Create folder error", nil)];
             else
@@ -203,7 +336,7 @@ static dispatch_queue_t _connectionQueue = NULL;
         NSString* html = NSLocalizedString(@"Successfully Uploaded", nil);
         GCDWebServerMultiPartFile* file = [[(GCDWebServerMultiPartFormRequest*)request files] objectForKey:@"file"];
         
-        FFURLPath * targetUrl = [FFWebServer getInputPath:request.query];
+        FFURLPath * targetUrl = [weakSelf getInputPath:request.query];
         NSString * strRoot = targetUrl.inSecret ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];
         NSString * targetPath = [strRoot stringByAppendingPathComponent:targetUrl.path == nil ? @"" : targetUrl.path];
 

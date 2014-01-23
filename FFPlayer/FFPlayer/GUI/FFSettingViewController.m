@@ -41,7 +41,7 @@ enum {
     self.tabBarItem.title = self.title = self.navigationItem.title = NSLocalizedString(@"Setting", @"Setting title");
 
     sectionHeader = [NSArray arrayWithObjects:NSLocalizedString(@"Global Setting", nil),
-                                        NSLocalizedString(@"Upload", nil),
+                                        NSLocalizedString(@"Upload/Download", nil),
                                         NSLocalizedString(@"Movie player", nil),
                                         NSLocalizedString(@"Other", nil),
                                     nil];

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F44BC561890FE9300C3E0D9 /* XMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F44BC551890FE9300C3E0D9 /* XMLDictionary.m */; };
 		1FBC5B091889176F005FB7DB /* Website in Resources */ = {isa = PBXBuildFile; fileRef = 1FBC5B081889176F005FB7DB /* Website */; };
 		1FBC5B0E188929BC005FB7DB /* GTMNSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B0D188929BC005FB7DB /* GTMNSString.m */; };
 		1FBC5B11188935EE005FB7DB /* FFLocalFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B10188935EE005FB7DB /* FFLocalFileManager.m */; };
@@ -108,6 +109,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1F44BC541890FE9300C3E0D9 /* XMLDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMLDictionary.h; path = OtherLibs/XMLDictionary/XMLDictionary.h; sourceTree = "<group>"; };
+		1F44BC551890FE9300C3E0D9 /* XMLDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMLDictionary.m; path = OtherLibs/XMLDictionary/XMLDictionary.m; sourceTree = "<group>"; };
 		1FBC5B081889176F005FB7DB /* Website */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Website; path = FFPlayer/Resource/Website; sourceTree = "<group>"; };
 		1FBC5B0B188929BC005FB7DB /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMDefines.h; path = OtherLibs/GTMNSString/GTMDefines.h; sourceTree = "<group>"; };
 		1FBC5B0C188929BC005FB7DB /* GTMNSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMNSString.h; path = OtherLibs/GTMNSString/GTMNSString.h; sourceTree = "<group>"; };
@@ -275,6 +278,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F44BC531890FE8000C3E0D9 /* XMLDictionary */ = {
+			isa = PBXGroup;
+			children = (
+				1F44BC541890FE9300C3E0D9 /* XMLDictionary.h */,
+				1F44BC551890FE9300C3E0D9 /* XMLDictionary.m */,
+			);
+			name = XMLDictionary;
+			sourceTree = "<group>";
+		};
 		1FBC5B0A188929AA005FB7DB /* GTMNSString */ = {
 			isa = PBXGroup;
 			children = (
@@ -324,6 +336,7 @@
 		1FC0718A1884FC3B00ED63E8 /* OtherLibs */ = {
 			isa = PBXGroup;
 			children = (
+				1F44BC531890FE8000C3E0D9 /* XMLDictionary */,
 				1FBC5B0A188929AA005FB7DB /* GTMNSString */,
 				4DBD9806188829F800C71747 /* CGDWebServer */,
 				1FC071AB18850CF800ED63E8 /* ALMoviePlayerController */,
@@ -670,6 +683,7 @@
 				1FE5F8B618838DA700CB4C09 /* KxAudioManager.m in Sources */,
 				1FC071B7188518D900ED63E8 /* FFMovieViewController.m in Sources */,
 				1FC071B418850D1F00ED63E8 /* ALMoviePlayerControls.m in Sources */,
+				1F44BC561890FE9300C3E0D9 /* XMLDictionary.m in Sources */,
 				1FC071A01884FC6600ED63E8 /* AFHTTPRequestOperationManager.m in Sources */,
 				1FE5F8811883891D00CB4C09 /* FFAppDelegate.m in Sources */,
 				1FC0717E1883F24900ED63E8 /* FFAlertView.m in Sources */,
