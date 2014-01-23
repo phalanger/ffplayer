@@ -199,7 +199,7 @@ enum {
                             return;
                         NSFileManager * mgr = [NSFileManager defaultManager];
                         NSString * trimFolder = [self makeSureFileName:folder];
-                        if ( !trimFolder)
+                        if ( !trimFolder || ([trimFolder isEqualToString:@"Secret"] && _currentPath == nil && currentState != IN_SECRET))
                             return;
                         NSString * strFullPath = [[self getCurrentFullPath] stringByAppendingPathComponent:trimFolder];
                         NSError * err = nil;
