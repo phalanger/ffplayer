@@ -283,6 +283,13 @@ static dispatch_queue_t _connectionQueue = NULL;
     return theDepth;
 }
 
+-(NSString *) webDavURLToLocalURL:(NSString*) inputPath
+{
+    NSString *theRootPath = [inputPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    FFURLPath * path = [self getInputPathByURLPath:theRootPath];
+    return [FFLocalFileManager getCurrentFolder:path.path inSecret:path.inSecret];
+}
+
 -(void) initHandle {
     
     NSString* websitePath = [[NSBundle mainBundle] pathForResource:@"Website" ofType:nil];
@@ -325,11 +332,9 @@ static dispatch_queue_t _connectionQueue = NULL;
         
     }];
     [self addHandlerForMethod:@"GET" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
-        GCDWebServerResponse* response = nil;
-        NSString *theRootPath = [request.URL.path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        FFURLPath * path = [weakSelf getInputPathByURLPath:theRootPath];
-        NSString * pathToCheck = [FFLocalFileManager getCurrentFolder:path.path inSecret:path.inSecret];
         
+        GCDWebServerResponse* response = nil;
+        NSString * pathToCheck = [weakSelf webDavURLToLocalURL:request.URL.path];
         if ( [[NSFileManager defaultManager]  fileExistsAtPath:pathToCheck] ) {
             response = [GCDWebServerFileResponse responseWithFile:pathToCheck isAttachment:YES];
         } else {
@@ -339,14 +344,10 @@ static dispatch_queue_t _connectionQueue = NULL;
     }];
     [self addHandlerForMethod:@"MKCOL" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
-        NSString *theRootPath = [request.URL.path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        FFURLPath * path = [weakSelf getInputPathByURLPath:theRootPath];
-        NSString * pathToCheck = [FFLocalFileManager getCurrentFolder:path.path inSecret:path.inSecret];
+        NSString * pathToCheck = [weakSelf webDavURLToLocalURL:request.URL.path];
         NSFileManager * mgr = [NSFileManager defaultManager];
-        BOOL theIsDirectoryFlag = NO;
-        BOOL theFileExistsFlag = [mgr fileExistsAtPath:pathToCheck isDirectory:&theIsDirectoryFlag];
         
-        if (theFileExistsFlag == YES)
+        if ( [mgr fileExistsAtPath:pathToCheck isDirectory:nil] )
             return [GCDWebServerResponse responseWithStatusCode:405];//Not allow
         else if ( [request.headers objectForKey:@"Content-Type"] )
             return [GCDWebServerResponse responseWithStatusCode:415];        /* Unsupported Media Type */        \
@@ -356,22 +357,96 @@ static dispatch_queue_t _connectionQueue = NULL;
     }];
     [self addHandlerForMethod:@"DELETE" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
-        NSString *theRootPath = [request.URL.path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        FFURLPath * path = [weakSelf getInputPathByURLPath:theRootPath];
-        NSString * pathToCheck = [FFLocalFileManager getCurrentFolder:path.path inSecret:path.inSecret];
+        NSString * pathToCheck = [weakSelf webDavURLToLocalURL:request.URL.path];
         NSFileManager * mgr = [NSFileManager defaultManager];
-        BOOL theIsDirectoryFlag = NO;
-        BOOL theFileExistsFlag = [mgr fileExistsAtPath:pathToCheck isDirectory:&theIsDirectoryFlag];
         
         if ( [weakSelf getWebDAVDepth:request.headers] != -1)
             return [GCDWebServerDataResponse responseWithStatusCode:400];
-        else if (theFileExistsFlag == NO)
+        else if ( ![mgr fileExistsAtPath:pathToCheck isDirectory:nil] )
             return [GCDWebServerResponse responseWithStatusCode:404];//Not found
-        else if ( ![mgr removeItemAtPath:pathToCheck error:nil])
+        else if ( ![mgr removeItemAtPath:pathToCheck error:nil] )
             return [GCDWebServerResponse responseWithStatusCode:403];        /* Forbidden */
         return [GCDWebServerResponse responseWithStatusCode:201];
     }];
-    
+    [self addHandlerForMethod:@"MOVE" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+        
+        NSInteger theDepth = [weakSelf getWebDAVDepth:request.headers];
+        if ( theDepth != -1)
+            return [GCDWebServerDataResponse responseWithXML:@{} withStatusCode:400];
+        BOOL boOverWrite = [[request.headers objectForKey:@"Overwrite"] isEqualToString:@"T"];
+        NSFileManager * mgr = [NSFileManager defaultManager];
+
+        NSString *theSourcePath = [weakSelf webDavURLToLocalURL:request.URL.path];
+        NSString *theDestinationStringURL = [request.headers objectForKey:@"Destination"];
+
+        if ( theDestinationStringURL == nil )
+            return [GCDWebServerResponse responseWithStatusCode:400];
+        NSURL *theDestination = [NSURL URLWithString:theDestinationStringURL];
+        NSString *theDestinationPath = [weakSelf webDavURLToLocalURL:[theDestination path]];
+        
+        if ( ![mgr fileExistsAtPath:theSourcePath isDirectory:nil] )
+            return [GCDWebServerResponse responseWithStatusCode:404];//Not found
+        else if ( [mgr fileExistsAtPath:theDestinationPath] ) {
+            if ( !boOverWrite )
+                return [GCDWebServerResponse responseWithStatusCode:400];
+            else if (![mgr removeItemAtPath:theDestinationPath error:nil])
+                return [GCDWebServerResponse responseWithStatusCode:500];
+        }
+        
+        if ( ![mgr moveItemAtPath:theSourcePath toPath:theDestinationPath error:nil] )
+            return [GCDWebServerResponse responseWithStatusCode:403];        /* Forbidden */
+        return [GCDWebServerResponse responseWithStatusCode:200];
+    }];
+    [self addHandlerForMethod:@"COPY" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+        
+        NSInteger theDepth = [weakSelf getWebDAVDepth:request.headers];
+        if ( theDepth != -1)
+            return [GCDWebServerDataResponse responseWithXML:@{} withStatusCode:400];
+        BOOL boOverWrite = [[request.headers objectForKey:@"Overwrite"] isEqualToString:@"T"];
+        NSFileManager * mgr = [NSFileManager defaultManager];
+        
+        NSString *theSourcePath = [weakSelf webDavURLToLocalURL:request.URL.path];
+        NSString *theDestinationStringURL = [request.headers objectForKey:@"Destination"];
+        
+        if ( theDestinationStringURL == nil )
+            return [GCDWebServerResponse responseWithStatusCode:400];
+        NSURL *theDestination = [NSURL URLWithString:theDestinationStringURL];
+        NSString *theDestinationPath = [weakSelf webDavURLToLocalURL:[theDestination path]];
+        
+        if ( ![mgr fileExistsAtPath:theSourcePath isDirectory:nil] )
+            return [GCDWebServerResponse responseWithStatusCode:404];//Not found
+        else if ( [mgr fileExistsAtPath:theDestinationPath] ) {
+            if ( !boOverWrite )
+                return [GCDWebServerResponse responseWithStatusCode:400];
+            else if (![mgr removeItemAtPath:theDestinationPath error:nil])
+                return [GCDWebServerResponse responseWithStatusCode:500];
+        }
+        
+        if ( ![mgr copyItemAtPath:theSourcePath toPath:theDestinationPath error:nil] )
+            return [GCDWebServerResponse responseWithStatusCode:403];        /* Forbidden */
+        return [GCDWebServerResponse responseWithStatusCode:200];
+    }];
+    [self addHandlerForMethod:@"PUT" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerFileRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+        GCDWebServerFileRequest * requestData = (GCDWebServerFileRequest *)request;
+        NSFileManager * mgr = [NSFileManager defaultManager];
+        NSString *thePath = [weakSelf webDavURLToLocalURL:request.URL.path];
+        BOOL isDir = FALSE, isSrcExist = FALSE;
+        if ( thePath == nil )
+            return [GCDWebServerResponse responseWithStatusCode:400];
+        else if ( ![mgr fileExistsAtPath:[ thePath stringByDeletingLastPathComponent]] )
+            return [GCDWebServerResponse responseWithStatusCode:403];
+        else if ( (isSrcExist = [mgr fileExistsAtPath:thePath isDirectory:&isDir]) && isDir )
+            return [GCDWebServerResponse responseWithStatusCode:403];
+        else if ( isSrcExist && ![mgr removeItemAtPath:thePath error:nil] )
+            return [GCDWebServerResponse responseWithStatusCode:403];
+        else if ( requestData.contentLength ==  0) {
+            [requestData open];
+            [requestData close];
+            [mgr removeItemAtPath:requestData.filePath error:nil];
+        } else if ( ![mgr moveItemAtPath:requestData.filePath toPath:thePath error:nil] )
+            return [GCDWebServerResponse responseWithStatusCode:403];
+        return [GCDWebServerResponse responseWithStatusCode:200];
+    }];
 
     
     [self addHandlerForMethod:@"GET" path:@"/" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
