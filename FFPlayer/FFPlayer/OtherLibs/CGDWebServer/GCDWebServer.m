@@ -145,6 +145,11 @@ static void _SignalHandler(int signal) {
   ARC_DEALLOC(super);
 }
 
+- (NSString*)bonjourName {
+  CFStringRef name = _service ? CFNetServiceGetName(_service) : NULL;
+  return name && CFStringGetLength(name) ? ARC_BRIDGE_RELEASE(CFStringCreateCopy(kCFAllocatorDefault, name)) : nil;
+}
+
 - (void)addHandlerWithMatchBlock:(GCDWebServerMatchBlock)matchBlock processBlock:(GCDWebServerProcessBlock)handlerBlock {
   DCHECK(_source == NULL);
   GCDWebServerHandler* handler = [[GCDWebServerHandler alloc] initWithMatchBlock:matchBlock processBlock:handlerBlock];
@@ -166,7 +171,7 @@ static void _NetServiceClientCallBack(CFNetServiceRef service, CFStreamError* er
     if (error->error) {
       LOG_ERROR(@"Bonjour error %i (domain %i)", error->error, (int)error->domain);
     } else {
-      LOG_VERBOSE(@"Registered Bonjour service \"%@\" with type '%@' on port %i", CFNetServiceGetName(service), CFNetServiceGetType(service), CFNetServiceGetPortNumber(service));
+      LOG_VERBOSE(@"Registered Bonjour service \"%@\" in domain \"%@\" with type '%@' on port %i", CFNetServiceGetName(service), CFNetServiceGetDomain(service), CFNetServiceGetType(service), CFNetServiceGetPortNumber(service));
     }
   }
 }
@@ -195,7 +200,7 @@ static void _NetServiceClientCallBack(CFNetServiceRef service, CFStreamError* er
             if (result != 0) {
               LOG_ERROR(@"Failed closing socket (%i): %s", errno, strerror(errno));
             } else {
-              MYLOG_DEBUG(@"Closed listening socket");
+              LOG_DEBUG(@"Closed listening socket");
             }
           }
           
@@ -282,7 +287,7 @@ static void _NetServiceClientCallBack(CFNetServiceRef service, CFStreamError* er
     }
     
     dispatch_source_cancel(_source);  // This will close the socket
-    //dispatch_release(_source);
+    ARC_DISPATCH_RELEASE(_source);
     _source = NULL;
     
     LOG_VERBOSE(@"%@ stopped", [self class]);

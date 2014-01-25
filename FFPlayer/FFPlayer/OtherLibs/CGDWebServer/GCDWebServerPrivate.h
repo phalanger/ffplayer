@@ -25,6 +25,8 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import <TargetConditionals.h>
+
 #if __has_feature(objc_arc)
 #define ARC_BRIDGE __bridge
 #define ARC_BRIDGE_RELEASE(__OBJECT__) CFBridgingRelease(__OBJECT__)
@@ -32,6 +34,11 @@
 #define ARC_RELEASE(__OBJECT__)
 #define ARC_AUTORELEASE(__OBJECT__) __OBJECT__
 #define ARC_DEALLOC(__OBJECT__)
+#if (TARGET_OS_IPHONE && (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0)) || (!TARGET_OS_IPHONE && (__MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_8))
+#define ARC_DISPATCH_RELEASE(__OBJECT__)
+#else
+#define ARC_DISPATCH_RELEASE(__OBJECT__) dispatch_release(__OBJECT__)
+#endif
 #else
 #define ARC_BRIDGE
 #define ARC_BRIDGE_RELEASE(__OBJECT__) [(id)__OBJECT__ autorelease]
@@ -39,6 +46,7 @@
 #define ARC_RELEASE(__OBJECT__) [__OBJECT__ release]
 #define ARC_AUTORELEASE(__OBJECT__) [__OBJECT__ autorelease]
 #define ARC_DEALLOC(__OBJECT__) [__OBJECT__ dealloc]
+#define ARC_DISPATCH_RELEASE(__OBJECT__) dispatch_release(__OBJECT__)
 #endif
 
 #import "GCDWebServerConnection.h"
@@ -69,7 +77,7 @@ static inline void __LogMessage(long level, NSString* format, ...) {
 
 #define LOG_VERBOSE(...) __LogMessage(1, __VA_ARGS__)
 #define LOG_INFO(...) __LogMessage(2, __VA_ARGS__)
-#define MYLOG_WARNING(...) __LogMessage(3, __VA_ARGS__)
+#define LOG_WARNING(...) __LogMessage(3, __VA_ARGS__)
 #define LOG_ERROR(...) __LogMessage(4, __VA_ARGS__)
 #define LOG_EXCEPTION(__EXCEPTION__) __LogMessage(5, @"%@", __EXCEPTION__)
 
@@ -88,7 +96,7 @@ static inline void __LogMessage(long level, NSString* format, ...) {
     } \
   } while (0)
 #define DNOT_REACHED() abort()
-#define MYLOG_DEBUG(...) __LogMessage(0, __VA_ARGS__)
+#define LOG_DEBUG(...) __LogMessage(0, __VA_ARGS__)
 
 #endif
 

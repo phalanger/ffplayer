@@ -54,14 +54,14 @@ static dispatch_queue_t _formatterQueue = NULL;
       if (error == 0) {
         size_t size = dispatch_data_get_size(buffer);
         if (size > 0) {
-          MYLOG_DEBUG(@"Connection received %i bytes on socket %i", size, _socket);
+          LOG_DEBUG(@"Connection received %i bytes on socket %i", size, _socket);
           _bytesRead += size;
           block(buffer);
         } else {
           if (_bytesRead > 0) {
             LOG_ERROR(@"No more data available on socket %i", _socket);
           } else {
-            MYLOG_WARNING(@"No data received from socket %i", _socket);
+            LOG_WARNING(@"No data received from socket %i", _socket);
           }
           block(NULL);
         }
@@ -177,7 +177,7 @@ static dispatch_queue_t _formatterQueue = NULL;
     @autoreleasepool {
       if (error == 0) {
         DCHECK(data == NULL);
-        MYLOG_DEBUG(@"Connection sent %i bytes on socket %i", size, _socket);
+        LOG_DEBUG(@"Connection sent %i bytes on socket %i", size, _socket);
         _bytesWritten += size;
         block(YES);
       } else {
@@ -193,7 +193,7 @@ static dispatch_queue_t _formatterQueue = NULL;
 #if !__has_feature(objc_arc)
   [data retain];
 #endif
-  dispatch_data_t buffer = dispatch_data_create(data.bytes, data.length, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+  dispatch_data_t buffer = dispatch_data_create(data.bytes, data.length, dispatch_get_main_queue(), ^{
 #if __has_feature(objc_arc)
     [data self];  // Keeps ARC from releasing data too early
 #else
@@ -201,7 +201,7 @@ static dispatch_queue_t _formatterQueue = NULL;
 #endif
   });
   [self _writeBuffer:buffer withCompletionBlock:block];
-  //dispatch_release(buffer); //remove by cyt
+  ARC_DISPATCH_RELEASE(buffer);
 }
 
 - (void)_writeHeadersWithCompletionBlock:(WriteHeadersCompletionBlock)block {
@@ -226,7 +226,7 @@ static dispatch_queue_t _formatterQueue = NULL;
       }
       
     }];
-    //dispatch_release(wrapper); //remove by cyt
+    ARC_DISPATCH_RELEASE(wrapper);
   } else if (result < 0) {
     LOG_ERROR(@"Failed reading response body on socket %i (error %i)", _socket, (int)result);
     block(NO);
@@ -244,7 +244,6 @@ static dispatch_queue_t _formatterQueue = NULL;
 @synthesize server=_server, address=_address, totalBytesRead=_bytesRead, totalBytesWritten=_bytesWritten;
 
 + (void)initialize {
-  DCHECK([NSThread isMainThread]);  // NSDateFormatter should be initialized on main thread
   if (_separatorData == nil) {
     _separatorData = [[NSData alloc] initWithBytes:"\r\n\r\n" length:4];
     DCHECK(_separatorData);
@@ -260,6 +259,7 @@ static dispatch_queue_t _formatterQueue = NULL;
     DCHECK(_continueData);
   }
   if (_dateFormatter == nil) {
+    DCHECK([NSThread isMainThread]);  // NSDateFormatter should be initialized on main thread
     _dateFormatter = [[NSDateFormatter alloc] init];
     _dateFormatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
     _dateFormatter.dateFormat = @"EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'";
@@ -289,7 +289,7 @@ static dispatch_queue_t _formatterQueue = NULL;
   [self _writeHeadersWithCompletionBlock:^(BOOL success) {
     ;  // Nothing more to do
   }];
-  MYLOG_DEBUG(@"Connection aborted with status code %i on socket %i", statusCode, _socket);
+  LOG_DEBUG(@"Connection aborted with status code %i on socket %i", statusCode, _socket);
 }
 
 // http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
@@ -397,8 +397,6 @@ static dispatch_queue_t _formatterQueue = NULL;
       }
       NSDictionary* requestHeaders = ARC_BRIDGE_RELEASE(CFHTTPMessageCopyAllHeaderFields(_requestMessage));
       DCHECK(requestHeaders);
-        if ( ![requestMethod isEqualToString:@"PROPFIND"])
-            NSLog(@"Method:%@ URL:%@ Path:%@ Headers:%@", requestMethod, requestURL, requestPath, requestHeaders);
       for (_handler in _server.handlers) {
         _request = ARC_RETAIN(_handler.matchBlock(requestMethod, requestURL, requestHeaders, requestPath, requestQuery));
         if (_request) {
@@ -477,12 +475,12 @@ static dispatch_queue_t _formatterQueue = NULL;
 @implementation GCDWebServerConnection (Subclassing)
 
 - (void)open {
-  MYLOG_DEBUG(@"Did open connection on socket %i", _socket);
+  LOG_DEBUG(@"Did open connection on socket %i", _socket);
   [self _readRequestHeaders];
 }
 
 - (GCDWebServerResponse*)processRequest:(GCDWebServerRequest*)request withBlock:(GCDWebServerProcessBlock)block {
-  MYLOG_DEBUG(@"Connection on socket %i processing %@ request for \"%@\" (%i bytes body)", _socket, _request.method, _request.path, _request.contentLength);
+  LOG_DEBUG(@"Connection on socket %i processing %@ request for \"%@\" (%i bytes body)", _socket, _request.method, _request.path, _request.contentLength);
   GCDWebServerResponse* response = nil;
   @try {
     response = block(request);
@@ -498,7 +496,7 @@ static dispatch_queue_t _formatterQueue = NULL;
   if (result != 0) {
     LOG_ERROR(@"Failed closing socket %i for connection (%i): %s", _socket, errno, strerror(errno));
   }
-  MYLOG_DEBUG(@"Did close connection on socket %i", _socket);
+  LOG_DEBUG(@"Did close connection on socket %i", _socket);
 }
 
 @end
