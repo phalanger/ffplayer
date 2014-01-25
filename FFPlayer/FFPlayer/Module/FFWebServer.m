@@ -262,7 +262,7 @@ static dispatch_queue_t _connectionQueue = NULL;
 
 - (NSArray *)allowedMethods
 {
-    return([NSArray arrayWithObjects:@"OPTIONS", @"GET", @"HEAD", @"PUT", @"POST", @"COPY", @"PROPFIND", @"DELETE", @"MKCOL", @"MOVE", NULL]);  //, @"PROPPATCH", @"LOCK", @"UNLOCK"
+    return([NSArray arrayWithObjects:@"OPTIONS", @"GET", @"HEAD", @"PUT", @"POST", @"COPY", @"PROPFIND", @"DELETE", @"MKCOL", @"MOVE", @"LOCK", @"UNLOCK", NULL]);  //, @"PROPPATCH"
 }
 
 -(NSInteger) getWebDAVDepth:(NSDictionary *)headers
@@ -442,8 +442,9 @@ static dispatch_queue_t _connectionQueue = NULL;
         else if ( requestData.contentLength ==  0) {
             [requestData open];
             [requestData close];
-            [mgr removeItemAtPath:requestData.filePath error:nil];
-        } else if ( ![mgr moveItemAtPath:requestData.filePath toPath:thePath error:nil] )
+            //[mgr removeItemAtPath:requestData.filePath error:nil];
+        }
+        if ( ![mgr moveItemAtPath:requestData.filePath toPath:thePath error:nil] )
             return [GCDWebServerResponse responseWithStatusCode:403];
         return [GCDWebServerResponse responseWithStatusCode:200];
     }];
@@ -557,3 +558,102 @@ static dispatch_queue_t _connectionQueue = NULL;
 }
 
 @end
+
+
+/*
+ if ([method isEqualToString:@"LOCK"]) {
+ NSString* path = [rootPath stringByAppendingPathComponent:resourcePath];
+ if (![path hasPrefix:rootPath]) {
+ return nil;
+ }
+ 
+ NSString* depth = [headers objectForKey:@"Depth"];
+ NSString* scope = nil;
+ NSString* type = nil;
+ NSString* owner = nil;
+ NSString* token = nil;
+ xmlDocPtr document = xmlReadMemory(body.bytes, (int)body.length, NULL, NULL, kXMLParseOptions);
+ if (document) {
+ xmlNodePtr node = _XMLChildWithName(document->children, (const xmlChar*)"lockinfo");
+ if (node) {
+ xmlNodePtr scopeNode = _XMLChildWithName(node->children, (const xmlChar*)"lockscope");
+ if (scopeNode && scopeNode->children && scopeNode->children->name) {
+ scope = [NSString stringWithUTF8String:(const char*)scopeNode->children->name];
+ }
+ xmlNodePtr typeNode = _XMLChildWithName(node->children, (const xmlChar*)"locktype");
+ if (typeNode && typeNode->children && typeNode->children->name) {
+ type = [NSString stringWithUTF8String:(const char*)typeNode->children->name];
+ }
+ xmlNodePtr ownerNode = _XMLChildWithName(node->children, (const xmlChar*)"owner");
+ if (ownerNode) {
+ ownerNode = _XMLChildWithName(ownerNode->children, (const xmlChar*)"href");
+ if (ownerNode && ownerNode->children && ownerNode->children->content) {
+ owner = [NSString stringWithUTF8String:(const char*)ownerNode->children->content];
+ }
+ }
+ } else {
+ HTTPLogWarn(@"HTTP Server: Invalid DAV properties\n%@", [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding]);
+ }
+ xmlFreeDoc(document);
+ } else {
+ // No body, see if they're trying to refresh an existing lock.  If so, then just fake up the scope, type and depth so we fall
+ // into the lock create case.
+ NSString* lockToken;
+ if ((lockToken = [headers objectForKey:@"If"]) != nil) {
+ scope = @"exclusive";
+ type = @"write";
+ depth = @"0";
+ token = [lockToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"(<>)"]];
+ }
+ }
+ if ([scope isEqualToString:@"exclusive"] && [type isEqualToString:@"write"] && [depth isEqualToString:@"0"] &&
+ ([[NSFileManager defaultManager] fileExistsAtPath:path] || [[NSData data] writeToFile:path atomically:YES])) {
+ NSString* timeout = [headers objectForKey:@"Timeout"];
+ if (!token) {
+ CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+ NSString *uuidStr = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+ token = [NSString stringWithFormat:@"urn:uuid:%@", uuidStr];
+ CFRelease(uuid);
+ }
+ 
+ NSMutableString* xmlString = [NSMutableString stringWithString:@"<?xml version=\"1.0\" encoding=\"utf-8\" ?>"];
+ [xmlString appendString:@"<D:prop xmlns:D=\"DAV:\">\n"];
+ [xmlString appendString:@"<D:lockdiscovery>\n<D:activelock>\n"];
+ [xmlString appendFormat:@"<D:locktype><D:%@/></D:locktype>\n", type];
+ [xmlString appendFormat:@"<D:lockscope><D:%@/></D:lockscope>\n", scope];
+ [xmlString appendFormat:@"<D:depth>%@</D:depth>\n", depth];
+ if (owner) {
+ [xmlString appendFormat:@"<D:owner><D:href>%@</D:href></D:owner>\n", owner];
+ }
+ if (timeout) {
+ [xmlString appendFormat:@"<D:timeout>%@</D:timeout>\n", timeout];
+ }
+ [xmlString appendFormat:@"<D:locktoken><D:href>%@</D:href></D:locktoken>\n", token];
+ NSString* lockroot = [@"http://" stringByAppendingString:[[headers objectForKey:@"Host"] stringByAppendingString:[@"/" stringByAppendingString:resourcePath]]];
+ [xmlString appendFormat:@"<D:lockroot><D:href>%@</D:href></D:lockroot>\n", lockroot];
+ [xmlString appendString:@"</D:activelock>\n</D:lockdiscovery>\n"];
+ [xmlString appendString:@"</D:prop>"];
+ 
+ [_headers setObject:@"application/xml; charset=\"utf-8\"" forKey:@"Content-Type"];
+ _data = [xmlString dataUsingEncoding:NSUTF8StringEncoding];
+ _status = 200;
+ HTTPLogVerbose(@"Pretending to lock \"%@\"", resourcePath);
+ } else {
+ HTTPLogError(@"Locking request \"%@/%@/%@\" for \"%@\" is not allowed", scope, type, depth, resourcePath);
+ _status = 403;
+ }
+ }
+ 
+ // 9.11 UNLOCK Method - TODO: Actually unlock the resource
+ if ([method isEqualToString:@"UNLOCK"]) {
+ NSString* path = [rootPath stringByAppendingPathComponent:resourcePath];
+ if (![path hasPrefix:rootPath] || ![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+ return nil;
+ }
+ 
+ NSString* token = [headers objectForKey:@"Lock-Token"];
+ _status = token ? 204 : 400;
+ HTTPLogVerbose(@"Pretending to unlock \"%@\"", resourcePath);
+}
+ 
+ */

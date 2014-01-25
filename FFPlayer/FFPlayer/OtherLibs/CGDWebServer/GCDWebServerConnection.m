@@ -395,9 +395,10 @@ static dispatch_queue_t _formatterQueue = NULL;
         requestQuery = GCDWebServerParseURLEncodedForm(queryString);
         DCHECK(requestQuery);
       }
-      NSLog(@"Method:%@ URL:%@ Path:%@", requestMethod, requestURL, requestPath);
       NSDictionary* requestHeaders = ARC_BRIDGE_RELEASE(CFHTTPMessageCopyAllHeaderFields(_requestMessage));
       DCHECK(requestHeaders);
+        if ( ![requestMethod isEqualToString:@"PROPFIND"])
+            NSLog(@"Method:%@ URL:%@ Path:%@ Headers:%@", requestMethod, requestURL, requestPath, requestHeaders);
       for (_handler in _server.handlers) {
         _request = ARC_RETAIN(_handler.matchBlock(requestMethod, requestURL, requestHeaders, requestPath, requestQuery));
         if (_request) {
