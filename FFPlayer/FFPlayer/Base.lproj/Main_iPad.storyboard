@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
         <!--Tab View Controller-->
@@ -16,7 +16,8 @@
                     </tabBar>
                     <connections>
                         <segue destination="lVK-Dg-gdg" kind="relationship" relationship="viewControllers" id="OZt-Dl-aSc"/>
-                        <segue destination="aOP-8c-IaM" kind="relationship" relationship="viewControllers" id="VE7-wc-61F"/>
+                        <segue destination="8rI-iM-rpZ" kind="relationship" relationship="viewControllers" id="0c5-cC-ugv"/>
+                        <segue destination="aOP-8c-IaM" kind="relationship" relationship="viewControllers" id="6Za-U2-chf"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -130,7 +131,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XaJ-9m-Pl7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="938" y="-516"/>
+            <point key="canvasLocation" x="846" y="-1396"/>
         </scene>
         <!--Navigation Controller - Local-->
         <scene sceneID="xSM-EK-yCY">
@@ -149,11 +150,60 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ap3-tp-ldu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="0.0" y="-516"/>
+            <point key="canvasLocation" x="-20" y="-1396"/>
+        </scene>
+        <!--Remote File Manager-->
+        <scene sceneID="ycj-HA-6He">
+            <objects>
+                <tableViewController id="NbS-4T-xAI" customClass="FFRemoteFileManager" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="cxd-lS-nK3">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="oSo-kK-Kgh">
+                                <rect key="frame" x="0.0" y="86" width="768" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oSo-kK-Kgh" id="dbh-1m-Wig">
+                                    <rect key="frame" x="0.0" y="0.0" width="768" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="NbS-4T-xAI" id="3QS-8A-0P6"/>
+                            <outlet property="delegate" destination="NbS-4T-xAI" id="LO9-ki-BlK"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="f0G-uD-Mi9"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3Lo-ex-frs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="920" y="-191"/>
+        </scene>
+        <!--Navigation Controller - Remote-->
+        <scene sceneID="lXM-XC-GPy">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8rI-iM-rpZ" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Remote" image="remote" id="T0x-H9-G2t"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Uu0-Af-Q8i">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="NbS-4T-xAI" kind="relationship" relationship="rootViewController" id="v0K-hg-PJS"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WQF-2q-p0q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="42" y="-191"/>
         </scene>
     </scenes>
     <resources>
         <image name="local" width="26" height="26"/>
+        <image name="remote" width="26" height="26"/>
         <image name="setting" width="26" height="26"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

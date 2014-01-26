@@ -83,6 +83,8 @@
 		1FE5F8EC18838EEA00CB4C09 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8EB18838EEA00CB4C09 /* libz.dylib */; };
 		1FE5F8EE1883930D00CB4C09 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE5F8ED1883930D00CB4C09 /* AVFoundation.framework */; };
 		4D0165C418856D650031DC71 /* FFInternalMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */; };
+		4D61275518954E4500C74ADE /* FFRemoteFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D61275418954E4500C74ADE /* FFRemoteFileManager.m */; };
+		4D6127581895555400C74ADE /* FFPlayHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127571895555400C74ADE /* FFPlayHistory.m */; };
 		4DBD97F8188814D000C71747 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F6188814D000C71747 /* folder.png */; };
 		4DBD97F9188814D000C71747 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F7188814D000C71747 /* folder@2x.png */; };
 		4DBD97FC1888156D00C71747 /* movie.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97FA1888156D00C71747 /* movie.png */; };
@@ -220,6 +222,10 @@
 		1FE5F8ED1883930D00CB4C09 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4D0165C218856D650031DC71 /* FFInternalMoviePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFInternalMoviePlayerController.h; path = GUI/FFInternalMoviePlayerController.h; sourceTree = "<group>"; };
 		4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFInternalMoviePlayerController.m; path = GUI/FFInternalMoviePlayerController.m; sourceTree = "<group>"; };
+		4D61275318954E4500C74ADE /* FFRemoteFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFRemoteFileManager.h; path = GUI/FFRemoteFileManager.h; sourceTree = "<group>"; };
+		4D61275418954E4500C74ADE /* FFRemoteFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFRemoteFileManager.m; path = GUI/FFRemoteFileManager.m; sourceTree = "<group>"; };
+		4D6127561895555400C74ADE /* FFPlayHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFPlayHistory.h; path = Module/FFPlayHistory.h; sourceTree = "<group>"; };
+		4D6127571895555400C74ADE /* FFPlayHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFPlayHistory.m; path = Module/FFPlayHistory.m; sourceTree = "<group>"; };
 		4DBD97F6188814D000C71747 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folder.png; path = Resource/folder.png; sourceTree = "<group>"; };
 		4DBD97F7188814D000C71747 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resource/folder@2x.png"; sourceTree = "<group>"; };
 		4DBD97FA1888156D00C71747 /* movie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = movie.png; path = Resource/movie.png; sourceTree = "<group>"; };
@@ -312,6 +318,8 @@
 				4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */,
 				1FC071E11887B68A00ED63E8 /* FFTabViewController.h */,
 				1FC071E21887B68A00ED63E8 /* FFTabViewController.m */,
+				4D61275318954E4500C74ADE /* FFRemoteFileManager.h */,
+				4D61275418954E4500C74ADE /* FFRemoteFileManager.m */,
 			);
 			name = GUI;
 			sourceTree = "<group>";
@@ -329,6 +337,8 @@
 				1FC071FA18890D4500ED63E8 /* FFSetting.m */,
 				1FBC5B0F188935EE005FB7DB /* FFLocalFileManager.h */,
 				1FBC5B10188935EE005FB7DB /* FFLocalFileManager.m */,
+				4D6127561895555400C74ADE /* FFPlayHistory.h */,
+				4D6127571895555400C74ADE /* FFPlayHistory.m */,
 			);
 			name = Module;
 			sourceTree = "<group>";
@@ -694,6 +704,7 @@
 				1FC071FB18890D4500ED63E8 /* FFSetting.m in Sources */,
 				1FC071A71884FC6600ED63E8 /* AFURLSessionManager.m in Sources */,
 				4DBD981318882A0600C71747 /* GCDWebServerResponse.m in Sources */,
+				4D6127581895555400C74ADE /* FFPlayHistory.m in Sources */,
 				4DBD981618882FA100C71747 /* FFWebServer.m in Sources */,
 				1FC071A61884FC6600ED63E8 /* AFURLResponseSerialization.m in Sources */,
 				1FC071821883F36D00ED63E8 /* FFSettingViewController.m in Sources */,
@@ -704,6 +715,7 @@
 				4DBD981118882A0600C71747 /* GCDWebServerConnection.m in Sources */,
 				1FC071A21884FC6600ED63E8 /* AFNetworkReachabilityManager.m in Sources */,
 				1FC071E31887B68A00ED63E8 /* FFTabViewController.m in Sources */,
+				4D61275518954E4500C74ADE /* FFRemoteFileManager.m in Sources */,
 				1FE5F8B818838DA700CB4C09 /* KxMovieDecoder.m in Sources */,
 				1FC0719F1884FC6600ED63E8 /* AFHTTPRequestOperation.m in Sources */,
 				1FC071A11884FC6600ED63E8 /* AFHTTPSessionManager.m in Sources */,

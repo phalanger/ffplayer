@@ -87,6 +87,33 @@
     return [root stringByAppendingPathComponent:@"private"];
 }
 
++(NSString *) getPlayHistoryPath
+{
+    NSString * root = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,
+                                                           NSUserDomainMask,
+                                                           YES) lastObject];
+    
+    return [root stringByAppendingPathComponent:@"playhistory.data"];
+}
+
++(NSString *) getURLHistoryPath
+{
+    NSString * root = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,
+                                                           NSUserDomainMask,
+                                                           YES) lastObject];
+    
+    return [root stringByAppendingPathComponent:@"urlhistory.data"];
+}
+
++(NSString *) getSparkSvrListPath
+{
+    NSString * root = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,
+                                                           NSUserDomainMask,
+                                                           YES) lastObject];
+    
+    return [root stringByAppendingPathComponent:@"sparksvr.data"];
+}
+
 +(NSString *) getCurrentFolder:(NSString *) strSubPath inSecret:(BOOL) inSecret
 {
     NSString * root = (inSecret) ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];

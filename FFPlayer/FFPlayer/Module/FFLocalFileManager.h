@@ -40,6 +40,10 @@ typedef enum {
 +(NSString *) getRootFullPath;
 +(NSString *) getSecretRootPath;
 
++(NSString *) getPlayHistoryPath;
++(NSString *) getURLHistoryPath;
++(NSString *) getSparkSvrListPath;
+
 +(NSString *) getCurrentFolder:(NSString *) strSubPath inSecret:(BOOL) inSecret;
 +(NSArray *) listCurrentFolder:(NSString *) strSubPath inSecret:(BOOL) inSecret;
 
