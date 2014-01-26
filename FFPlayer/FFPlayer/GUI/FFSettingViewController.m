@@ -23,6 +23,8 @@ enum {
     MENU_SEEK_DELTA,
     SWITCH_HTTP_UPLOAD,
     MENU_ABOUT,
+    LAB_WEB,
+    LAB_WEBDAV,
 };
 
 @interface FFSettingViewController () <UITextFieldDelegate>
@@ -68,6 +70,8 @@ enum {
                                 ] mutableCopy];
     
     NSMutableArray * aryUpload = [@[ @(SWITCH_HTTP_UPLOAD)
+                                     ,@(LAB_WEB)
+                                     ,@(LAB_WEBDAV)
                                     ] mutableCopy];
 
     NSMutableArray * aryMovie = [@[ @(SWITCH_AUTO_PLAY_NEXT)
@@ -161,7 +165,7 @@ enum {
     return nil;
 }
 
--(NSString *) getWebURLs:(int) port
+-(NSString *) getWebURLs:(int) port isWebDav:(BOOL)isWebDav
 {
     NSMutableSet * setURLs = [[NSMutableSet alloc] init];
     NSString * strIP1 = [FFHelper localIPAddress];
@@ -172,7 +176,10 @@ enum {
         [setURLs addObject:strIP1];
     NSMutableArray * aryRes = [[NSMutableArray alloc] init];
     for ( NSString * item in setURLs) {
-        [aryRes addObject:[NSString stringWithFormat:@"http://%@:%d", item, port]];
+        if ( isWebDav )
+            [aryRes addObject:[NSString stringWithFormat:@"http://%@:%d/webdav/", item, port]];
+        else
+            [aryRes addObject:[NSString stringWithFormat:@"http://%@:%d", item, port]];
     }
     return [aryRes componentsJoinedByString:@","];
 }
@@ -197,13 +204,28 @@ enum {
         } break;
 
         case SWITCH_HTTP_UPLOAD: {
-            cell.textLabel.text = NSLocalizedString(@"Open Web Server for upload", nil);
+            cell.textLabel.text = NSLocalizedString(@"Open WebServer/WebDav", nil);
             [self addSwitchToCell:cell withTag:SWITCH_HTTP_UPLOAD withValue:[webServer isRunning]];
             int nWebPort = [[FFSetting default] webPort];
             [self addInputToCell:cell placeHolder:[NSString stringWithFormat:@"%@:%d", NSLocalizedString(@"Port", nil), nWebPort]
-                         withTag:SWITCH_HTTP_UPLOAD inFrame:CGRectMake( 265, 3, 100, 38)];
-            cell.detailTextLabel.text = [self getWebURLs:nWebPort];
+                         withTag:SWITCH_HTTP_UPLOAD inFrame:CGRectMake( 230, 3, 100, 38)];
+            cell.detailTextLabel.text = nil;
         } break;
+        case LAB_WEB: {
+            int nWebPort = [[FFSetting default] webPort];
+            cell.detailTextLabel.text = nil;
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ : %@", NSLocalizedString(@"Web Server URL", nil), [self getWebURLs:nWebPort isWebDav:FALSE]];
+            cell.indentationLevel = 1;
+            cell.indentationWidth = 20.0f;
+        } break;
+        case LAB_WEBDAV: {
+            int nWebPort = [[FFSetting default] webPort];
+            cell.detailTextLabel.text = nil;
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ : %@", NSLocalizedString(@"Webdav URL", nil), [self getWebURLs:nWebPort isWebDav:TRUE]];
+            cell.indentationLevel = 1;
+            cell.indentationWidth = 20.0f;
+        } break;
+        
             
         case SWITCH_AUTO_PLAY_NEXT: {
             cell.textLabel.text = NSLocalizedString(@"Auto play next", nil);

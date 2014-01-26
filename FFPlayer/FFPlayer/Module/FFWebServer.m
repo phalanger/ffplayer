@@ -163,23 +163,26 @@ static dispatch_queue_t _connectionQueue = NULL;
         if ( item.type == LIT_PARENT )
             continue;
         else {
+            NSString * subName = (item.type == LIT_SECRETE) ? @"Secret" : item.fileName;
+            NSString * displayName = (item.type == LIT_SECRETE) ? NSLocalizedString(@"Secret", nil) : item.fileName;
             NSMutableDictionary * response = [[NSMutableDictionary alloc] init];
             NSMutableDictionary * propstat = [[NSMutableDictionary alloc] init];
             NSMutableDictionary * prop = [[NSMutableDictionary alloc] init];
 
             [aryResponse addObject:response];
-            [response setObject:[self urlEncode:[parentURL stringByAppendingPathComponent:item.fileName]] forKey:@"d:href"];
+            [response setObject:[self urlEncode:[parentURL stringByAppendingPathComponent:subName]] forKey:@"d:href"];
                 [response setObject:propstat forKey:@"d:propstat"];
                     [propstat setObject:@"HTTP/1.1 200 OK" forKey:@"d:status"];
                     [propstat setObject:prop forKey:@"d:prop"];
-                        [prop setObject:item.fileName forKey:@"d:displayname"];
-                        [prop setObject:item.fileName forKey:@"d:name"];
+                        [prop setObject:displayName forKey:@"d:displayname"];
+                        [prop setObject:displayName forKey:@"d:name"];
                         if ( item.type == LIT_DIR || item.type == LIT_SECRETE )
                             [prop setObject:@{ @"d:collection" : @{} } forKey:@"d:resourcetype"];
-                        else
+                        else {
                             [prop setObject:@{} forKey:@"d:resourcetype"];
-                        [prop setObject:[NSString stringWithFormat:@"%qu", item.size] forKey:@"d:getcontentlength"];
-                        [prop setObject:[formatter stringFromDate:item.modifyTime] forKey:@"d:getlastmodified"];
+                            [prop setObject:[NSString stringWithFormat:@"%qu", item.size] forKey:@"d:getcontentlength"];
+                            [prop setObject:[formatter stringFromDate:item.modifyTime] forKey:@"d:getlastmodified"];
+                        }
         }
     }
 }
@@ -222,10 +225,14 @@ static dispatch_queue_t _connectionQueue = NULL;
         if ( aryPath.count > 0 ) {
             if ( [aryPath[0] isEqualToString:@"/"] )
                 [aryPath removeObjectAtIndex:0];
-            if ( aryPath.count > 0 ) {
-                if ( [aryPath[0] isEqualToString:@"Secret"] && [[FFSetting default] unlock] )
-                    url.inSecret = YES;
+            if ( aryPath.count > 0 && [aryPath[0] isEqualToString:@"webdav"] ) {
                 [aryPath removeObjectAtIndex:0];
+            }
+            if ( aryPath.count > 0 ) {
+                if ( [aryPath[0] isEqualToString:@"Secret"] && [[FFSetting default] unlock] ) {
+                    url.inSecret = YES;
+                    [aryPath removeObjectAtIndex:0];
+                }
             }
             NSString * subPath = [NSString pathWithComponents:aryPath];
             subPath = [self normalizedPath:subPath];
@@ -317,7 +324,7 @@ static dispatch_queue_t _connectionQueue = NULL;
     
     [self addHandlerForBasePath:@"/" localPath:websitePath indexFilename:nil cacheAge:3600];
     
-    [self addHandlerForMethod:@"PROPFIND" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerDataRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+    [self addHandlerForMethod:@"PROPFIND" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerDataRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         GCDWebServerDataRequest * requestData = (GCDWebServerDataRequest *)request;
         
         NSInteger theDepth = [weakSelf getWebDAVDepth:requestData.headers];
@@ -339,7 +346,7 @@ static dispatch_queue_t _connectionQueue = NULL;
         
         return [GCDWebServerDataResponse responseWithXML:dicData withStatusCode:200];
     }];
-    [self addHandlerForMethod:@"OPTIONS" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+    [self addHandlerForMethod:@"OPTIONS" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
         GCDWebServerResponse * response = [GCDWebServerResponse responseWithStatusCode:200];
         [response setValue:[weakSelf DAVClass] forAdditionalHeader:@"DAV"];
@@ -347,7 +354,7 @@ static dispatch_queue_t _connectionQueue = NULL;
         return response;
         
     }];
-    [self addHandlerForMethod:@"GET" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+    [self addHandlerForMethod:@"GET" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
         GCDWebServerResponse* response = nil;
         NSString * pathToCheck = [weakSelf webDavURLToLocalURL:request.URL.path];
@@ -358,7 +365,7 @@ static dispatch_queue_t _connectionQueue = NULL;
         }
         return response;
     }];
-    [self addHandlerForMethod:@"MKCOL" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+    [self addHandlerForMethod:@"MKCOL" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
         NSString * pathToCheck = [weakSelf webDavURLToLocalURL:request.URL.path];
         NSFileManager * mgr = [NSFileManager defaultManager];
@@ -371,7 +378,7 @@ static dispatch_queue_t _connectionQueue = NULL;
             return [GCDWebServerResponse responseWithStatusCode:403];        /* Forbidden */
         return [GCDWebServerResponse responseWithStatusCode:201];
     }];
-    [self addHandlerForMethod:@"DELETE" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+    [self addHandlerForMethod:@"DELETE" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
         NSString * pathToCheck = [weakSelf webDavURLToLocalURL:request.URL.path];
         NSFileManager * mgr = [NSFileManager defaultManager];
@@ -384,7 +391,7 @@ static dispatch_queue_t _connectionQueue = NULL;
             return [GCDWebServerResponse responseWithStatusCode:403];        /* Forbidden */
         return [GCDWebServerResponse responseWithStatusCode:201];
     }];
-    [self addHandlerForMethod:@"MOVE" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+    [self addHandlerForMethod:@"MOVE" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
         NSInteger theDepth = [weakSelf getWebDAVDepth:request.headers];
         if ( theDepth != -1)
@@ -413,7 +420,7 @@ static dispatch_queue_t _connectionQueue = NULL;
             return [GCDWebServerResponse responseWithStatusCode:403];        /* Forbidden */
         return [GCDWebServerResponse responseWithStatusCode:200];
     }];
-    [self addHandlerForMethod:@"COPY" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+    [self addHandlerForMethod:@"COPY" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
         NSInteger theDepth = [weakSelf getWebDAVDepth:request.headers];
         if ( theDepth != -1)
@@ -442,12 +449,10 @@ static dispatch_queue_t _connectionQueue = NULL;
             return [GCDWebServerResponse responseWithStatusCode:403];        /* Forbidden */
         return [GCDWebServerResponse responseWithStatusCode:200];
     }];
-    [self addHandlerForMethod:@"PUT" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerFileRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+    [self addHandlerForMethod:@"PUT" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerFileRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         GCDWebServerFileRequest * requestData = (GCDWebServerFileRequest *)request;
         
         NSFileManager * mgr = [NSFileManager defaultManager];
-        NSDictionary * fileAttr = [mgr attributesOfItemAtPath:requestData.filePath error:nil];
-        NSLog(@"Handle PUT:%@ %@ Size:%@", request.URL.path, request.headers, [fileAttr valueForKey:NSFileSize]);
         
         NSString *thePath = [weakSelf webDavURLToLocalURL:request.URL.path];
         BOOL isDir = FALSE, isSrcExist = FALSE;
@@ -462,13 +467,12 @@ static dispatch_queue_t _connectionQueue = NULL;
         else if ( requestData.contentLength ==  0) {
             [requestData open];
             [requestData close];
-            //[mgr removeItemAtPath:requestData.filePath error:nil];
         }
         if ( ![mgr moveItemAtPath:requestData.filePath toPath:thePath error:nil] )
             return [GCDWebServerResponse responseWithStatusCode:403];
         return [GCDWebServerResponse responseWithStatusCode:200];
     }];
-    [self addHandlerForMethod:@"LOCK" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerDataRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest * request){
+    [self addHandlerForMethod:@"LOCK" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerDataRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest * request){
         GCDWebServerDataRequest * requestData = (GCDWebServerDataRequest *)request;
         
         NSInteger theDepth = [weakSelf getWebDAVDepth:requestData.headers];
@@ -546,7 +550,7 @@ static dispatch_queue_t _connectionQueue = NULL;
         }
         return [GCDWebServerResponse responseWithStatusCode:200];
     }];
-    [self addHandlerForMethod:@"UNLOCK" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+    [self addHandlerForMethod:@"UNLOCK" pathRegex:@"/webdav/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         
         return [GCDWebServerResponse responseWithStatusCode:200];
     }];
