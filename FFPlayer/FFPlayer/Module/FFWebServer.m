@@ -115,14 +115,15 @@ static dispatch_queue_t _connectionQueue = NULL;
     formatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
     formatter.dateFormat = @"EEE', 'd' 'MMM' 'yyyy' 'HH:mm:ss' GMT'";
     
-    NSMutableDictionary * root = [[NSMutableDictionary alloc] init];
+//    NSMutableDictionary * root = [[NSMutableDictionary alloc] init];
     NSMutableDictionary * response = [[NSMutableDictionary alloc] init];
     NSMutableDictionary * propstat = [[NSMutableDictionary alloc] init];
     NSMutableDictionary * prop = [[NSMutableDictionary alloc] init];
     
-    [data setObject:root forKey:@"d:multistatus"];
-    [root setObject:@{ @"xmlns:d" : @"DAV:" } forKey:XMLDictionaryAttributesKey];
-    [root setObject:response forKey:@"d:response"];
+//    [data setObject:root forKey:@"d:multistatus"];
+    [data setObject:@"d:multistatus" forKey:XMLDictionaryNodeNameKey];
+    [data setObject:@{ @"xmlns:d" : @"DAV:" } forKey:XMLDictionaryAttributesKey];
+    [data setObject:response forKey:@"d:response"];
     
         [response setObject:[self urlEncode:parentURL] forKey:@"d:href"];
         [response setObject:propstat forKey:@"d:propstat"];
@@ -263,6 +264,21 @@ static dispatch_queue_t _connectionQueue = NULL;
 - (NSArray *)allowedMethods
 {
     return([NSArray arrayWithObjects:@"OPTIONS", @"GET", @"HEAD", @"PUT", @"POST", @"COPY", @"PROPFIND", @"DELETE", @"MKCOL", @"MOVE", @"LOCK", @"UNLOCK", NULL]);  //, @"PROPPATCH"
+}
+
+-(NSString *) firstElementKey:(NSDictionary *)xml
+{
+    for ( NSString * key in xml ) {
+        if ([key hasPrefix:XMLDictionaryAttributePrefix])
+            continue;
+        NSString * lowerKey = [key lowercaseString];
+        NSRange range = [lowerKey rangeOfString:@":"];
+        if ( range.location != NSNotFound )
+            return [lowerKey substringFromIndex:range.location + 1];
+        else
+            return  lowerKey;
+    }
+    return  nil;
 }
 
 -(NSInteger) getWebDAVDepth:(NSDictionary *)headers
@@ -428,7 +444,11 @@ static dispatch_queue_t _connectionQueue = NULL;
     }];
     [self addHandlerForMethod:@"PUT" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerFileRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
         GCDWebServerFileRequest * requestData = (GCDWebServerFileRequest *)request;
+        
         NSFileManager * mgr = [NSFileManager defaultManager];
+        NSDictionary * fileAttr = [mgr attributesOfItemAtPath:requestData.filePath error:nil];
+        NSLog(@"Handle PUT:%@ %@ Size:%@", request.URL.path, request.headers, [fileAttr valueForKey:NSFileSize]);
+        
         NSString *thePath = [weakSelf webDavURLToLocalURL:request.URL.path];
         BOOL isDir = FALSE, isSrcExist = FALSE;
         if ( thePath == nil )
@@ -446,6 +466,88 @@ static dispatch_queue_t _connectionQueue = NULL;
         }
         if ( ![mgr moveItemAtPath:requestData.filePath toPath:thePath error:nil] )
             return [GCDWebServerResponse responseWithStatusCode:403];
+        return [GCDWebServerResponse responseWithStatusCode:200];
+    }];
+    [self addHandlerForMethod:@"LOCK" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerDataRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest * request){
+        GCDWebServerDataRequest * requestData = (GCDWebServerDataRequest *)request;
+        
+        NSInteger theDepth = [weakSelf getWebDAVDepth:requestData.headers];
+        if ( theDepth < -1)
+            return [GCDWebServerDataResponse responseWithXML:@{} withStatusCode:400];
+        NSFileManager * mgr = [NSFileManager defaultManager];
+        NSString *thePath = [weakSelf webDavURLToLocalURL:request.URL.path];
+        if ( ![mgr fileExistsAtPath:thePath] )
+            return [GCDWebServerResponse responseWithStatusCode:404];
+
+        NSString* scope = nil;
+        NSString* type = nil;
+        NSString* owner = nil;
+        NSString* token = nil;
+        NSString * lockToken = nil;
+        
+        XMLDictionaryParser * parser = [XMLDictionaryParser sharedInstance];
+        parser.stripEmptyNodes = FALSE;
+        parser.attributesMode = XMLDictionaryAttributesModeDiscard;
+        NSDictionary * xml = [parser dictionaryWithData:requestData.data];
+        if ( xml == nil ) {
+            if ((lockToken = [request.headers objectForKey:@"If"]) != nil) {
+                scope = @"exclusive";
+                type = @"write";
+                theDepth = 0;
+                token = [lockToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"(<>)"]];
+            }
+        } else {
+            for ( NSString * key in xml ) {
+                NSString * strLowKey = [key lowercaseString];
+                if ( [strLowKey hasSuffix:@"lockscope"] ) {
+                    scope = [weakSelf firstElementKey:[xml objectForKey:key]];
+                } else if ( [strLowKey hasSuffix:@"locktype"] ) {
+                    type = [weakSelf firstElementKey:[xml objectForKey:key]];
+                } else if ( [strLowKey hasSuffix:@"owner"] ) {
+                    owner = [[xml objectForKey:key] objectForKey:@"href"];
+                }
+            }
+        }
+        
+        if ([scope isEqualToString:@"exclusive"] && [type isEqualToString:@"write"] && theDepth == 0 &&
+            ([[NSFileManager defaultManager] fileExistsAtPath:thePath] || [[NSData data] writeToFile:thePath atomically:YES])) {
+            NSString* timeout = [request.headers objectForKey:@"Timeout"];
+            if (!token) {
+                CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+                NSString *uuidStr = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+                token = [NSString stringWithFormat:@"urn:uuid:%@", uuidStr];
+                CFRelease(uuid);
+            }
+            NSString* lockroot = [@"http://" stringByAppendingString:[[request.headers objectForKey:@"Host"] stringByAppendingString:[@"/" stringByAppendingString:request.path]]];
+            
+            NSMutableDictionary * xmlResult = [NSMutableDictionary dictionary];
+            NSMutableDictionary * xmlDiscovery = [NSMutableDictionary dictionary];
+            NSMutableDictionary * xmlActivelock = [NSMutableDictionary dictionary];
+            
+            [xmlResult setObject:@"d:prop" forKey:XMLDictionaryNodeNameKey];
+                [xmlResult setObject:@{ @"xmlns:d" : @"DAV:" } forKey:XMLDictionaryAttributesKey];
+                [xmlResult setObject:xmlDiscovery forKey:@"d:lockdiscovery"];
+                [xmlDiscovery setObject:xmlActivelock forKey:@"d:activelock"];
+            
+                [xmlActivelock setObject:@{ [NSString stringWithFormat:@"d:%@",type] : @{} } forKey:@"d:locktype"];
+                [xmlActivelock setObject:@{ [NSString stringWithFormat:@"d:%@",scope] : @{} } forKey:@"d:lockscope"];
+                [xmlActivelock setObject:[NSString stringWithFormat:@"%d", theDepth] forKey:@"d:depth"];
+                if (owner)
+                    [xmlActivelock setObject:@{ @"d:href" : owner } forKey:@"d:owner"];
+                if (timeout)
+                    [xmlActivelock setObject:timeout forKey:@"d:timeout"];
+            [xmlActivelock setObject:@{ @"d:href" : token } forKey:@"d:locktoken"];
+            [xmlActivelock setObject:@{ @"d:href" : lockroot } forKey:@"d:lockroot"];
+            
+            return [GCDWebServerDataResponse responseWithXML:xmlResult withStatusCode:200];
+        } else {
+            NSLog(@"Locking request \"%@/%@/%d\" for \"%@\" is not allowed", scope, type, theDepth, request.path);
+            return [GCDWebServerResponse responseWithStatusCode:403];
+        }
+        return [GCDWebServerResponse responseWithStatusCode:200];
+    }];
+    [self addHandlerForMethod:@"UNLOCK" pathRegex:@"/(webdav|Secret)/.*" requestClass:[GCDWebServerRequest class] processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+        
         return [GCDWebServerResponse responseWithStatusCode:200];
     }];
 
@@ -574,37 +676,37 @@ static dispatch_queue_t _connectionQueue = NULL;
  NSString* token = nil;
  xmlDocPtr document = xmlReadMemory(body.bytes, (int)body.length, NULL, NULL, kXMLParseOptions);
  if (document) {
- xmlNodePtr node = _XMLChildWithName(document->children, (const xmlChar*)"lockinfo");
- if (node) {
- xmlNodePtr scopeNode = _XMLChildWithName(node->children, (const xmlChar*)"lockscope");
- if (scopeNode && scopeNode->children && scopeNode->children->name) {
- scope = [NSString stringWithUTF8String:(const char*)scopeNode->children->name];
- }
- xmlNodePtr typeNode = _XMLChildWithName(node->children, (const xmlChar*)"locktype");
- if (typeNode && typeNode->children && typeNode->children->name) {
- type = [NSString stringWithUTF8String:(const char*)typeNode->children->name];
- }
- xmlNodePtr ownerNode = _XMLChildWithName(node->children, (const xmlChar*)"owner");
- if (ownerNode) {
- ownerNode = _XMLChildWithName(ownerNode->children, (const xmlChar*)"href");
- if (ownerNode && ownerNode->children && ownerNode->children->content) {
- owner = [NSString stringWithUTF8String:(const char*)ownerNode->children->content];
- }
- }
+    xmlNodePtr node = _XMLChildWithName(document->children, (const xmlChar*)"lockinfo");
+    if (node) {
+        xmlNodePtr scopeNode = _XMLChildWithName(node->children, (const xmlChar*)"lockscope");
+        if (scopeNode && scopeNode->children && scopeNode->children->name) {
+            scope = [NSString stringWithUTF8String:(const char*)scopeNode->children->name];
+        }
+        xmlNodePtr typeNode = _XMLChildWithName(node->children, (const xmlChar*)"locktype");
+        if (typeNode && typeNode->children && typeNode->children->name) {
+            type = [NSString stringWithUTF8String:(const char*)typeNode->children->name];
+        }
+        xmlNodePtr ownerNode = _XMLChildWithName(node->children, (const xmlChar*)"owner");
+        if (ownerNode) {
+            ownerNode = _XMLChildWithName(ownerNode->children, (const xmlChar*)"href");
+            if (ownerNode && ownerNode->children && ownerNode->children->content) {
+                owner = [NSString stringWithUTF8String:(const char*)ownerNode->children->content];
+            }
+        }
+    } else {
+        HTTPLogWarn(@"HTTP Server: Invalid DAV properties\n%@", [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding]);
+    }
+    xmlFreeDoc(document);
  } else {
- HTTPLogWarn(@"HTTP Server: Invalid DAV properties\n%@", [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding]);
- }
- xmlFreeDoc(document);
- } else {
- // No body, see if they're trying to refresh an existing lock.  If so, then just fake up the scope, type and depth so we fall
- // into the lock create case.
- NSString* lockToken;
- if ((lockToken = [headers objectForKey:@"If"]) != nil) {
- scope = @"exclusive";
- type = @"write";
- depth = @"0";
- token = [lockToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"(<>)"]];
- }
+    // No body, see if they're trying to refresh an existing lock.  If so, then just fake up the scope, type and depth so we fall
+    // into the lock create case.
+    NSString* lockToken;
+    if ((lockToken = [headers objectForKey:@"If"]) != nil) {
+        scope = @"exclusive";
+        type = @"write";
+        depth = @"0";
+        token = [lockToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"(<>)"]];
+    }
  }
  if ([scope isEqualToString:@"exclusive"] && [type isEqualToString:@"write"] && [depth isEqualToString:@"0"] &&
  ([[NSFileManager defaultManager] fileExistsAtPath:path] || [[NSData data] writeToFile:path atomically:YES])) {
