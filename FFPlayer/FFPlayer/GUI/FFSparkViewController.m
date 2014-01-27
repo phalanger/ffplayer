@@ -11,6 +11,8 @@
 #import "MBProgressHUD.h"
 #import "FFAlertView.h"
 #import "FFHelper.h"
+#import "FFSetting.h"
+#import "FFPlayer.h"
 
 #define ASYNC_HUD_BEGIN(strTitle)   if ( self.navigationController.navigationBar) self.navigationController.navigationBar.userInteractionEnabled = NO;\
                                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES]; \
@@ -28,6 +30,11 @@
 @property (atomic) NSString *   name;
 @property (assign) BOOL         dir;
 @property (assign) BOOL         root;
+@property (assign) BOOL         lock;
+@property (atomic) NSString *   mtime;
+@property (assign) long long    size;
+
+
 @end
 
 @implementation FFSparkItem
@@ -82,8 +89,9 @@
 
 @end
 
-
 ///////////////////////////////////////////////////
+
+static FFPlayer * _internalPlayer = nil;
 
 @interface FFSparkViewController ()
 {
@@ -92,7 +100,8 @@
     NSString * _setting;
     NSString * _name;
     NSString * _baseURL;
-    NSMutableArray *    _arySprkItems;
+    NSString * _urlPrefix;
+    NSArray *    _arySprkItems;
 }
 @end
 
@@ -102,10 +111,12 @@
 {
     _baseURL = baseURL;
     _name = name;
-    if ( [setting rangeOfString:@":"].location == NSNotFound )
-        _setting = [NSString stringWithFormat:@"http://%@:27888", setting];
+    _setting = setting;
+
+    if ( [_setting rangeOfString:@":"].location == NSNotFound )
+        _urlPrefix = [NSString stringWithFormat:@"http://%@:27888", _setting];
     else
-        _setting = [NSString stringWithFormat:@"http://%@", setting];
+        _urlPrefix = [NSString stringWithFormat:@"http://%@", _setting];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -121,7 +132,7 @@
 {
     [super viewDidLoad];
     
-    _arySprkItems = [[NSMutableArray alloc] init];
+    _arySprkItems = [[NSArray alloc] init];
     self.title = _name;
 
     btnRefresh = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(onRefresh:)];
@@ -163,11 +174,38 @@
 
 -(void) onGetList:(NSDictionary *)dictData
 {
-    [_arySprkItems removeAllObjects];
+    NSMutableArray * ary = [[NSMutableArray alloc] init];
     NSArray * aryItems = [((NSDictionary *)dictData) objectForKey:@"data"];
     for ( NSDictionary * dict in aryItems ) {
+        FFSparkItem * item = [[FFSparkItem alloc] init];
+        item.name = [dict objectForKey:@"name"];
+        item.dir = [[dict objectForKey:@"dir"] isEqualToString:@"true"];
+        item.path = [dict objectForKey:@"path"];
+        item.root = [[dict objectForKey:@"root"] isEqualToString:@"true"];
+        item.lock = [[dict objectForKey:@"lock"] isEqualToString:@"true"];
+        if ( item.name != nil && item.name.length > 0 && [item.name hasPrefix:@"."])
+            continue;
+        else if ( item.root ) {
+            item.mtime = @"";
+            item.size = 0;
+        } else {
+            item.mtime = [dict objectForKey:@"mtime"];
+            item.size = [[dict objectForKey:@"size"] longLongValue];
+        }
         
+        [ary addObject:item];
     }
+    
+    NSMutableArray * arySort = [[NSMutableArray alloc] init];
+    [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"dir" ascending:NO]];
+    int nSort = [[FFSetting default] sortType];
+    if ( nSort == SORT_BY_DATE || nSort == SORT_BY_DATE_DESC )
+        [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"mtime" ascending:(nSort == SORT_BY_DATE)]];
+    else if ( nSort == SORT_BY_NAME || nSort == SORT_BY_NAME_DESC )
+        [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:(nSort == SORT_BY_NAME)]];
+    
+    _arySprkItems = [[ary sortedArrayUsingDescriptors:arySort] copy];
+
     [self.tableView reloadData];
 }
 
@@ -194,14 +232,20 @@
     
     __weak FFSparkViewController * weakSelf = self;
     ASYNC_HUD_BEGIN( NSLocalizedString(@"Loading", nil) );
+    NSString * strURL = [_urlPrefix stringByAppendingString:@"/list"];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:strURL]];
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[_setting stringByAppendingString:@"/list"]]];
+    if ( _baseURL != nil && _baseURL.length > 0 ) {
+        AFHTTPRequestSerializer * sz = [AFHTTPRequestSerializer serializer];
+        request = [sz requestBySerializingRequest:request withParameters:@{ @"path" : _baseURL } error:nil];
+    }
+    
     AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     op.responseSerializer = [MyJSONResponseSerializer serializer];
     [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         ASYNC_HUD_END;
-        [weakSelf onGetList:responseObject];
         NSLog(@"JSON: %@", responseObject);
+        [weakSelf onGetList:responseObject];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         ASYNC_HUD_END;
         [weakSelf handleError:operation error:error];
@@ -212,7 +256,7 @@
 -(void) login:(NSString *)pass
 {
     NSString * strMD5 = [FFHelper md5HexDigest:pass];
-    NSString * strQuery = [NSString stringWithFormat:@"%@/login_server?spid=%@", _setting, strMD5];
+    NSString * strQuery = [NSString stringWithFormat:@"%@/login_server?spid=%@", _urlPrefix, strMD5];
     
     __weak FFSparkViewController * weakSelf = self;
     ASYNC_HUD_BEGIN( NSLocalizedString(@"Login", nil) );
@@ -249,8 +293,74 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
+    FFSparkItem * item = [_arySprkItems objectAtIndex:indexPath.row];
+    if ( item.dir ) {
+        cell.textLabel.text = [NSString stringWithFormat:@"[%@]", item.name];
+        cell.textLabel.font = [UIFont boldSystemFontOfSize:20];
+        cell.detailTextLabel.text = nil;
+        cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor blackColor];
+        if ( !item.lock )
+            cell.imageView.image = [UIImage imageNamed:@"folder"];
+        else
+            cell.imageView.image = [UIImage imageNamed:@"padlock"];
+    } else {
+        
+        cell.textLabel.text = item.name;
+        
+        NSByteCountFormatter *byteCountFormatter = [[NSByteCountFormatter alloc] init];
+        [byteCountFormatter setAllowedUnits:NSByteCountFormatterUseMB];
+        
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@", item.mtime, [byteCountFormatter stringFromByteCount:item.size]];
+        cell.imageView.image = [UIImage imageNamed:@"movie"];
+    }
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    FFSparkItem * item = [_arySprkItems objectAtIndex:indexPath.row];
+    if ( item.dir ) {
+        FFSparkViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FFSparkViewController"];
+        NSString * strNewBaseURL = nil;
+        if ( item.root )
+            strNewBaseURL = item.path;
+        else
+            strNewBaseURL = [_baseURL stringByAppendingPathComponent:item.name];
+        
+        [vc setSparkServer:_setting baseURL:strNewBaseURL name:item.name ];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else {
+        if ( _internalPlayer == nil )
+            _internalPlayer = [[FFPlayer alloc] init];
+        
+        NSString * strURL = [_urlPrefix stringByAppendingString:@"/play_stream.m3u8"];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:strURL]];
+        AFHTTPRequestSerializer * sz = [AFHTTPRequestSerializer serializer];
+        FFSetting * setting = [FFSetting default];
+        
+        NSMutableArray  * aryList = [[NSMutableArray alloc] init];
+        int index = 0, i = 0;
+        for ( FFSparkItem * it in _arySprkItems) {
+            if  ( it.dir || it.root )
+                continue;
+            else if ( it == item )
+                index = i;
+        
+            NSURLRequest * req = [sz requestBySerializingRequest:request withParameters:@{
+                                                                                          @"path" : [_baseURL stringByAppendingPathComponent:it.name]
+                                                                                          ,@"bandwidth" : [NSString stringWithFormat:@"%d", [setting bandwidth]]
+                                                                                          ,@"res" : [NSString stringWithFormat:@"%d", [setting resolution]]
+                                                                                          ,@"boost" : [NSString stringWithFormat:@"%d", [setting boost]]
+                                                                                          ,@"aindex" : [NSString stringWithFormat:@"%d", 0]
+                                                                                        } error:nil];
+            
+            [aryList addObject:[[FFPlayItem alloc] initWithPath:[req.URL absoluteString] position:0.0]];
+            ++i;
+        }
+        [_internalPlayer internalPlayList:aryList curIndex:index parent:self];
+    }
 }
 
 /*

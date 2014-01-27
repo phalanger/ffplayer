@@ -37,6 +37,7 @@
     __weak UIViewController *  _parentView;
     UIViewController *         _lastController;
     KxMovieDecoder *           _decoder;
+    BOOL                       _forceInternal;
 }
 @end
 
@@ -51,6 +52,7 @@
         self->_parentView = nil;
         self->_lastController = nil;
         self->_decoder = nil;
+        self->_forceInternal = YES;
     }
     
     return self;
@@ -68,6 +70,12 @@
     NSArray * aryResult = [_decoder.info copy];
     [_decoder closeFile];
     return aryResult;
+}
+
+-(UIViewController *)internalPlayList:(NSArray *)aryList curIndex:(int)curIndex parent:(UIViewController *)parent
+{
+    _forceInternal = YES;
+    return [self playList:aryList curIndex:curIndex parent:parent];
 }
 
 -(UIViewController *)playList:(NSArray *)aryList curIndex:(int)curIndex parent:(UIViewController *)parent
@@ -117,7 +125,7 @@
 
 -(UIViewController *) play:(FFPlayItem *)item animated:(BOOL)animated
 {
-    if ( [FFHelper isInternalPlayerSupport:item.url] ) {
+    if ( _forceInternal || [FFHelper isInternalPlayerSupport:item.url] ) {
         
         if ( _lastController != nil && [_lastController isKindOfClass:[FFInternalMoviePlayerController class]]) {
             [FFPlayer playInController:_lastController item:item];

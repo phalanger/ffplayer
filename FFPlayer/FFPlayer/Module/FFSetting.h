@@ -51,4 +51,13 @@ enum SORT_TYPE
 -(int) webPort;
 -(void) setWebPort:(int)nPort;
 
+-(int) bandwidth;
+-(void) setBandwidth:(int) n;
+
+-(int) resolution;
+-(void) setResolution:(int) n;
+
+-(int) boost;
+-(void) setBoost:(int)n;
+
 @end

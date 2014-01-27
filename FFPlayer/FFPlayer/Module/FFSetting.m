@@ -146,6 +146,45 @@
 -(void) setWebPort:(int)nPort
 {
     [_setting setInteger:nPort forKey:@"web_port"];
+    [_setting synchronize];
+}
+
+-(int) bandwidth
+{
+    int n = [_setting integerForKey:@"band_width"];
+    if ( n == 0 )
+        n = 10000;
+    return n;
+}
+-(void) setBandwidth:(int) n
+{
+    [_setting setInteger:n forKey:@"band_width"];
+    [_setting synchronize];
+}
+
+-(int) resolution
+{
+    int n = [_setting integerForKey:@"resolution"];
+    if ( n == 0 )
+        n = 1024;
+    return n;
+}
+
+-(void) setResolution:(int) n
+{
+    [_setting setInteger:n forKey:@"resolution"];
+    [_setting synchronize];
+}
+
+-(int) boost
+{
+    return [_setting integerForKey:@"boost"];
+}
+
+-(void) setBoost:(int)n
+{
+    [_setting setInteger:n forKey:@"boost"];
+    [_setting synchronize];
 }
 
 @end

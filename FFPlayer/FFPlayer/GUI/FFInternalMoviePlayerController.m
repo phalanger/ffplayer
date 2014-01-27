@@ -330,7 +330,7 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 -(void) playMovie:(NSString *)path pos:(CGFloat)pos parameters: (NSDictionary *) parameters
 {
-    NSURL * url = [NSURL fileURLWithPath:path];
+    NSURL * url = [path hasPrefix:@"/"] ? [NSURL fileURLWithPath:path] : [NSURL URLWithString:path];
     if ( _player == nil ) {
         _urlToPlay = url;
         _startPos = pos;
