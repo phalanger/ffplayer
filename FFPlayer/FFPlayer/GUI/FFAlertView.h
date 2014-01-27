@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 
 typedef void (^InputBlock)(NSUInteger btn, NSString *);
+typedef void (^InputBlock2)(NSUInteger btn, NSString *, NSString *);
 
 @interface FFAlertView : UIAlertView <UIAlertViewDelegate>
 {
     InputBlock _block;
+    InputBlock2 _block2;
 }
 
 +(id) showWithTitle:(NSString *) title
@@ -29,5 +31,11 @@ typedef void (^InputBlock)(NSUInteger btn, NSString *);
           usingBlock:(void (^)(BOOL notTheSame,NSString * pass)) finalBlock
    cancelButtonTitle:(NSString *)cancelButtonTitle
       okButtonTitles:(NSString *)okButtonTitles;
+
++(void) inputUserAndPassword:(NSString *)title
+                     message:(NSString *)message
+                  usingBlock:(void (^)(NSUInteger btn, NSString * s1, NSString * s2)) block
+           cancelButtonTitle:(NSString *)cancelButtonTitle
+              okButtonTitles:(NSString *)okButtonTitles;
 
 @end

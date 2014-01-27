@@ -8,6 +8,7 @@
 
 #import "FFRemoteViewController.h"
 #import "FFLocalFileManager.h"
+#import "FFSparkViewController.h"
 #import "FFAlertView.h"
 #import "FFPlayer.h"
 
@@ -198,6 +199,11 @@
     } else if ( indexPath.section == 1 ) {
         if ( indexPath.row == 0 ) {
             [self addSparkSvr];
+        } else {
+            NSString * setting = arySparkList[indexPath.row];
+            FFSparkViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FFSparkViewController"];
+            [vc setSparkServer:setting baseURL:@"" name:NSLocalizedString(@"[ROOT]", nil)];
+            [self.navigationController pushViewController:vc animated:YES];
         }
     }
 }

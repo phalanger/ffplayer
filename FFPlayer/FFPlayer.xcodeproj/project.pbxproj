@@ -17,6 +17,8 @@
 		1FB97DED1896499E00E4006B /* TTOpenInAppActivity@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97DE81896499E00E4006B /* TTOpenInAppActivity@2x.png */; };
 		1FB97DEE1896499E00E4006B /* TTOpenInAppActivity7.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97DE91896499E00E4006B /* TTOpenInAppActivity7.png */; };
 		1FB97DEF1896499E00E4006B /* TTOpenInAppActivity7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97DEA1896499E00E4006B /* TTOpenInAppActivity7@2x.png */; };
+		1FB97DF218964D5900E4006B /* FFSparkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97DF118964D5900E4006B /* FFSparkViewController.m */; };
+		1FB97DF6189653A300E4006B /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97DF5189653A300E4006B /* MBProgressHUD.m */; };
 		1FBC5B091889176F005FB7DB /* Website in Resources */ = {isa = PBXBuildFile; fileRef = 1FBC5B081889176F005FB7DB /* Website */; };
 		1FBC5B0E188929BC005FB7DB /* GTMNSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B0D188929BC005FB7DB /* GTMNSString.m */; };
 		1FBC5B11188935EE005FB7DB /* FFLocalFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B10188935EE005FB7DB /* FFLocalFileManager.m */; };
@@ -132,6 +134,10 @@
 		1FB97DE81896499E00E4006B /* TTOpenInAppActivity@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity@2x.png"; path = "OtherLibs/TTOpenInAppActivity/TTOpenInAppActivity@2x.png"; sourceTree = "<group>"; };
 		1FB97DE91896499E00E4006B /* TTOpenInAppActivity7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity7.png; path = OtherLibs/TTOpenInAppActivity/TTOpenInAppActivity7.png; sourceTree = "<group>"; };
 		1FB97DEA1896499E00E4006B /* TTOpenInAppActivity7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity7@2x.png"; path = "OtherLibs/TTOpenInAppActivity/TTOpenInAppActivity7@2x.png"; sourceTree = "<group>"; };
+		1FB97DF018964D5900E4006B /* FFSparkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFSparkViewController.h; path = GUI/FFSparkViewController.h; sourceTree = "<group>"; };
+		1FB97DF118964D5900E4006B /* FFSparkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFSparkViewController.m; path = GUI/FFSparkViewController.m; sourceTree = "<group>"; };
+		1FB97DF4189653A300E4006B /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = OtherLibs/MBProgressHUD/MBProgressHUD.h; sourceTree = "<group>"; };
+		1FB97DF5189653A300E4006B /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = OtherLibs/MBProgressHUD/MBProgressHUD.m; sourceTree = "<group>"; };
 		1FBC5B081889176F005FB7DB /* Website */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Website; path = FFPlayer/Resource/Website; sourceTree = "<group>"; };
 		1FBC5B0B188929BC005FB7DB /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMDefines.h; path = OtherLibs/GTMNSString/GTMDefines.h; sourceTree = "<group>"; };
 		1FBC5B0C188929BC005FB7DB /* GTMNSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMNSString.h; path = OtherLibs/GTMNSString/GTMNSString.h; sourceTree = "<group>"; };
@@ -325,6 +331,15 @@
 			name = TTOpenInAppActivity;
 			sourceTree = "<group>";
 		};
+		1FB97DF31896539500E4006B /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				1FB97DF4189653A300E4006B /* MBProgressHUD.h */,
+				1FB97DF5189653A300E4006B /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		1FBC5B0A188929AA005FB7DB /* GTMNSString */ = {
 			isa = PBXGroup;
 			children = (
@@ -352,6 +367,8 @@
 				1FC071E21887B68A00ED63E8 /* FFTabViewController.m */,
 				4D61275318954E4500C74ADE /* FFRemoteViewController.h */,
 				4D61275418954E4500C74ADE /* FFRemoteViewController.m */,
+				1FB97DF018964D5900E4006B /* FFSparkViewController.h */,
+				1FB97DF118964D5900E4006B /* FFSparkViewController.m */,
 			);
 			name = GUI;
 			sourceTree = "<group>";
@@ -378,6 +395,7 @@
 		1FC0718A1884FC3B00ED63E8 /* OtherLibs */ = {
 			isa = PBXGroup;
 			children = (
+				1FB97DF31896539500E4006B /* MBProgressHUD */,
 				1FB97DE41896498F00E4006B /* TTOpenInAppActivity */,
 				1F44BC531890FE8000C3E0D9 /* XMLDictionary */,
 				1FBC5B0A188929AA005FB7DB /* GTMNSString */,
@@ -735,6 +753,7 @@
 				1FC071A31884FC6600ED63E8 /* AFSecurityPolicy.m in Sources */,
 				4D0165C418856D650031DC71 /* FFInternalMoviePlayerController.m in Sources */,
 				4DBD981018882A0600C71747 /* GCDWebServer.m in Sources */,
+				1FB97DF6189653A300E4006B /* MBProgressHUD.m in Sources */,
 				1FE5F8B618838DA700CB4C09 /* KxAudioManager.m in Sources */,
 				1FC071B7188518D900ED63E8 /* FFMovieViewController.m in Sources */,
 				1FC071B418850D1F00ED63E8 /* ALMoviePlayerControls.m in Sources */,
@@ -760,6 +779,7 @@
 				1FC071A51884FC6600ED63E8 /* AFURLRequestSerialization.m in Sources */,
 				4DBD981118882A0600C71747 /* GCDWebServerConnection.m in Sources */,
 				1FC071A21884FC6600ED63E8 /* AFNetworkReachabilityManager.m in Sources */,
+				1FB97DF218964D5900E4006B /* FFSparkViewController.m in Sources */,
 				1FC071E31887B68A00ED63E8 /* FFTabViewController.m in Sources */,
 				4D61275518954E4500C74ADE /* FFRemoteViewController.m in Sources */,
 				1FE5F8B818838DA700CB4C09 /* KxMovieDecoder.m in Sources */,

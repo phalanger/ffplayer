@@ -22,13 +22,14 @@
 - (void) dealloc
 {
     _block = nil;
+    _block2 = nil;
 }
 
 + (id)showWithTitle:(NSString *)title
             message:(NSString *)message
         defaultText:(NSString *)defaultText
               style:(UIAlertViewStyle)style
-         usingBlock:(void (^)(NSUInteger btn, NSString *))block
+         usingBlock:(void (^)(NSUInteger btn, NSString * s1))block
   cancelButtonTitle:(NSString *)cancelButtonTitle
   otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION
 {
@@ -70,6 +71,16 @@
             strText = tf.text;
         }
         _block( buttonIndex, strText );
+    }
+    if ( _block2 )
+    {
+        NSString * strText = nil;
+        NSString * strText2 = nil;
+        if ( alertView.alertViewStyle == UIAlertViewStyleLoginAndPasswordInput) {
+            strText =[alertView textFieldAtIndex:0].text;
+            strText2 =[alertView textFieldAtIndex:1].text;
+        }
+        _block2( buttonIndex, strText, strText2 );
     }
 }
 
@@ -117,6 +128,26 @@
                   cancelButtonTitle:cancelButtonTitle
                      okButtonTitles:okButtonTitles
                        lastPassword:nil];
+}
+
+
++(void) inputUserAndPassword:(NSString *)title
+                     message:(NSString *)message
+                  usingBlock:(void (^)(NSUInteger btn, NSString * s1, NSString * s2)) block
+           cancelButtonTitle:(NSString *)cancelButtonTitle
+              okButtonTitles:(NSString *)okButtonTitles
+{
+    FFAlertView * alert = [[FFAlertView alloc] initWithTitle:title
+                                                     message:message
+                                                    delegate:nil
+                                           cancelButtonTitle:cancelButtonTitle
+                                           otherButtonTitles:nil];
+    
+    alert.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
+    alert.delegate = alert;
+    alert->_block2 = [block copy];
+    [alert addButtonWithTitle:okButtonTitles];
+    [alert show];
 }
 
 
