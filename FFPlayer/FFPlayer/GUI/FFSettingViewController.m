@@ -168,12 +168,10 @@ enum {
 -(NSString *) getWebURLs:(int) port isWebDav:(BOOL)isWebDav
 {
     NSMutableSet * setURLs = [[NSMutableSet alloc] init];
-    NSString * strIP1 = [FFHelper localIPAddress];
-    if ( strIP1 )
-        [setURLs addObject:strIP1];
-    strIP1 = [FFHelper localWiFiIPAddress];
-    if ( strIP1 )
-        [setURLs addObject:strIP1];
+    NSArray * aryWifiIPs = [FFHelper localWiFiIPAddresses];
+    if ( aryWifiIPs )
+        [setURLs addObjectsFromArray:aryWifiIPs];
+    
     NSMutableArray * aryRes = [[NSMutableArray alloc] init];
     for ( NSString * item in setURLs) {
         if ( isWebDav )

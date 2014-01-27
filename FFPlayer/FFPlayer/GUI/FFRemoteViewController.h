@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FFRemoteFileManager : UITableViewController
+@interface FFRemoteViewController : UITableViewController
 
 @end

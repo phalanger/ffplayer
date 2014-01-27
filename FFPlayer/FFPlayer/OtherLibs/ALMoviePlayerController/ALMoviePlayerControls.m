@@ -572,6 +572,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 - (void)showLoadingIndicators {
     [self addSubview:_activityBackgroundView];
     [self addSubview:_activityIndicator];
+    _activityIndicator.center = self.center;
     [_activityIndicator startAnimating];
     
     [UIView animateWithDuration:0.2f animations:^{

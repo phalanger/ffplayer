@@ -13,13 +13,14 @@
 #import "FFPlayer.h"
 #import "FFAlertView.h"
 #import "FFLocalFileManager.h"
+#import "TTOpenInAppActivity.h"
 
 enum {
     IN_LOCAL,
     IN_SECRET,
 };
 
-@interface FFLocalViewController ()
+@interface FFLocalViewController () <UIDocumentInteractionControllerDelegate>
 {
     NSArray *   _localMovies;
     NSString * _currentPath;
@@ -451,10 +452,37 @@ enum {
             }break;
             default:
             {
-                
+                NSURL * newURL = [NSURL fileURLWithPath:item.fullPath];
+                UIDocumentInteractionController * ctrl = [UIDocumentInteractionController interactionControllerWithURL:newURL];
+                [ctrl setDelegate:self];
+                BOOL boCanPreview = [ctrl presentPreviewAnimated:YES];
+                NSLog(@"Can preview: %d", boCanPreview);
+                if (!boCanPreview) {
+                    TTOpenInAppActivity *openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.view andRect:self.view.frame];
+                    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[newURL] applicationActivities:@[openInAppActivity]];
+                    
+                    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+                        // Store reference to superview (UIActionSheet) to allow dismissal
+                        openInAppActivity.superViewController = activityViewController;
+                        // Show UIActivityViewController
+                        [self presentViewController:activityViewController animated:YES completion:NULL];
+                    } else {
+                        //            // Create pop up
+                        UIPopoverController * activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
+                        //            // Store reference to superview (UIPopoverController) to allow dismissal
+                        openInAppActivity.superViewController = activityPopoverController;
+                        //            // Show UIActivityViewController in popup
+                        [activityPopoverController presentPopoverFromRect:self.view.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                    }
+                }
+
             }break;
         };
     }
+}
+
+- (UIViewController *) documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *) controller {
+    return self;
 }
 
 -(void) unlock:(BOOL) bo

@@ -120,12 +120,19 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
         
         SecTrustRef trust = NULL;
         
+#if defined(NS_BLOCK_ASSERTIONS)
+        SecTrustCreateWithCertificates(certificates, policy, &trust);
+        
+        SecTrustResultType result;
+        SecTrustEvaluate(trust, &result);
+#else
         OSStatus status = SecTrustCreateWithCertificates(certificates, policy, &trust);
         NSCAssert(status == errSecSuccess, @"SecTrustCreateWithCertificates error: %ld", (long int)status);
         
         SecTrustResultType result;
         status = SecTrustEvaluate(trust, &result);
         NSCAssert(status == errSecSuccess, @"SecTrustEvaluate error: %ld", (long int)status);
+#endif
         
         [trustChain addObject:(__bridge_transfer id)SecTrustCopyPublicKey(trust)];
         
@@ -248,9 +255,8 @@ static BOOL AFCertificateHostMatchesDomain(NSString *certificateHost, NSString *
 - (BOOL)evaluateServerTrust:(SecTrustRef)serverTrust
                   forDomain:(NSString *)domain
 {
-    __block NSData *matchingCertificateData = nil;
-    __block BOOL shouldTrustServer = NO;
-    
+    BOOL shouldTrustServer = NO;
+
     if (self.SSLPinningMode == AFSSLPinningModeNone && self.allowInvalidCertificates) {
         return YES;
     }
@@ -265,7 +271,8 @@ static BOOL AFCertificateHostMatchesDomain(NSString *certificateHost, NSString *
             return YES;
         case AFSSLPinningModeCertificate: {
             if (!self.validatesCertificateChain) {
-                return [self.pinnedCertificates containsObject:[serverCertificates firstObject]];
+                shouldTrustServer = [self.pinnedCertificates containsObject:[serverCertificates firstObject]];
+                break;
             }
 
             NSUInteger trustedCertificateCount = 0;
@@ -275,7 +282,7 @@ static BOOL AFCertificateHostMatchesDomain(NSString *certificateHost, NSString *
                 }
             }
 
-            return trustedCertificateCount > 0 && trustedCertificateCount == [serverCertificates count];
+            shouldTrustServer = trustedCertificateCount > 0 && ((self.validatesCertificateChain && trustedCertificateCount == [serverCertificates count]) || (!self.validatesCertificateChain && trustedCertificateCount >= 1));
         }
             break;
         case AFSSLPinningModePublicKey: {
@@ -293,7 +300,7 @@ static BOOL AFCertificateHostMatchesDomain(NSString *certificateHost, NSString *
                 }
             }
 
-            return trustedPublicKeyCount > 0 && trustedPublicKeyCount == [serverCertificates count];
+            shouldTrustServer = trustedPublicKeyCount > 0 && ((self.validatesCertificateChain && trustedPublicKeyCount == [serverCertificates count]) || (!self.validatesCertificateChain && trustedPublicKeyCount >= 1));
         }
             break;
         default:
@@ -301,7 +308,8 @@ static BOOL AFCertificateHostMatchesDomain(NSString *certificateHost, NSString *
     }
     
     if (shouldTrustServer && domain && self.validatesDomainName) {
-        SecCertificateRef matchingCertificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)matchingCertificateData);
+        NSData *serverCertificate = [serverCertificates firstObject];
+        SecCertificateRef matchingCertificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)serverCertificate);
         NSParameterAssert(matchingCertificate);
 
         shouldTrustServer = AFCertificateHostMatchesDomain((__bridge_transfer NSString *)SecCertificateCopySubjectSummary(matchingCertificate), domain);

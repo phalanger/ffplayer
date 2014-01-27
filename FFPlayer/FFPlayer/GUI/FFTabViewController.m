@@ -8,7 +8,7 @@
 
 #import "FFTabViewController.h"
 #import "FFLocalViewController.h"
-#import "FFRemoteFileManager.h"
+#import "FFRemoteViewController.h"
 #import "FFSettingViewController.h"
 #import "FFHelper.h"
 #import "FFSetting.h"
@@ -50,7 +50,7 @@
             if ( [root isKindOfClass:[FFLocalViewController class]] ) {
                 _indexOfLocal = i;
                 viewController.tabBarItem.title = NSLocalizedString(@"Local", nil);
-            } else if ( [root isKindOfClass:[FFRemoteFileManager class]] )
+            } else if ( [root isKindOfClass:[FFRemoteViewController class]] )
                 viewController.tabBarItem.title = NSLocalizedString(@"Remote", nil);
             else if ( [root isKindOfClass:[FFSettingViewController class]] )
                 viewController.tabBarItem.title = NSLocalizedString(@"Setting", nil);
