@@ -335,7 +335,7 @@ static FFPlayer * _internalPlayer = nil;
         if ( _internalPlayer == nil )
             _internalPlayer = [[FFPlayer alloc] init];
         
-        NSString * strURL = [_urlPrefix stringByAppendingString:@"/play_stream.m3u8"];
+        NSString * strURL = [_urlPrefix stringByAppendingString:@"/play.m3u8"];
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:strURL]];
         AFHTTPRequestSerializer * sz = [AFHTTPRequestSerializer serializer];
         FFSetting * setting = [FFSetting default];

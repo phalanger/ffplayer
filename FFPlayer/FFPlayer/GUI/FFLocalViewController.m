@@ -31,6 +31,9 @@ enum {
     NSArray *                   itemToMove;
     int                         currentState;
 }
+
+@property (nonatomic, strong) UIPopoverController *activityPopoverController;
+
 @end
 
 @implementation FFLocalViewController
@@ -458,7 +461,10 @@ enum {
                 BOOL boCanPreview = [ctrl presentPreviewAnimated:YES];
                 NSLog(@"Can preview: %d", boCanPreview);
                 if (!boCanPreview) {
-                    TTOpenInAppActivity *openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.view andRect:self.view.frame];
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    CGRect rect= cell.bounds; //CGRectMake(cell.bounds.origin.x+60, cell.bounds.origin.y+10, 50, 30);
+                    
+                    TTOpenInAppActivity *openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:cell andRect:rect];
                     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[newURL] applicationActivities:@[openInAppActivity]];
                     
                     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
@@ -467,12 +473,12 @@ enum {
                         // Show UIActivityViewController
                         [self presentViewController:activityViewController animated:YES completion:NULL];
                     } else {
-                        //            // Create pop up
-                        UIPopoverController * activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-                        //            // Store reference to superview (UIPopoverController) to allow dismissal
-                        openInAppActivity.superViewController = activityPopoverController;
-                        //            // Show UIActivityViewController in popup
-                        [activityPopoverController presentPopoverFromRect:self.view.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                        // Create pop up
+                        self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
+                        // Store reference to superview (UIPopoverController) to allow dismissal
+                        openInAppActivity.superViewController = self.activityPopoverController;
+                        // Show UIActivityViewController in popup
+                        [self.activityPopoverController presentPopoverFromRect:rect inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                     }
                 }
 

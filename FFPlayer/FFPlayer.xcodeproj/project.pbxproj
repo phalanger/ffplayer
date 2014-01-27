@@ -96,6 +96,7 @@
 		4D0165C418856D650031DC71 /* FFInternalMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D0165C318856D650031DC71 /* FFInternalMoviePlayerController.m */; };
 		4D61275518954E4500C74ADE /* FFRemoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D61275418954E4500C74ADE /* FFRemoteViewController.m */; };
 		4D6127581895555400C74ADE /* FFPlayHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127571895555400C74ADE /* FFPlayHistory.m */; };
+		4D61275A1896B0D100C74ADE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6127591896B0D100C74ADE /* MobileCoreServices.framework */; };
 		4DBD97F8188814D000C71747 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F6188814D000C71747 /* folder.png */; };
 		4DBD97F9188814D000C71747 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F7188814D000C71747 /* folder@2x.png */; };
 		4DBD97FC1888156D00C71747 /* movie.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97FA1888156D00C71747 /* movie.png */; };
@@ -251,6 +252,7 @@
 		4D61275418954E4500C74ADE /* FFRemoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFRemoteViewController.m; path = GUI/FFRemoteViewController.m; sourceTree = "<group>"; };
 		4D6127561895555400C74ADE /* FFPlayHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFPlayHistory.h; path = Module/FFPlayHistory.h; sourceTree = "<group>"; };
 		4D6127571895555400C74ADE /* FFPlayHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFPlayHistory.m; path = Module/FFPlayHistory.m; sourceTree = "<group>"; };
+		4D6127591896B0D100C74ADE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		4DBD97F6188814D000C71747 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folder.png; path = Resource/folder.png; sourceTree = "<group>"; };
 		4DBD97F7188814D000C71747 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resource/folder@2x.png"; sourceTree = "<group>"; };
 		4DBD97FA1888156D00C71747 /* movie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = movie.png; path = Resource/movie.png; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D61275A1896B0D100C74ADE /* MobileCoreServices.framework in Frameworks */,
 				1FE5F8EE1883930D00CB4C09 /* AVFoundation.framework in Frameworks */,
 				1FE5F8EC18838EEA00CB4C09 /* libz.dylib in Frameworks */,
 				1FE5F8EA18838EDA00CB4C09 /* OpenGLES.framework in Frameworks */,
@@ -508,6 +511,7 @@
 		1FE5F86F1883891D00CB4C09 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4D6127591896B0D100C74ADE /* MobileCoreServices.framework */,
 				1FE5F8ED1883930D00CB4C09 /* AVFoundation.framework */,
 				1FE5F8EB18838EEA00CB4C09 /* libz.dylib */,
 				1FE5F8E918838EDA00CB4C09 /* OpenGLES.framework */,
