@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1F44BC561890FE9300C3E0D9 /* XMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F44BC551890FE9300C3E0D9 /* XMLDictionary.m */; };
+		1F63AC8D1897AD8B0022BAE3 /* MiniZip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F63AC8A1897AD8B0022BAE3 /* MiniZip.m */; };
+		1F63AC8E1897AD8B0022BAE3 /* UnRAR.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F63AC8C1897AD8B0022BAE3 /* UnRAR.m */; };
 		1FB97DDE18963F9300E4006B /* plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97DDC18963F9300E4006B /* plus.png */; };
 		1FB97DDF18963F9300E4006B /* plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97DDD18963F9300E4006B /* plus@2x.png */; };
 		1FB97DE21896401F00E4006B /* connections.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97DE01896401F00E4006B /* connections.png */; };
@@ -64,6 +66,66 @@
 		1FB97E841897918B00E4006B /* UIImage+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E761897918B00E4006B /* UIImage+WebP.m */; };
 		1FB97E851897918B00E4006B /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E781897918B00E4006B /* UIImageView+WebCache.m */; };
 		1FB97E8718979C5200E4006B /* MWPhotoBrowser.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97E8618979C5200E4006B /* MWPhotoBrowser.bundle */; };
+		1FB97E941897A4D400E4006B /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E8C1897A4D400E4006B /* ioapi.c */; };
+		1FB97E951897A4D400E4006B /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E8E1897A4D400E4006B /* mztools.c */; };
+		1FB97E961897A4D400E4006B /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E901897A4D400E4006B /* unzip.c */; };
+		1FB97E971897A4D400E4006B /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E921897A4D400E4006B /* zip.c */; };
+		1FB97F181897A69700E4006B /* archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E9A1897A69600E4006B /* archive.cpp */; };
+		1FB97F191897A69700E4006B /* arcread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E9C1897A69600E4006B /* arcread.cpp */; };
+		1FB97F1B1897A69700E4006B /* cmddata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E9F1897A69600E4006B /* cmddata.cpp */; };
+		1FB97F1D1897A69700E4006B /* consio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EA41897A69600E4006B /* consio.cpp */; };
+		1FB97F1E1897A69700E4006B /* crc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EA61897A69600E4006B /* crc.cpp */; };
+		1FB97F1F1897A69700E4006B /* crypt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EA81897A69600E4006B /* crypt.cpp */; };
+		1FB97F201897A69700E4006B /* dll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EAA1897A69600E4006B /* dll.cpp */; };
+		1FB97F211897A69700E4006B /* dll.def in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97EAB1897A69600E4006B /* dll.def */; };
+		1FB97F221897A69700E4006B /* dll.rc in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97EAD1897A69600E4006B /* dll.rc */; };
+		1FB97F231897A69700E4006B /* encname.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EAE1897A69600E4006B /* encname.cpp */; };
+		1FB97F241897A69700E4006B /* errhnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EB01897A69600E4006B /* errhnd.cpp */; };
+		1FB97F251897A69700E4006B /* extinfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EB21897A69600E4006B /* extinfo.cpp */; };
+		1FB97F261897A69700E4006B /* extract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EB41897A69600E4006B /* extract.cpp */; };
+		1FB97F271897A69700E4006B /* filcreat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EB61897A69600E4006B /* filcreat.cpp */; };
+		1FB97F281897A69700E4006B /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EB81897A69600E4006B /* file.cpp */; };
+		1FB97F291897A69700E4006B /* filefn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EBA1897A69600E4006B /* filefn.cpp */; };
+		1FB97F2A1897A69700E4006B /* filestr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EBC1897A69600E4006B /* filestr.cpp */; };
+		1FB97F2B1897A69700E4006B /* find.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EBE1897A69600E4006B /* find.cpp */; };
+		1FB97F2C1897A69700E4006B /* getbits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EC01897A69600E4006B /* getbits.cpp */; };
+		1FB97F2D1897A69700E4006B /* global.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EC21897A69600E4006B /* global.cpp */; };
+		1FB97F2E1897A69700E4006B /* isnt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EC51897A69600E4006B /* isnt.cpp */; };
+		1FB97F2F1897A69700E4006B /* license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97EC71897A69600E4006B /* license.txt */; };
+		1FB97F301897A69700E4006B /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EC81897A69600E4006B /* list.cpp */; };
+		1FB97F321897A69700E4006B /* makefile.bcc in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97ECD1897A69600E4006B /* makefile.bcc */; };
+		1FB97F331897A69700E4006B /* makefile.cygmin in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97ECE1897A69600E4006B /* makefile.cygmin */; };
+		1FB97F341897A69700E4006B /* makefile.dj in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97ECF1897A69600E4006B /* makefile.dj */; };
+		1FB97F351897A69700E4006B /* makefile.dmc in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97ED01897A69600E4006B /* makefile.dmc */; };
+		1FB97F361897A69700E4006B /* makefile.unix in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97ED11897A69600E4006B /* makefile.unix */; };
+		1FB97F371897A69700E4006B /* match.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97ED21897A69600E4006B /* match.cpp */; };
+		1FB97F391897A69700E4006B /* msc.dep in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97ED61897A69600E4006B /* msc.dep */; };
+		1FB97F3A1897A69700E4006B /* options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97ED71897A69600E4006B /* options.cpp */; };
+		1FB97F3C1897A69700E4006B /* pathfn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EDB1897A69600E4006B /* pathfn.cpp */; };
+		1FB97F3D1897A69700E4006B /* rar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EDD1897A69600E4006B /* rar.cpp */; };
+		1FB97F3E1897A69700E4006B /* rarpch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EE21897A69600E4006B /* rarpch.cpp */; };
+		1FB97F3F1897A69700E4006B /* rarvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EE41897A69600E4006B /* rarvm.cpp */; };
+		1FB97F411897A69700E4006B /* rawread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EE71897A69600E4006B /* rawread.cpp */; };
+		1FB97F421897A69700E4006B /* rdwrfn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EE91897A69600E4006B /* rdwrfn.cpp */; };
+		1FB97F431897A69700E4006B /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97EEB1897A69600E4006B /* readme.txt */; };
+		1FB97F441897A69700E4006B /* recvol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EEC1897A69600E4006B /* recvol.cpp */; };
+		1FB97F451897A69700E4006B /* resource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EEE1897A69600E4006B /* resource.cpp */; };
+		1FB97F461897A69700E4006B /* rijndael.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EF01897A69600E4006B /* rijndael.cpp */; };
+		1FB97F471897A69700E4006B /* rs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EF21897A69600E4006B /* rs.cpp */; };
+		1FB97F481897A69700E4006B /* savepos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EF41897A69600E4006B /* savepos.cpp */; };
+		1FB97F491897A69700E4006B /* scantree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EF61897A69600E4006B /* scantree.cpp */; };
+		1FB97F4A1897A69700E4006B /* sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EF81897A69600E4006B /* sha1.cpp */; };
+		1FB97F4B1897A69700E4006B /* smallfn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EFA1897A69600E4006B /* smallfn.cpp */; };
+		1FB97F4C1897A69700E4006B /* strfn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EFC1897A69600E4006B /* strfn.cpp */; };
+		1FB97F4D1897A69700E4006B /* strlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97EFE1897A69600E4006B /* strlist.cpp */; };
+		1FB97F4F1897A69700E4006B /* system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97F021897A69600E4006B /* system.cpp */; };
+		1FB97F501897A69700E4006B /* timefn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97F041897A69700E4006B /* timefn.cpp */; };
+		1FB97F511897A69700E4006B /* ulinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97F061897A69700E4006B /* ulinks.cpp */; };
+		1FB97F521897A69700E4006B /* unicode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97F081897A69700E4006B /* unicode.cpp */; };
+		1FB97F541897A69700E4006B /* unpack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97F0B1897A69700E4006B /* unpack.cpp */; };
+		1FB97F571897A69700E4006B /* UnRAR.vcproj in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97F0F1897A69700E4006B /* UnRAR.vcproj */; };
+		1FB97F581897A69700E4006B /* UnRARDll.vcproj in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97F101897A69700E4006B /* UnRARDll.vcproj */; };
+		1FB97F5A1897A69700E4006B /* volume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97F131897A69700E4006B /* volume.cpp */; };
 		1FBC5B091889176F005FB7DB /* Website in Resources */ = {isa = PBXBuildFile; fileRef = 1FBC5B081889176F005FB7DB /* Website */; };
 		1FBC5B0E188929BC005FB7DB /* GTMNSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B0D188929BC005FB7DB /* GTMNSString.m */; };
 		1FBC5B11188935EE005FB7DB /* FFLocalFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B10188935EE005FB7DB /* FFLocalFileManager.m */; };
@@ -170,6 +232,10 @@
 /* Begin PBXFileReference section */
 		1F44BC541890FE9300C3E0D9 /* XMLDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMLDictionary.h; path = OtherLibs/XMLDictionary/XMLDictionary.h; sourceTree = "<group>"; };
 		1F44BC551890FE9300C3E0D9 /* XMLDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMLDictionary.m; path = OtherLibs/XMLDictionary/XMLDictionary.m; sourceTree = "<group>"; };
+		1F63AC891897AD8B0022BAE3 /* MiniZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MiniZip.h; path = OtherLibs/Compress/MiniZip.h; sourceTree = "<group>"; };
+		1F63AC8A1897AD8B0022BAE3 /* MiniZip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MiniZip.m; path = OtherLibs/Compress/MiniZip.m; sourceTree = "<group>"; };
+		1F63AC8B1897AD8B0022BAE3 /* UnRAR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnRAR.h; path = OtherLibs/Compress/UnRAR.h; sourceTree = "<group>"; };
+		1F63AC8C1897AD8B0022BAE3 /* UnRAR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UnRAR.m; path = OtherLibs/Compress/UnRAR.m; sourceTree = "<group>"; };
 		1FB97DDC18963F9300E4006B /* plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = plus.png; path = Resource/plus.png; sourceTree = "<group>"; };
 		1FB97DDD18963F9300E4006B /* plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "plus@2x.png"; path = "Resource/plus@2x.png"; sourceTree = "<group>"; };
 		1FB97DE01896401F00E4006B /* connections.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connections.png; path = Resource/connections.png; sourceTree = "<group>"; };
@@ -276,6 +342,141 @@
 		1FB97E771897918B00E4006B /* UIImageView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+WebCache.h"; path = "OtherLibs/SDWebImage/UIImageView+WebCache.h"; sourceTree = "<group>"; };
 		1FB97E781897918B00E4006B /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+WebCache.m"; path = "OtherLibs/SDWebImage/UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		1FB97E8618979C5200E4006B /* MWPhotoBrowser.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = MWPhotoBrowser.bundle; path = OtherLibs/MWPhotoBrowser/MWPhotoBrowser.bundle; sourceTree = "<group>"; };
+		1FB97E8B1897A4D400E4006B /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypt.h; path = "OtherLibs/Compress/Minizip-1.1/crypt.h"; sourceTree = "<group>"; };
+		1FB97E8C1897A4D400E4006B /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ioapi.c; path = "OtherLibs/Compress/Minizip-1.1/ioapi.c"; sourceTree = "<group>"; };
+		1FB97E8D1897A4D400E4006B /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioapi.h; path = "OtherLibs/Compress/Minizip-1.1/ioapi.h"; sourceTree = "<group>"; };
+		1FB97E8E1897A4D400E4006B /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mztools.c; path = "OtherLibs/Compress/Minizip-1.1/mztools.c"; sourceTree = "<group>"; };
+		1FB97E8F1897A4D400E4006B /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mztools.h; path = "OtherLibs/Compress/Minizip-1.1/mztools.h"; sourceTree = "<group>"; };
+		1FB97E901897A4D400E4006B /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = unzip.c; path = "OtherLibs/Compress/Minizip-1.1/unzip.c"; sourceTree = "<group>"; };
+		1FB97E911897A4D400E4006B /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unzip.h; path = "OtherLibs/Compress/Minizip-1.1/unzip.h"; sourceTree = "<group>"; };
+		1FB97E921897A4D400E4006B /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = "OtherLibs/Compress/Minizip-1.1/zip.c"; sourceTree = "<group>"; };
+		1FB97E931897A4D400E4006B /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = "OtherLibs/Compress/Minizip-1.1/zip.h"; sourceTree = "<group>"; };
+		1FB97E991897A69600E4006B /* arccmt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = arccmt.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/arccmt.cpp"; sourceTree = "<group>"; };
+		1FB97E9A1897A69600E4006B /* archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = archive.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/archive.cpp"; sourceTree = "<group>"; };
+		1FB97E9B1897A69600E4006B /* archive.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = archive.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/archive.hpp"; sourceTree = "<group>"; };
+		1FB97E9C1897A69600E4006B /* arcread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = arcread.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/arcread.cpp"; sourceTree = "<group>"; };
+		1FB97E9D1897A69600E4006B /* array.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = array.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/array.hpp"; sourceTree = "<group>"; };
+		1FB97E9E1897A69600E4006B /* beosea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = beosea.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/beosea.cpp"; sourceTree = "<group>"; };
+		1FB97E9F1897A69600E4006B /* cmddata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cmddata.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/cmddata.cpp"; sourceTree = "<group>"; };
+		1FB97EA01897A69600E4006B /* cmddata.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cmddata.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/cmddata.hpp"; sourceTree = "<group>"; };
+		1FB97EA11897A69600E4006B /* coder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = coder.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/coder.cpp"; sourceTree = "<group>"; };
+		1FB97EA21897A69600E4006B /* coder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = coder.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/coder.hpp"; sourceTree = "<group>"; };
+		1FB97EA31897A69600E4006B /* compress.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = compress.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/compress.hpp"; sourceTree = "<group>"; };
+		1FB97EA41897A69600E4006B /* consio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = consio.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/consio.cpp"; sourceTree = "<group>"; };
+		1FB97EA51897A69600E4006B /* consio.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = consio.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/consio.hpp"; sourceTree = "<group>"; };
+		1FB97EA61897A69600E4006B /* crc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = crc.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/crc.cpp"; sourceTree = "<group>"; };
+		1FB97EA71897A69600E4006B /* crc.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = crc.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/crc.hpp"; sourceTree = "<group>"; };
+		1FB97EA81897A69600E4006B /* crypt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = crypt.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/crypt.cpp"; sourceTree = "<group>"; };
+		1FB97EA91897A69600E4006B /* crypt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = crypt.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/crypt.hpp"; sourceTree = "<group>"; };
+		1FB97EAA1897A69600E4006B /* dll.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dll.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/dll.cpp"; sourceTree = "<group>"; };
+		1FB97EAB1897A69600E4006B /* dll.def */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dll.def; path = "OtherLibs/Compress/UnRAR-3.9.10/dll.def"; sourceTree = "<group>"; };
+		1FB97EAC1897A69600E4006B /* dll.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = dll.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/dll.hpp"; sourceTree = "<group>"; };
+		1FB97EAD1897A69600E4006B /* dll.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dll.rc; path = "OtherLibs/Compress/UnRAR-3.9.10/dll.rc"; sourceTree = "<group>"; };
+		1FB97EAE1897A69600E4006B /* encname.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = encname.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/encname.cpp"; sourceTree = "<group>"; };
+		1FB97EAF1897A69600E4006B /* encname.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = encname.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/encname.hpp"; sourceTree = "<group>"; };
+		1FB97EB01897A69600E4006B /* errhnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = errhnd.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/errhnd.cpp"; sourceTree = "<group>"; };
+		1FB97EB11897A69600E4006B /* errhnd.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = errhnd.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/errhnd.hpp"; sourceTree = "<group>"; };
+		1FB97EB21897A69600E4006B /* extinfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = extinfo.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/extinfo.cpp"; sourceTree = "<group>"; };
+		1FB97EB31897A69600E4006B /* extinfo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = extinfo.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/extinfo.hpp"; sourceTree = "<group>"; };
+		1FB97EB41897A69600E4006B /* extract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = extract.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/extract.cpp"; sourceTree = "<group>"; };
+		1FB97EB51897A69600E4006B /* extract.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = extract.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/extract.hpp"; sourceTree = "<group>"; };
+		1FB97EB61897A69600E4006B /* filcreat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = filcreat.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/filcreat.cpp"; sourceTree = "<group>"; };
+		1FB97EB71897A69600E4006B /* filcreat.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = filcreat.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/filcreat.hpp"; sourceTree = "<group>"; };
+		1FB97EB81897A69600E4006B /* file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = file.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/file.cpp"; sourceTree = "<group>"; };
+		1FB97EB91897A69600E4006B /* file.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = file.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/file.hpp"; sourceTree = "<group>"; };
+		1FB97EBA1897A69600E4006B /* filefn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = filefn.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/filefn.cpp"; sourceTree = "<group>"; };
+		1FB97EBB1897A69600E4006B /* filefn.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = filefn.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/filefn.hpp"; sourceTree = "<group>"; };
+		1FB97EBC1897A69600E4006B /* filestr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = filestr.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/filestr.cpp"; sourceTree = "<group>"; };
+		1FB97EBD1897A69600E4006B /* filestr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = filestr.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/filestr.hpp"; sourceTree = "<group>"; };
+		1FB97EBE1897A69600E4006B /* find.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = find.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/find.cpp"; sourceTree = "<group>"; };
+		1FB97EBF1897A69600E4006B /* find.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = find.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/find.hpp"; sourceTree = "<group>"; };
+		1FB97EC01897A69600E4006B /* getbits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = getbits.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/getbits.cpp"; sourceTree = "<group>"; };
+		1FB97EC11897A69600E4006B /* getbits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = getbits.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/getbits.hpp"; sourceTree = "<group>"; };
+		1FB97EC21897A69600E4006B /* global.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = global.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/global.cpp"; sourceTree = "<group>"; };
+		1FB97EC31897A69600E4006B /* global.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = global.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/global.hpp"; sourceTree = "<group>"; };
+		1FB97EC41897A69600E4006B /* headers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = headers.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/headers.hpp"; sourceTree = "<group>"; };
+		1FB97EC51897A69600E4006B /* isnt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = isnt.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/isnt.cpp"; sourceTree = "<group>"; };
+		1FB97EC61897A69600E4006B /* isnt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = isnt.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/isnt.hpp"; sourceTree = "<group>"; };
+		1FB97EC71897A69600E4006B /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = license.txt; path = "OtherLibs/Compress/UnRAR-3.9.10/license.txt"; sourceTree = "<group>"; };
+		1FB97EC81897A69600E4006B /* list.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = list.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/list.cpp"; sourceTree = "<group>"; };
+		1FB97EC91897A69600E4006B /* list.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = list.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/list.hpp"; sourceTree = "<group>"; };
+		1FB97ECA1897A69600E4006B /* loclang.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = loclang.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/loclang.hpp"; sourceTree = "<group>"; };
+		1FB97ECB1897A69600E4006B /* log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = log.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/log.cpp"; sourceTree = "<group>"; };
+		1FB97ECC1897A69600E4006B /* log.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = log.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/log.hpp"; sourceTree = "<group>"; };
+		1FB97ECD1897A69600E4006B /* makefile.bcc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = makefile.bcc; path = "OtherLibs/Compress/UnRAR-3.9.10/makefile.bcc"; sourceTree = "<group>"; };
+		1FB97ECE1897A69600E4006B /* makefile.cygmin */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = makefile.cygmin; path = "OtherLibs/Compress/UnRAR-3.9.10/makefile.cygmin"; sourceTree = "<group>"; };
+		1FB97ECF1897A69600E4006B /* makefile.dj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = makefile.dj; path = "OtherLibs/Compress/UnRAR-3.9.10/makefile.dj"; sourceTree = "<group>"; };
+		1FB97ED01897A69600E4006B /* makefile.dmc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = makefile.dmc; path = "OtherLibs/Compress/UnRAR-3.9.10/makefile.dmc"; sourceTree = "<group>"; };
+		1FB97ED11897A69600E4006B /* makefile.unix */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = makefile.unix; path = "OtherLibs/Compress/UnRAR-3.9.10/makefile.unix"; sourceTree = "<group>"; };
+		1FB97ED21897A69600E4006B /* match.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = match.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/match.cpp"; sourceTree = "<group>"; };
+		1FB97ED31897A69600E4006B /* match.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = match.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/match.hpp"; sourceTree = "<group>"; };
+		1FB97ED41897A69600E4006B /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = model.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/model.cpp"; sourceTree = "<group>"; };
+		1FB97ED51897A69600E4006B /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = model.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/model.hpp"; sourceTree = "<group>"; };
+		1FB97ED61897A69600E4006B /* msc.dep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = msc.dep; path = "OtherLibs/Compress/UnRAR-3.9.10/msc.dep"; sourceTree = "<group>"; };
+		1FB97ED71897A69600E4006B /* options.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = options.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/options.cpp"; sourceTree = "<group>"; };
+		1FB97ED81897A69600E4006B /* options.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = options.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/options.hpp"; sourceTree = "<group>"; };
+		1FB97ED91897A69600E4006B /* os.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = os.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/os.hpp"; sourceTree = "<group>"; };
+		1FB97EDA1897A69600E4006B /* os2ea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = os2ea.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/os2ea.cpp"; sourceTree = "<group>"; };
+		1FB97EDB1897A69600E4006B /* pathfn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pathfn.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/pathfn.cpp"; sourceTree = "<group>"; };
+		1FB97EDC1897A69600E4006B /* pathfn.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pathfn.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/pathfn.hpp"; sourceTree = "<group>"; };
+		1FB97EDD1897A69600E4006B /* rar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rar.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rar.cpp"; sourceTree = "<group>"; };
+		1FB97EDE1897A69600E4006B /* rar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rar.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rar.hpp"; sourceTree = "<group>"; };
+		1FB97EDF1897A69600E4006B /* rardefs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rardefs.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rardefs.hpp"; sourceTree = "<group>"; };
+		1FB97EE01897A69600E4006B /* rarlang.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rarlang.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rarlang.hpp"; sourceTree = "<group>"; };
+		1FB97EE11897A69600E4006B /* raros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = raros.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/raros.hpp"; sourceTree = "<group>"; };
+		1FB97EE21897A69600E4006B /* rarpch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rarpch.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rarpch.cpp"; sourceTree = "<group>"; };
+		1FB97EE31897A69600E4006B /* rartypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rartypes.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rartypes.hpp"; sourceTree = "<group>"; };
+		1FB97EE41897A69600E4006B /* rarvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rarvm.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rarvm.cpp"; sourceTree = "<group>"; };
+		1FB97EE51897A69600E4006B /* rarvm.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rarvm.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rarvm.hpp"; sourceTree = "<group>"; };
+		1FB97EE61897A69600E4006B /* rarvmtbl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rarvmtbl.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rarvmtbl.cpp"; sourceTree = "<group>"; };
+		1FB97EE71897A69600E4006B /* rawread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawread.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rawread.cpp"; sourceTree = "<group>"; };
+		1FB97EE81897A69600E4006B /* rawread.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rawread.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rawread.hpp"; sourceTree = "<group>"; };
+		1FB97EE91897A69600E4006B /* rdwrfn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rdwrfn.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rdwrfn.cpp"; sourceTree = "<group>"; };
+		1FB97EEA1897A69600E4006B /* rdwrfn.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rdwrfn.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rdwrfn.hpp"; sourceTree = "<group>"; };
+		1FB97EEB1897A69600E4006B /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = readme.txt; path = "OtherLibs/Compress/UnRAR-3.9.10/readme.txt"; sourceTree = "<group>"; };
+		1FB97EEC1897A69600E4006B /* recvol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = recvol.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/recvol.cpp"; sourceTree = "<group>"; };
+		1FB97EED1897A69600E4006B /* recvol.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = recvol.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/recvol.hpp"; sourceTree = "<group>"; };
+		1FB97EEE1897A69600E4006B /* resource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resource.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/resource.cpp"; sourceTree = "<group>"; };
+		1FB97EEF1897A69600E4006B /* resource.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = resource.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/resource.hpp"; sourceTree = "<group>"; };
+		1FB97EF01897A69600E4006B /* rijndael.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rijndael.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rijndael.cpp"; sourceTree = "<group>"; };
+		1FB97EF11897A69600E4006B /* rijndael.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rijndael.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rijndael.hpp"; sourceTree = "<group>"; };
+		1FB97EF21897A69600E4006B /* rs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rs.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rs.cpp"; sourceTree = "<group>"; };
+		1FB97EF31897A69600E4006B /* rs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rs.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/rs.hpp"; sourceTree = "<group>"; };
+		1FB97EF41897A69600E4006B /* savepos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = savepos.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/savepos.cpp"; sourceTree = "<group>"; };
+		1FB97EF51897A69600E4006B /* savepos.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = savepos.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/savepos.hpp"; sourceTree = "<group>"; };
+		1FB97EF61897A69600E4006B /* scantree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scantree.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/scantree.cpp"; sourceTree = "<group>"; };
+		1FB97EF71897A69600E4006B /* scantree.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = scantree.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/scantree.hpp"; sourceTree = "<group>"; };
+		1FB97EF81897A69600E4006B /* sha1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sha1.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/sha1.cpp"; sourceTree = "<group>"; };
+		1FB97EF91897A69600E4006B /* sha1.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = sha1.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/sha1.hpp"; sourceTree = "<group>"; };
+		1FB97EFA1897A69600E4006B /* smallfn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = smallfn.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/smallfn.cpp"; sourceTree = "<group>"; };
+		1FB97EFB1897A69600E4006B /* smallfn.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = smallfn.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/smallfn.hpp"; sourceTree = "<group>"; };
+		1FB97EFC1897A69600E4006B /* strfn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = strfn.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/strfn.cpp"; sourceTree = "<group>"; };
+		1FB97EFD1897A69600E4006B /* strfn.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = strfn.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/strfn.hpp"; sourceTree = "<group>"; };
+		1FB97EFE1897A69600E4006B /* strlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = strlist.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/strlist.cpp"; sourceTree = "<group>"; };
+		1FB97EFF1897A69600E4006B /* strlist.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = strlist.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/strlist.hpp"; sourceTree = "<group>"; };
+		1FB97F001897A69600E4006B /* suballoc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = suballoc.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/suballoc.cpp"; sourceTree = "<group>"; };
+		1FB97F011897A69600E4006B /* suballoc.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = suballoc.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/suballoc.hpp"; sourceTree = "<group>"; };
+		1FB97F021897A69600E4006B /* system.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = system.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/system.cpp"; sourceTree = "<group>"; };
+		1FB97F031897A69700E4006B /* system.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = system.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/system.hpp"; sourceTree = "<group>"; };
+		1FB97F041897A69700E4006B /* timefn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timefn.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/timefn.cpp"; sourceTree = "<group>"; };
+		1FB97F051897A69700E4006B /* timefn.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = timefn.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/timefn.hpp"; sourceTree = "<group>"; };
+		1FB97F061897A69700E4006B /* ulinks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ulinks.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/ulinks.cpp"; sourceTree = "<group>"; };
+		1FB97F071897A69700E4006B /* ulinks.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ulinks.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/ulinks.hpp"; sourceTree = "<group>"; };
+		1FB97F081897A69700E4006B /* unicode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unicode.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/unicode.cpp"; sourceTree = "<group>"; };
+		1FB97F091897A69700E4006B /* unicode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = unicode.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/unicode.hpp"; sourceTree = "<group>"; };
+		1FB97F0A1897A69700E4006B /* unios2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unios2.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/unios2.cpp"; sourceTree = "<group>"; };
+		1FB97F0B1897A69700E4006B /* unpack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unpack.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/unpack.cpp"; sourceTree = "<group>"; };
+		1FB97F0C1897A69700E4006B /* unpack.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = unpack.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/unpack.hpp"; sourceTree = "<group>"; };
+		1FB97F0D1897A69700E4006B /* unpack15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unpack15.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/unpack15.cpp"; sourceTree = "<group>"; };
+		1FB97F0E1897A69700E4006B /* unpack20.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unpack20.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/unpack20.cpp"; sourceTree = "<group>"; };
+		1FB97F0F1897A69700E4006B /* UnRAR.vcproj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = UnRAR.vcproj; path = "OtherLibs/Compress/UnRAR-3.9.10/UnRAR.vcproj"; sourceTree = "<group>"; };
+		1FB97F101897A69700E4006B /* UnRARDll.vcproj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = UnRARDll.vcproj; path = "OtherLibs/Compress/UnRAR-3.9.10/UnRARDll.vcproj"; sourceTree = "<group>"; };
+		1FB97F111897A69700E4006B /* uowners.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = uowners.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/uowners.cpp"; sourceTree = "<group>"; };
+		1FB97F121897A69700E4006B /* version.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = version.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/version.hpp"; sourceTree = "<group>"; };
+		1FB97F131897A69700E4006B /* volume.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = volume.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/volume.cpp"; sourceTree = "<group>"; };
+		1FB97F141897A69700E4006B /* volume.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = volume.hpp; path = "OtherLibs/Compress/UnRAR-3.9.10/volume.hpp"; sourceTree = "<group>"; };
+		1FB97F151897A69700E4006B /* win32acl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = win32acl.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/win32acl.cpp"; sourceTree = "<group>"; };
+		1FB97F161897A69700E4006B /* win32stm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = win32stm.cpp; path = "OtherLibs/Compress/UnRAR-3.9.10/win32stm.cpp"; sourceTree = "<group>"; };
 		1FBC5B081889176F005FB7DB /* Website */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Website; path = FFPlayer/Resource/Website; sourceTree = "<group>"; };
 		1FBC5B0B188929BC005FB7DB /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMDefines.h; path = OtherLibs/GTMNSString/GTMDefines.h; sourceTree = "<group>"; };
 		1FBC5B0C188929BC005FB7DB /* GTMNSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMNSString.h; path = OtherLibs/GTMNSString/GTMNSString.h; sourceTree = "<group>"; };
@@ -459,6 +660,17 @@
 			name = XMLDictionary;
 			sourceTree = "<group>";
 		};
+		1F63AC881897AD790022BAE3 /* Compress */ = {
+			isa = PBXGroup;
+			children = (
+				1F63AC891897AD8B0022BAE3 /* MiniZip.h */,
+				1F63AC8A1897AD8B0022BAE3 /* MiniZip.m */,
+				1F63AC8B1897AD8B0022BAE3 /* UnRAR.h */,
+				1F63AC8C1897AD8B0022BAE3 /* UnRAR.m */,
+			);
+			name = Compress;
+			sourceTree = "<group>";
+		};
 		1FB97DE41896498F00E4006B /* TTOpenInAppActivity */ = {
 			isa = PBXGroup;
 			children = (
@@ -603,6 +815,155 @@
 			name = SDWebImage;
 			sourceTree = "<group>";
 		};
+		1FB97E881897A4AD00E4006B /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				1FB97E8B1897A4D400E4006B /* crypt.h */,
+				1FB97E8C1897A4D400E4006B /* ioapi.c */,
+				1FB97E8D1897A4D400E4006B /* ioapi.h */,
+				1FB97E8E1897A4D400E4006B /* mztools.c */,
+				1FB97E8F1897A4D400E4006B /* mztools.h */,
+				1FB97E901897A4D400E4006B /* unzip.c */,
+				1FB97E911897A4D400E4006B /* unzip.h */,
+				1FB97E921897A4D400E4006B /* zip.c */,
+				1FB97E931897A4D400E4006B /* zip.h */,
+			);
+			name = minizip;
+			sourceTree = "<group>";
+		};
+		1FB97E981897A68200E4006B /* unRAR */ = {
+			isa = PBXGroup;
+			children = (
+				1FB97E991897A69600E4006B /* arccmt.cpp */,
+				1FB97E9A1897A69600E4006B /* archive.cpp */,
+				1FB97E9B1897A69600E4006B /* archive.hpp */,
+				1FB97E9C1897A69600E4006B /* arcread.cpp */,
+				1FB97E9D1897A69600E4006B /* array.hpp */,
+				1FB97E9E1897A69600E4006B /* beosea.cpp */,
+				1FB97E9F1897A69600E4006B /* cmddata.cpp */,
+				1FB97EA01897A69600E4006B /* cmddata.hpp */,
+				1FB97EA11897A69600E4006B /* coder.cpp */,
+				1FB97EA21897A69600E4006B /* coder.hpp */,
+				1FB97EA31897A69600E4006B /* compress.hpp */,
+				1FB97EA41897A69600E4006B /* consio.cpp */,
+				1FB97EA51897A69600E4006B /* consio.hpp */,
+				1FB97EA61897A69600E4006B /* crc.cpp */,
+				1FB97EA71897A69600E4006B /* crc.hpp */,
+				1FB97EA81897A69600E4006B /* crypt.cpp */,
+				1FB97EA91897A69600E4006B /* crypt.hpp */,
+				1FB97EAA1897A69600E4006B /* dll.cpp */,
+				1FB97EAB1897A69600E4006B /* dll.def */,
+				1FB97EAC1897A69600E4006B /* dll.hpp */,
+				1FB97EAD1897A69600E4006B /* dll.rc */,
+				1FB97EAE1897A69600E4006B /* encname.cpp */,
+				1FB97EAF1897A69600E4006B /* encname.hpp */,
+				1FB97EB01897A69600E4006B /* errhnd.cpp */,
+				1FB97EB11897A69600E4006B /* errhnd.hpp */,
+				1FB97EB21897A69600E4006B /* extinfo.cpp */,
+				1FB97EB31897A69600E4006B /* extinfo.hpp */,
+				1FB97EB41897A69600E4006B /* extract.cpp */,
+				1FB97EB51897A69600E4006B /* extract.hpp */,
+				1FB97EB61897A69600E4006B /* filcreat.cpp */,
+				1FB97EB71897A69600E4006B /* filcreat.hpp */,
+				1FB97EB81897A69600E4006B /* file.cpp */,
+				1FB97EB91897A69600E4006B /* file.hpp */,
+				1FB97EBA1897A69600E4006B /* filefn.cpp */,
+				1FB97EBB1897A69600E4006B /* filefn.hpp */,
+				1FB97EBC1897A69600E4006B /* filestr.cpp */,
+				1FB97EBD1897A69600E4006B /* filestr.hpp */,
+				1FB97EBE1897A69600E4006B /* find.cpp */,
+				1FB97EBF1897A69600E4006B /* find.hpp */,
+				1FB97EC01897A69600E4006B /* getbits.cpp */,
+				1FB97EC11897A69600E4006B /* getbits.hpp */,
+				1FB97EC21897A69600E4006B /* global.cpp */,
+				1FB97EC31897A69600E4006B /* global.hpp */,
+				1FB97EC41897A69600E4006B /* headers.hpp */,
+				1FB97EC51897A69600E4006B /* isnt.cpp */,
+				1FB97EC61897A69600E4006B /* isnt.hpp */,
+				1FB97EC71897A69600E4006B /* license.txt */,
+				1FB97EC81897A69600E4006B /* list.cpp */,
+				1FB97EC91897A69600E4006B /* list.hpp */,
+				1FB97ECA1897A69600E4006B /* loclang.hpp */,
+				1FB97ECB1897A69600E4006B /* log.cpp */,
+				1FB97ECC1897A69600E4006B /* log.hpp */,
+				1FB97ECD1897A69600E4006B /* makefile.bcc */,
+				1FB97ECE1897A69600E4006B /* makefile.cygmin */,
+				1FB97ECF1897A69600E4006B /* makefile.dj */,
+				1FB97ED01897A69600E4006B /* makefile.dmc */,
+				1FB97ED11897A69600E4006B /* makefile.unix */,
+				1FB97ED21897A69600E4006B /* match.cpp */,
+				1FB97ED31897A69600E4006B /* match.hpp */,
+				1FB97ED41897A69600E4006B /* model.cpp */,
+				1FB97ED51897A69600E4006B /* model.hpp */,
+				1FB97ED61897A69600E4006B /* msc.dep */,
+				1FB97ED71897A69600E4006B /* options.cpp */,
+				1FB97ED81897A69600E4006B /* options.hpp */,
+				1FB97ED91897A69600E4006B /* os.hpp */,
+				1FB97EDA1897A69600E4006B /* os2ea.cpp */,
+				1FB97EDB1897A69600E4006B /* pathfn.cpp */,
+				1FB97EDC1897A69600E4006B /* pathfn.hpp */,
+				1FB97EDD1897A69600E4006B /* rar.cpp */,
+				1FB97EDE1897A69600E4006B /* rar.hpp */,
+				1FB97EDF1897A69600E4006B /* rardefs.hpp */,
+				1FB97EE01897A69600E4006B /* rarlang.hpp */,
+				1FB97EE11897A69600E4006B /* raros.hpp */,
+				1FB97EE21897A69600E4006B /* rarpch.cpp */,
+				1FB97EE31897A69600E4006B /* rartypes.hpp */,
+				1FB97EE41897A69600E4006B /* rarvm.cpp */,
+				1FB97EE51897A69600E4006B /* rarvm.hpp */,
+				1FB97EE61897A69600E4006B /* rarvmtbl.cpp */,
+				1FB97EE71897A69600E4006B /* rawread.cpp */,
+				1FB97EE81897A69600E4006B /* rawread.hpp */,
+				1FB97EE91897A69600E4006B /* rdwrfn.cpp */,
+				1FB97EEA1897A69600E4006B /* rdwrfn.hpp */,
+				1FB97EEB1897A69600E4006B /* readme.txt */,
+				1FB97EEC1897A69600E4006B /* recvol.cpp */,
+				1FB97EED1897A69600E4006B /* recvol.hpp */,
+				1FB97EEE1897A69600E4006B /* resource.cpp */,
+				1FB97EEF1897A69600E4006B /* resource.hpp */,
+				1FB97EF01897A69600E4006B /* rijndael.cpp */,
+				1FB97EF11897A69600E4006B /* rijndael.hpp */,
+				1FB97EF21897A69600E4006B /* rs.cpp */,
+				1FB97EF31897A69600E4006B /* rs.hpp */,
+				1FB97EF41897A69600E4006B /* savepos.cpp */,
+				1FB97EF51897A69600E4006B /* savepos.hpp */,
+				1FB97EF61897A69600E4006B /* scantree.cpp */,
+				1FB97EF71897A69600E4006B /* scantree.hpp */,
+				1FB97EF81897A69600E4006B /* sha1.cpp */,
+				1FB97EF91897A69600E4006B /* sha1.hpp */,
+				1FB97EFA1897A69600E4006B /* smallfn.cpp */,
+				1FB97EFB1897A69600E4006B /* smallfn.hpp */,
+				1FB97EFC1897A69600E4006B /* strfn.cpp */,
+				1FB97EFD1897A69600E4006B /* strfn.hpp */,
+				1FB97EFE1897A69600E4006B /* strlist.cpp */,
+				1FB97EFF1897A69600E4006B /* strlist.hpp */,
+				1FB97F001897A69600E4006B /* suballoc.cpp */,
+				1FB97F011897A69600E4006B /* suballoc.hpp */,
+				1FB97F021897A69600E4006B /* system.cpp */,
+				1FB97F031897A69700E4006B /* system.hpp */,
+				1FB97F041897A69700E4006B /* timefn.cpp */,
+				1FB97F051897A69700E4006B /* timefn.hpp */,
+				1FB97F061897A69700E4006B /* ulinks.cpp */,
+				1FB97F071897A69700E4006B /* ulinks.hpp */,
+				1FB97F081897A69700E4006B /* unicode.cpp */,
+				1FB97F091897A69700E4006B /* unicode.hpp */,
+				1FB97F0A1897A69700E4006B /* unios2.cpp */,
+				1FB97F0B1897A69700E4006B /* unpack.cpp */,
+				1FB97F0C1897A69700E4006B /* unpack.hpp */,
+				1FB97F0D1897A69700E4006B /* unpack15.cpp */,
+				1FB97F0E1897A69700E4006B /* unpack20.cpp */,
+				1FB97F0F1897A69700E4006B /* UnRAR.vcproj */,
+				1FB97F101897A69700E4006B /* UnRARDll.vcproj */,
+				1FB97F111897A69700E4006B /* uowners.cpp */,
+				1FB97F121897A69700E4006B /* version.hpp */,
+				1FB97F131897A69700E4006B /* volume.cpp */,
+				1FB97F141897A69700E4006B /* volume.hpp */,
+				1FB97F151897A69700E4006B /* win32acl.cpp */,
+				1FB97F161897A69700E4006B /* win32stm.cpp */,
+			);
+			name = unRAR;
+			sourceTree = "<group>";
+		};
 		1FBC5B0A188929AA005FB7DB /* GTMNSString */ = {
 			isa = PBXGroup;
 			children = (
@@ -660,6 +1021,9 @@
 		1FC0718A1884FC3B00ED63E8 /* OtherLibs */ = {
 			isa = PBXGroup;
 			children = (
+				1F63AC881897AD790022BAE3 /* Compress */,
+				1FB97E981897A68200E4006B /* unRAR */,
+				1FB97E881897A4AD00E4006B /* minizip */,
 				1FB97E5D1897917900E4006B /* SDWebImage */,
 				1FB97E331897915500E4006B /* PSTCollectionView */,
 				1FB97E171897913100E4006B /* MWPhotoBrowser */,
@@ -967,12 +1331,14 @@
 				1FB97E1118978B4800E4006B /* camera@2x.png in Resources */,
 				1FC071CF1885366D00ED63E8 /* movieForward.png in Resources */,
 				1FC071DD1886508200ED63E8 /* movieNext.png in Resources */,
+				1FB97F431897A69700E4006B /* readme.txt in Resources */,
 				4DBD97FC1888156D00C71747 /* movie.png in Resources */,
 				1FC071D21885366D00ED63E8 /* movieForwardSelected@2x.png in Resources */,
 				1FC071D71885366D00ED63E8 /* moviePlay.png in Resources */,
 				1FE5F8871883891D00CB4C09 /* Main_iPad.storyboard in Resources */,
 				1FC071D41885366D00ED63E8 /* movieFullscreen@2x.png in Resources */,
 				1FC071D61885366D00ED63E8 /* moviePause@2x.png in Resources */,
+				1FB97F581897A69700E4006B /* UnRARDll.vcproj in Resources */,
 				1FC071D81885366D00ED63E8 /* moviePlay@2x.png in Resources */,
 				1FC071D11885366D00ED63E8 /* movieForwardSelected.png in Resources */,
 				1FE5F88F1883891D00CB4C09 /* Images.xcassets in Resources */,
@@ -983,22 +1349,32 @@
 				1FC071DF1886508200ED63E8 /* moviePrev.png in Resources */,
 				4DBD98041888168400C71747 /* disk.png in Resources */,
 				1FC071D01885366D00ED63E8 /* movieForward@2x.png in Resources */,
+				1FB97F2F1897A69700E4006B /* license.txt in Resources */,
+				1FB97F341897A69700E4006B /* makefile.dj in Resources */,
 				1FC071D31885366D00ED63E8 /* movieFullscreen.png in Resources */,
 				1FB97E1018978B4800E4006B /* camera.png in Resources */,
+				1FB97F211897A69700E4006B /* dll.def in Resources */,
 				1FC071CB1885366D00ED63E8 /* movieBackwardSelected.png in Resources */,
+				1FB97F351897A69700E4006B /* makefile.dmc in Resources */,
 				4DBD98051888168400C71747 /* disk@2x.png in Resources */,
 				4DBD97F9188814D000C71747 /* folder@2x.png in Resources */,
 				1FB97DEE1896499E00E4006B /* TTOpenInAppActivity7.png in Resources */,
 				1FC071C91885366D00ED63E8 /* movieBackward.png in Resources */,
 				1FC071CC1885366D00ED63E8 /* movieBackwardSelected@2x.png in Resources */,
+				1FB97F321897A69700E4006B /* makefile.bcc in Resources */,
 				1FE5F8841883891D00CB4C09 /* Main_iPhone.storyboard in Resources */,
+				1FB97F331897A69700E4006B /* makefile.cygmin in Resources */,
+				1FB97F361897A69700E4006B /* makefile.unix in Resources */,
 				4DBD97FD1888156D00C71747 /* movie@2x.png in Resources */,
 				1FB97DEF1896499E00E4006B /* TTOpenInAppActivity7@2x.png in Resources */,
 				4DBD97F8188814D000C71747 /* folder.png in Resources */,
 				1FB97DEC1896499E00E4006B /* TTOpenInAppActivity.png in Resources */,
+				1FB97F571897A69700E4006B /* UnRAR.vcproj in Resources */,
 				1FC071E01886508200ED63E8 /* moviePrev@2x.png in Resources */,
+				1FB97F221897A69700E4006B /* dll.rc in Resources */,
 				1FB97DE21896401F00E4006B /* connections.png in Resources */,
 				4DBD9800188815FD00C71747 /* padlock.png in Resources */,
+				1FB97F391897A69700E4006B /* msc.dep in Resources */,
 				1FC071D51885366D00ED63E8 /* moviePause.png in Resources */,
 				1FB97E8718979C5200E4006B /* MWPhotoBrowser.bundle in Resources */,
 				1FB97DDF18963F9300E4006B /* plus@2x.png in Resources */,
@@ -1029,76 +1405,126 @@
 				1FBC5B11188935EE005FB7DB /* FFLocalFileManager.m in Sources */,
 				1FB97E061897499600E4006B /* FMDatabase.m in Sources */,
 				1FB97E7E1897918B00E4006B /* SDWebImageDownloaderOperation.m in Sources */,
+				1FB97F3D1897A69700E4006B /* rar.cpp in Sources */,
 				1FB97E791897918B00E4006B /* NSData+GIF.m in Sources */,
 				1FC071A41884FC6600ED63E8 /* AFURLConnectionOperation.m in Sources */,
 				1FB97E5C1897916600E4006B /* PSTGridLayoutSection.m in Sources */,
+				1FB97F441897A69700E4006B /* recvol.cpp in Sources */,
 				1FB97E2F1897914200E4006B /* MWPhotoBrowser.m in Sources */,
+				1FB97F4A1897A69700E4006B /* sha1.cpp in Sources */,
 				1FB97E531897916600E4006B /* PSTCollectionViewController.m in Sources */,
 				1FB97E081897499600E4006B /* FMDatabasePool.m in Sources */,
+				1FB97F1B1897A69700E4006B /* cmddata.cpp in Sources */,
 				1FB97E581897916600E4006B /* PSTCollectionViewUpdateItem.m in Sources */,
 				1FB97E591897916600E4006B /* PSTGridLayoutInfo.m in Sources */,
 				1FC071851884C82600ED63E8 /* FFLocalViewController.m in Sources */,
+				1FB97F2D1897A69700E4006B /* global.cpp in Sources */,
 				1FB97E811897918B00E4006B /* UIButton+WebCache.m in Sources */,
 				1FB97E561897916600E4006B /* PSTCollectionViewItemKey.m in Sources */,
+				1FB97F181897A69700E4006B /* archive.cpp in Sources */,
 				1FB97E2E1897914200E4006B /* MWPhoto.m in Sources */,
 				1FC071A31884FC6600ED63E8 /* AFSecurityPolicy.m in Sources */,
 				4D0165C418856D650031DC71 /* FFInternalMoviePlayerController.m in Sources */,
+				1FB97F1F1897A69700E4006B /* crypt.cpp in Sources */,
 				4DBD981018882A0600C71747 /* GCDWebServer.m in Sources */,
 				1FB97E0B1897499600E4006B /* FMResultSet.m in Sources */,
+				1FB97F2C1897A69700E4006B /* getbits.cpp in Sources */,
+				1F63AC8D1897AD8B0022BAE3 /* MiniZip.m in Sources */,
 				1FB97E551897916600E4006B /* PSTCollectionViewFlowLayout.m in Sources */,
+				1FB97E971897A4D400E4006B /* zip.c in Sources */,
+				1FB97F421897A69700E4006B /* rdwrfn.cpp in Sources */,
+				1FB97F301897A69700E4006B /* list.cpp in Sources */,
+				1FB97F271897A69700E4006B /* filcreat.cpp in Sources */,
 				1FB97E5A1897916600E4006B /* PSTGridLayoutItem.m in Sources */,
 				1FB97DF6189653A300E4006B /* MBProgressHUD.m in Sources */,
 				1FB97E301897914200E4006B /* MWTapDetectingImageView.m in Sources */,
+				1FB97F481897A69700E4006B /* savepos.cpp in Sources */,
 				1FE5F8B618838DA700CB4C09 /* KxAudioManager.m in Sources */,
 				1FC071B7188518D900ED63E8 /* FFMovieViewController.m in Sources */,
+				1FB97F291897A69700E4006B /* filefn.cpp in Sources */,
 				1FC071B418850D1F00ED63E8 /* ALMoviePlayerControls.m in Sources */,
+				1FB97F4C1897A69700E4006B /* strfn.cpp in Sources */,
+				1FB97F281897A69700E4006B /* file.cpp in Sources */,
+				1FB97F371897A69700E4006B /* match.cpp in Sources */,
+				1FB97F3A1897A69700E4006B /* options.cpp in Sources */,
 				1F44BC561890FE9300C3E0D9 /* XMLDictionary.m in Sources */,
+				1FB97E951897A4D400E4006B /* mztools.c in Sources */,
 				1FC071A01884FC6600ED63E8 /* AFHTTPRequestOperationManager.m in Sources */,
 				1FE5F8811883891D00CB4C09 /* FFAppDelegate.m in Sources */,
+				1FB97F471897A69700E4006B /* rs.cpp in Sources */,
+				1FB97F491897A69700E4006B /* scantree.cpp in Sources */,
 				1FC0717E1883F24900ED63E8 /* FFAlertView.m in Sources */,
+				1FB97F261897A69700E4006B /* extract.cpp in Sources */,
 				1FB97E831897918B00E4006B /* UIImage+MultiFormat.m in Sources */,
 				1FB97E511897916600E4006B /* PSTCollectionView.m in Sources */,
 				1FE5F87D1883891D00CB4C09 /* main.m in Sources */,
 				1FB97DEB1896499E00E4006B /* TTOpenInAppActivity.m in Sources */,
+				1FB97F4D1897A69700E4006B /* strlist.cpp in Sources */,
 				1FC071891884CDAE00ED63E8 /* FFHelper.m in Sources */,
 				1FB97E521897916600E4006B /* PSTCollectionViewCell.m in Sources */,
 				1FE5F8BA18838DA700CB4C09 /* KxMovieViewController.m in Sources */,
 				1FC071AA1884FCC200ED63E8 /* FFPlayer.m in Sources */,
+				1FB97F3E1897A69700E4006B /* rarpch.cpp in Sources */,
 				1FB97E571897916600E4006B /* PSTCollectionViewLayout.m in Sources */,
 				1FB97E7B1897918B00E4006B /* SDWebImageCompat.m in Sources */,
+				1FB97F3C1897A69700E4006B /* pathfn.cpp in Sources */,
 				1FC071FB18890D4500ED63E8 /* FFSetting.m in Sources */,
+				1FB97F3F1897A69700E4006B /* rarvm.cpp in Sources */,
+				1FB97F1E1897A69700E4006B /* crc.cpp in Sources */,
+				1FB97F461897A69700E4006B /* rijndael.cpp in Sources */,
 				1FB97E801897918B00E4006B /* SDWebImagePrefetcher.m in Sources */,
 				1FB97E321897914200E4006B /* MWZoomingScrollView.m in Sources */,
 				1FB97E7F1897918B00E4006B /* SDWebImageManager.m in Sources */,
 				1FC071A71884FC6600ED63E8 /* AFURLSessionManager.m in Sources */,
+				1FB97F4F1897A69700E4006B /* system.cpp in Sources */,
+				1FB97F511897A69700E4006B /* ulinks.cpp in Sources */,
 				4DBD981318882A0600C71747 /* GCDWebServerResponse.m in Sources */,
 				4D6127581895555400C74ADE /* FFPlayHistory.m in Sources */,
 				1FB97E851897918B00E4006B /* UIImageView+WebCache.m in Sources */,
 				4DBD981618882FA100C71747 /* FFWebServer.m in Sources */,
+				1FB97F5A1897A69700E4006B /* volume.cpp in Sources */,
 				1FB97E311897914200E4006B /* MWTapDetectingView.m in Sources */,
+				1FB97F451897A69700E4006B /* resource.cpp in Sources */,
 				1FB97E5B1897916600E4006B /* PSTGridLayoutRow.m in Sources */,
 				1FB97E2C1897914200E4006B /* MWGridCell.m in Sources */,
 				1FB97E7D1897918B00E4006B /* SDWebImageDownloader.m in Sources */,
+				1FB97F521897A69700E4006B /* unicode.cpp in Sources */,
 				1FB97E541897916600E4006B /* PSTCollectionViewData.m in Sources */,
 				1FC071A61884FC6600ED63E8 /* AFURLResponseSerialization.m in Sources */,
 				1FC071821883F36D00ED63E8 /* FFSettingViewController.m in Sources */,
 				1FC071B218850D1F00ED63E8 /* ALAirplayView.m in Sources */,
+				1FB97F241897A69700E4006B /* errhnd.cpp in Sources */,
 				1FB97E7C1897918B00E4006B /* SDWebImageDecoder.m in Sources */,
 				1FE5F8B918838DA700CB4C09 /* KxMovieGLView.m in Sources */,
+				1FB97E941897A4D400E4006B /* ioapi.c in Sources */,
 				1FB97E161897912300E4006B /* DACircularProgressView.m in Sources */,
 				1FBC5B0E188929BC005FB7DB /* GTMNSString.m in Sources */,
 				1FB97E501897916600E4006B /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
 				1FB97E2D1897914200E4006B /* MWGridViewController.m in Sources */,
+				1FB97F501897A69700E4006B /* timefn.cpp in Sources */,
+				1F63AC8E1897AD8B0022BAE3 /* UnRAR.m in Sources */,
+				1FB97F201897A69700E4006B /* dll.cpp in Sources */,
+				1FB97F2E1897A69700E4006B /* isnt.cpp in Sources */,
+				1FB97F1D1897A69700E4006B /* consio.cpp in Sources */,
+				1FB97F4B1897A69700E4006B /* smallfn.cpp in Sources */,
 				1FC071A51884FC6600ED63E8 /* AFURLRequestSerialization.m in Sources */,
 				4DBD981118882A0600C71747 /* GCDWebServerConnection.m in Sources */,
+				1FB97F2A1897A69700E4006B /* filestr.cpp in Sources */,
 				1FB97E841897918B00E4006B /* UIImage+WebP.m in Sources */,
+				1FB97F411897A69700E4006B /* rawread.cpp in Sources */,
 				1FB97E091897499600E4006B /* FMDatabaseQueue.m in Sources */,
 				1FC071A21884FC6600ED63E8 /* AFNetworkReachabilityManager.m in Sources */,
+				1FB97F231897A69700E4006B /* encname.cpp in Sources */,
 				1FB97E2B1897914200E4006B /* MWCaptionView.m in Sources */,
 				1FB97DF218964D5900E4006B /* FFSparkViewController.m in Sources */,
+				1FB97F191897A69700E4006B /* arcread.cpp in Sources */,
+				1FB97F541897A69700E4006B /* unpack.cpp in Sources */,
 				1FB97E071897499600E4006B /* FMDatabaseAdditions.m in Sources */,
 				1FC071E31887B68A00ED63E8 /* FFTabViewController.m in Sources */,
 				4D61275518954E4500C74ADE /* FFRemoteViewController.m in Sources */,
+				1FB97F251897A69700E4006B /* extinfo.cpp in Sources */,
+				1FB97E961897A4D400E4006B /* unzip.c in Sources */,
+				1FB97F2B1897A69700E4006B /* find.cpp in Sources */,
 				1FE5F8B818838DA700CB4C09 /* KxMovieDecoder.m in Sources */,
 				1FC0719F1884FC6600ED63E8 /* AFHTTPRequestOperation.m in Sources */,
 				1FC071A11884FC6600ED63E8 /* AFHTTPSessionManager.m in Sources */,
@@ -1245,6 +1671,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FFPlayer/FFPlayer-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					USE_FILE32API,
+					RARDLL,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1271,6 +1701,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FFPlayer/FFPlayer-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					USE_FILE32API,
+					RARDLL,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
