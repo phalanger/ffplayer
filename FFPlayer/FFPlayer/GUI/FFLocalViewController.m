@@ -15,6 +15,7 @@
 #import "FFLocalFileManager.h"
 #import "TTOpenInAppActivity.h"
 #import "MWPhotoBrowser.h"
+#import "MBProgressHUD.h"
 
 enum {
     IN_LOCAL,
@@ -508,12 +509,22 @@ enum {
                 [self displayPic:item];
             }break;
             case LIT_ZIP: {
-                NSString * strTemp = [FFLocalFileManager uncompress:item.fullPath];
-                if ( strTemp == nil )
-                    return;
-                FFLocalViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"LocalFile"];
-                [vc switchToUncompressMode:strTemp name:item.fileName];
-                [self.navigationController pushViewController:vc animated:YES];
+                if ( self.navigationController.navigationBar)
+                    self.navigationController.navigationBar.userInteractionEnabled = NO;
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                hud.labelText = NSLocalizedString(@"Uncompressing ...", nil);
+                __weak FFLocalViewController * weakSelf = self;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSString * strTemp = [FFLocalFileManager uncompress:item.fullPath];
+                    if ( weakSelf.navigationController.navigationBar)
+                        weakSelf.navigationController.navigationBar.userInteractionEnabled = YES;
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                    if ( strTemp == nil )
+                        return;
+                    FFLocalViewController * vc = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"LocalFile"];
+                    [vc switchToUncompressMode:strTemp name:item.fileName];
+                    [weakSelf.navigationController pushViewController:vc animated:YES];
+                });
             } break;
             default:
             {

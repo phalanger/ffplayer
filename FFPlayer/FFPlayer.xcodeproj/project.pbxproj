@@ -206,6 +206,24 @@
 		4D61275A1896B0D100C74ADE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6127591896B0D100C74ADE /* MobileCoreServices.framework */; };
 		4D61275D1897E60600C74ADE /* briefcase.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D61275B1897E60600C74ADE /* briefcase.png */; };
 		4D61275E1897E60600C74ADE /* briefcase@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D61275C1897E60600C74ADE /* briefcase@2x.png */; };
+		4D6127831897F92D00C74ADE /* 7zBuf.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127611897F92D00C74ADE /* 7zBuf.c */; };
+		4D6127841897F92D00C74ADE /* 7zBuf2.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127631897F92D00C74ADE /* 7zBuf2.c */; };
+		4D6127851897F92D00C74ADE /* 7zDec.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127641897F92D00C74ADE /* 7zDec.c */; };
+		4D6127861897F92D00C74ADE /* 7zFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127651897F92D00C74ADE /* 7zFile.c */; };
+		4D6127871897F92D00C74ADE /* 7zIn.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127671897F92D00C74ADE /* 7zIn.c */; };
+		4D6127881897F92D00C74ADE /* 7zStream.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127681897F92D00C74ADE /* 7zStream.c */; };
+		4D6127891897F92D00C74ADE /* Alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D61276A1897F92D00C74ADE /* Alloc.c */; };
+		4D61278A1897F92D00C74ADE /* CpuArch.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D61276C1897F92D00C74ADE /* CpuArch.c */; };
+		4D61278B1897F92D00C74ADE /* Delta.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D61276E1897F92D00C74ADE /* Delta.c */; };
+		4D61278C1897F92D00C74ADE /* Lzma2Dec.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127711897F92D00C74ADE /* Lzma2Dec.c */; };
+		4D61278D1897F92D00C74ADE /* LzmaDec.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127731897F92D00C74ADE /* LzmaDec.c */; };
+		4D61278E1897F92D00C74ADE /* Ppmd7.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127761897F92D00C74ADE /* Ppmd7.c */; };
+		4D61278F1897F92D00C74ADE /* Ppmd7Dec.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127781897F92D00C74ADE /* Ppmd7Dec.c */; };
+		4D6127901897F92D00C74ADE /* Ppmd8.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127791897F92D00C74ADE /* Ppmd8.c */; };
+		4D6127911897F92D00C74ADE /* Ppmd8Dec.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D61277B1897F92D00C74ADE /* Ppmd8Dec.c */; };
+		4D6127921897F92D00C74ADE /* 7zAlloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127801897F92D00C74ADE /* 7zAlloc.c */; };
+		4D6127931897F92D00C74ADE /* 7zMain.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127821897F92D00C74ADE /* 7zMain.c */; };
+		4D6127961897F98D00C74ADE /* LZMAExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127951897F98D00C74ADE /* LZMAExtractor.m */; };
 		4DBD97F8188814D000C71747 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F6188814D000C71747 /* folder.png */; };
 		4DBD97F9188814D000C71747 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F7188814D000C71747 /* folder@2x.png */; };
 		4DBD97FC1888156D00C71747 /* movie.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97FA1888156D00C71747 /* movie.png */; };
@@ -595,6 +613,41 @@
 		4D6127591896B0D100C74ADE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		4D61275B1897E60600C74ADE /* briefcase.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = briefcase.png; path = Resource/briefcase.png; sourceTree = "<group>"; };
 		4D61275C1897E60600C74ADE /* briefcase@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "briefcase@2x.png"; path = "Resource/briefcase@2x.png"; sourceTree = "<group>"; };
+		4D6127601897F92D00C74ADE /* 7z.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 7z.h; path = OtherLibs/Compress/lzma/7z.h; sourceTree = "<group>"; };
+		4D6127611897F92D00C74ADE /* 7zBuf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = 7zBuf.c; path = OtherLibs/Compress/lzma/7zBuf.c; sourceTree = "<group>"; };
+		4D6127621897F92D00C74ADE /* 7zBuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 7zBuf.h; path = OtherLibs/Compress/lzma/7zBuf.h; sourceTree = "<group>"; };
+		4D6127631897F92D00C74ADE /* 7zBuf2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = 7zBuf2.c; path = OtherLibs/Compress/lzma/7zBuf2.c; sourceTree = "<group>"; };
+		4D6127641897F92D00C74ADE /* 7zDec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = 7zDec.c; path = OtherLibs/Compress/lzma/7zDec.c; sourceTree = "<group>"; };
+		4D6127651897F92D00C74ADE /* 7zFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = 7zFile.c; path = OtherLibs/Compress/lzma/7zFile.c; sourceTree = "<group>"; };
+		4D6127661897F92D00C74ADE /* 7zFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 7zFile.h; path = OtherLibs/Compress/lzma/7zFile.h; sourceTree = "<group>"; };
+		4D6127671897F92D00C74ADE /* 7zIn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = 7zIn.c; path = OtherLibs/Compress/lzma/7zIn.c; sourceTree = "<group>"; };
+		4D6127681897F92D00C74ADE /* 7zStream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = 7zStream.c; path = OtherLibs/Compress/lzma/7zStream.c; sourceTree = "<group>"; };
+		4D6127691897F92D00C74ADE /* 7zVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 7zVersion.h; path = OtherLibs/Compress/lzma/7zVersion.h; sourceTree = "<group>"; };
+		4D61276A1897F92D00C74ADE /* Alloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Alloc.c; path = OtherLibs/Compress/lzma/Alloc.c; sourceTree = "<group>"; };
+		4D61276B1897F92D00C74ADE /* Alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alloc.h; path = OtherLibs/Compress/lzma/Alloc.h; sourceTree = "<group>"; };
+		4D61276C1897F92D00C74ADE /* CpuArch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = CpuArch.c; path = OtherLibs/Compress/lzma/CpuArch.c; sourceTree = "<group>"; };
+		4D61276D1897F92D00C74ADE /* CpuArch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CpuArch.h; path = OtherLibs/Compress/lzma/CpuArch.h; sourceTree = "<group>"; };
+		4D61276E1897F92D00C74ADE /* Delta.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Delta.c; path = OtherLibs/Compress/lzma/Delta.c; sourceTree = "<group>"; };
+		4D61276F1897F92D00C74ADE /* Delta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Delta.h; path = OtherLibs/Compress/lzma/Delta.h; sourceTree = "<group>"; };
+		4D6127701897F92D00C74ADE /* LzHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LzHash.h; path = OtherLibs/Compress/lzma/LzHash.h; sourceTree = "<group>"; };
+		4D6127711897F92D00C74ADE /* Lzma2Dec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Lzma2Dec.c; path = OtherLibs/Compress/lzma/Lzma2Dec.c; sourceTree = "<group>"; };
+		4D6127721897F92D00C74ADE /* Lzma2Dec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lzma2Dec.h; path = OtherLibs/Compress/lzma/Lzma2Dec.h; sourceTree = "<group>"; };
+		4D6127731897F92D00C74ADE /* LzmaDec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = LzmaDec.c; path = OtherLibs/Compress/lzma/LzmaDec.c; sourceTree = "<group>"; };
+		4D6127741897F92D00C74ADE /* LzmaDec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LzmaDec.h; path = OtherLibs/Compress/lzma/LzmaDec.h; sourceTree = "<group>"; };
+		4D6127751897F92D00C74ADE /* Ppmd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Ppmd.h; path = OtherLibs/Compress/lzma/Ppmd.h; sourceTree = "<group>"; };
+		4D6127761897F92D00C74ADE /* Ppmd7.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Ppmd7.c; path = OtherLibs/Compress/lzma/Ppmd7.c; sourceTree = "<group>"; };
+		4D6127771897F92D00C74ADE /* Ppmd7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Ppmd7.h; path = OtherLibs/Compress/lzma/Ppmd7.h; sourceTree = "<group>"; };
+		4D6127781897F92D00C74ADE /* Ppmd7Dec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Ppmd7Dec.c; path = OtherLibs/Compress/lzma/Ppmd7Dec.c; sourceTree = "<group>"; };
+		4D6127791897F92D00C74ADE /* Ppmd8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Ppmd8.c; path = OtherLibs/Compress/lzma/Ppmd8.c; sourceTree = "<group>"; };
+		4D61277A1897F92D00C74ADE /* Ppmd8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Ppmd8.h; path = OtherLibs/Compress/lzma/Ppmd8.h; sourceTree = "<group>"; };
+		4D61277B1897F92D00C74ADE /* Ppmd8Dec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Ppmd8Dec.c; path = OtherLibs/Compress/lzma/Ppmd8Dec.c; sourceTree = "<group>"; };
+		4D61277C1897F92D00C74ADE /* RotateDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RotateDefs.h; path = OtherLibs/Compress/lzma/RotateDefs.h; sourceTree = "<group>"; };
+		4D61277D1897F92D00C74ADE /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = OtherLibs/Compress/lzma/Types.h; sourceTree = "<group>"; };
+		4D6127801897F92D00C74ADE /* 7zAlloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 7zAlloc.c; sourceTree = "<group>"; };
+		4D6127811897F92D00C74ADE /* 7zAlloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 7zAlloc.h; sourceTree = "<group>"; };
+		4D6127821897F92D00C74ADE /* 7zMain.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 7zMain.c; sourceTree = "<group>"; };
+		4D6127941897F98D00C74ADE /* LZMAExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LZMAExtractor.h; path = OtherLibs/Compress/LZMAExtractor.h; sourceTree = "<group>"; };
+		4D6127951897F98D00C74ADE /* LZMAExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LZMAExtractor.m; path = OtherLibs/Compress/LZMAExtractor.m; sourceTree = "<group>"; };
 		4DBD97F6188814D000C71747 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folder.png; path = Resource/folder.png; sourceTree = "<group>"; };
 		4DBD97F7188814D000C71747 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resource/folder@2x.png"; sourceTree = "<group>"; };
 		4DBD97FA1888156D00C71747 /* movie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = movie.png; path = Resource/movie.png; sourceTree = "<group>"; };
@@ -667,6 +720,8 @@
 		1F63AC881897AD790022BAE3 /* Compress */ = {
 			isa = PBXGroup;
 			children = (
+				4D6127941897F98D00C74ADE /* LZMAExtractor.h */,
+				4D6127951897F98D00C74ADE /* LZMAExtractor.m */,
 				1F63AC891897AD8B0022BAE3 /* MiniZip.h */,
 				1F63AC8A1897AD8B0022BAE3 /* MiniZip.m */,
 				1F63AC8B1897AD8B0022BAE3 /* UnRAR.h */,
@@ -1025,6 +1080,7 @@
 		1FC0718A1884FC3B00ED63E8 /* OtherLibs */ = {
 			isa = PBXGroup;
 			children = (
+				4D61275F1897F91700C74ADE /* lzma */,
 				1F63AC881897AD790022BAE3 /* Compress */,
 				1FB97E981897A68200E4006B /* unRAR */,
 				1FB97E881897A4AD00E4006B /* minizip */,
@@ -1235,6 +1291,63 @@
 			name = kxmovie;
 			sourceTree = "<group>";
 		};
+		4D61275F1897F91700C74ADE /* lzma */ = {
+			isa = PBXGroup;
+			children = (
+				4D6127601897F92D00C74ADE /* 7z.h */,
+				4D6127611897F92D00C74ADE /* 7zBuf.c */,
+				4D6127621897F92D00C74ADE /* 7zBuf.h */,
+				4D6127631897F92D00C74ADE /* 7zBuf2.c */,
+				4D6127641897F92D00C74ADE /* 7zDec.c */,
+				4D6127651897F92D00C74ADE /* 7zFile.c */,
+				4D6127661897F92D00C74ADE /* 7zFile.h */,
+				4D6127671897F92D00C74ADE /* 7zIn.c */,
+				4D6127681897F92D00C74ADE /* 7zStream.c */,
+				4D6127691897F92D00C74ADE /* 7zVersion.h */,
+				4D61276A1897F92D00C74ADE /* Alloc.c */,
+				4D61276B1897F92D00C74ADE /* Alloc.h */,
+				4D61276C1897F92D00C74ADE /* CpuArch.c */,
+				4D61276D1897F92D00C74ADE /* CpuArch.h */,
+				4D61276E1897F92D00C74ADE /* Delta.c */,
+				4D61276F1897F92D00C74ADE /* Delta.h */,
+				4D6127701897F92D00C74ADE /* LzHash.h */,
+				4D6127711897F92D00C74ADE /* Lzma2Dec.c */,
+				4D6127721897F92D00C74ADE /* Lzma2Dec.h */,
+				4D6127731897F92D00C74ADE /* LzmaDec.c */,
+				4D6127741897F92D00C74ADE /* LzmaDec.h */,
+				4D6127751897F92D00C74ADE /* Ppmd.h */,
+				4D6127761897F92D00C74ADE /* Ppmd7.c */,
+				4D6127771897F92D00C74ADE /* Ppmd7.h */,
+				4D6127781897F92D00C74ADE /* Ppmd7Dec.c */,
+				4D6127791897F92D00C74ADE /* Ppmd8.c */,
+				4D61277A1897F92D00C74ADE /* Ppmd8.h */,
+				4D61277B1897F92D00C74ADE /* Ppmd8Dec.c */,
+				4D61277C1897F92D00C74ADE /* RotateDefs.h */,
+				4D61277D1897F92D00C74ADE /* Types.h */,
+				4D61277E1897F92D00C74ADE /* Util */,
+			);
+			name = lzma;
+			sourceTree = "<group>";
+		};
+		4D61277E1897F92D00C74ADE /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				4D61277F1897F92D00C74ADE /* 7z */,
+			);
+			name = Util;
+			path = OtherLibs/Compress/lzma/Util;
+			sourceTree = "<group>";
+		};
+		4D61277F1897F92D00C74ADE /* 7z */ = {
+			isa = PBXGroup;
+			children = (
+				4D6127801897F92D00C74ADE /* 7zAlloc.c */,
+				4D6127811897F92D00C74ADE /* 7zAlloc.h */,
+				4D6127821897F92D00C74ADE /* 7zMain.c */,
+			);
+			path = 7z;
+			sourceTree = "<group>";
+		};
 		4DBD9806188829F800C71747 /* CGDWebServer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1420,6 +1533,7 @@
 				1FB97F441897A69700E4006B /* recvol.cpp in Sources */,
 				1FB97E2F1897914200E4006B /* MWPhotoBrowser.m in Sources */,
 				1FB97F4A1897A69700E4006B /* sha1.cpp in Sources */,
+				4D61278C1897F92D00C74ADE /* Lzma2Dec.c in Sources */,
 				1FB97E531897916600E4006B /* PSTCollectionViewController.m in Sources */,
 				1FB97E081897499600E4006B /* FMDatabasePool.m in Sources */,
 				1FB97F1B1897A69700E4006B /* cmddata.cpp in Sources */,
@@ -1447,18 +1561,22 @@
 				1FB97DF6189653A300E4006B /* MBProgressHUD.m in Sources */,
 				1FB97E301897914200E4006B /* MWTapDetectingImageView.m in Sources */,
 				1FB97F481897A69700E4006B /* savepos.cpp in Sources */,
+				4D6127961897F98D00C74ADE /* LZMAExtractor.m in Sources */,
 				1FE5F8B618838DA700CB4C09 /* KxAudioManager.m in Sources */,
 				1FC071B7188518D900ED63E8 /* FFMovieViewController.m in Sources */,
 				1FB97F291897A69700E4006B /* filefn.cpp in Sources */,
 				1FC071B418850D1F00ED63E8 /* ALMoviePlayerControls.m in Sources */,
 				1FB97F4C1897A69700E4006B /* strfn.cpp in Sources */,
 				1FB97F281897A69700E4006B /* file.cpp in Sources */,
+				4D6127931897F92D00C74ADE /* 7zMain.c in Sources */,
 				1FB97F371897A69700E4006B /* match.cpp in Sources */,
+				4D6127921897F92D00C74ADE /* 7zAlloc.c in Sources */,
 				1FB97F3A1897A69700E4006B /* options.cpp in Sources */,
 				1F44BC561890FE9300C3E0D9 /* XMLDictionary.m in Sources */,
 				1FB97E951897A4D400E4006B /* mztools.c in Sources */,
 				1FC071A01884FC6600ED63E8 /* AFHTTPRequestOperationManager.m in Sources */,
 				1FE5F8811883891D00CB4C09 /* FFAppDelegate.m in Sources */,
+				4D6127861897F92D00C74ADE /* 7zFile.c in Sources */,
 				1FB97F471897A69700E4006B /* rs.cpp in Sources */,
 				1FB97F491897A69700E4006B /* scantree.cpp in Sources */,
 				1FC0717E1883F24900ED63E8 /* FFAlertView.m in Sources */,
@@ -1466,6 +1584,7 @@
 				1FB97E831897918B00E4006B /* UIImage+MultiFormat.m in Sources */,
 				1FB97E511897916600E4006B /* PSTCollectionView.m in Sources */,
 				1FE5F87D1883891D00CB4C09 /* main.m in Sources */,
+				4D6127841897F92D00C74ADE /* 7zBuf2.c in Sources */,
 				1FB97DEB1896499E00E4006B /* TTOpenInAppActivity.m in Sources */,
 				1FB97F4D1897A69700E4006B /* strlist.cpp in Sources */,
 				1FC071891884CDAE00ED63E8 /* FFHelper.m in Sources */,
@@ -1482,8 +1601,11 @@
 				1FB97F461897A69700E4006B /* rijndael.cpp in Sources */,
 				1FB97E801897918B00E4006B /* SDWebImagePrefetcher.m in Sources */,
 				1FB97E321897914200E4006B /* MWZoomingScrollView.m in Sources */,
+				4D6127881897F92D00C74ADE /* 7zStream.c in Sources */,
+				4D61278F1897F92D00C74ADE /* Ppmd7Dec.c in Sources */,
 				1FB97E7F1897918B00E4006B /* SDWebImageManager.m in Sources */,
 				1FC071A71884FC6600ED63E8 /* AFURLSessionManager.m in Sources */,
+				4D6127901897F92D00C74ADE /* Ppmd8.c in Sources */,
 				1FB97F4F1897A69700E4006B /* system.cpp in Sources */,
 				1FB97F511897A69700E4006B /* ulinks.cpp in Sources */,
 				4DBD981318882A0600C71747 /* GCDWebServerResponse.m in Sources */,
@@ -1495,11 +1617,13 @@
 				1FB97F451897A69700E4006B /* resource.cpp in Sources */,
 				1FB97E5B1897916600E4006B /* PSTGridLayoutRow.m in Sources */,
 				1FB97E2C1897914200E4006B /* MWGridCell.m in Sources */,
+				4D6127851897F92D00C74ADE /* 7zDec.c in Sources */,
 				1FB97E7D1897918B00E4006B /* SDWebImageDownloader.m in Sources */,
 				1FB97F521897A69700E4006B /* unicode.cpp in Sources */,
 				1FB97E541897916600E4006B /* PSTCollectionViewData.m in Sources */,
 				1FC071A61884FC6600ED63E8 /* AFURLResponseSerialization.m in Sources */,
 				1FC071821883F36D00ED63E8 /* FFSettingViewController.m in Sources */,
+				4D6127911897F92D00C74ADE /* Ppmd8Dec.c in Sources */,
 				1FC071B218850D1F00ED63E8 /* ALAirplayView.m in Sources */,
 				1FB97F241897A69700E4006B /* errhnd.cpp in Sources */,
 				1FB97E7C1897918B00E4006B /* SDWebImageDecoder.m in Sources */,
@@ -1508,6 +1632,8 @@
 				1FB97E161897912300E4006B /* DACircularProgressView.m in Sources */,
 				1FBC5B0E188929BC005FB7DB /* GTMNSString.m in Sources */,
 				1FB97E501897916600E4006B /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
+				4D6127891897F92D00C74ADE /* Alloc.c in Sources */,
+				4D61278B1897F92D00C74ADE /* Delta.c in Sources */,
 				1FB97E2D1897914200E4006B /* MWGridViewController.m in Sources */,
 				1FB97F501897A69700E4006B /* timefn.cpp in Sources */,
 				1F63AC8E1897AD8B0022BAE3 /* UnRAR.m in Sources */,
@@ -1518,11 +1644,13 @@
 				1FC071A51884FC6600ED63E8 /* AFURLRequestSerialization.m in Sources */,
 				4DBD981118882A0600C71747 /* GCDWebServerConnection.m in Sources */,
 				1FB97F2A1897A69700E4006B /* filestr.cpp in Sources */,
+				4D61278D1897F92D00C74ADE /* LzmaDec.c in Sources */,
 				1FB97E841897918B00E4006B /* UIImage+WebP.m in Sources */,
 				1FB97F411897A69700E4006B /* rawread.cpp in Sources */,
 				1FB97E091897499600E4006B /* FMDatabaseQueue.m in Sources */,
 				1FC071A21884FC6600ED63E8 /* AFNetworkReachabilityManager.m in Sources */,
 				1FB97F231897A69700E4006B /* encname.cpp in Sources */,
+				4D6127871897F92D00C74ADE /* 7zIn.c in Sources */,
 				1FB97E2B1897914200E4006B /* MWCaptionView.m in Sources */,
 				1FB97DF218964D5900E4006B /* FFSparkViewController.m in Sources */,
 				1FB97F191897A69700E4006B /* arcread.cpp in Sources */,
@@ -1530,10 +1658,13 @@
 				1FB97E071897499600E4006B /* FMDatabaseAdditions.m in Sources */,
 				1FC071E31887B68A00ED63E8 /* FFTabViewController.m in Sources */,
 				4D61275518954E4500C74ADE /* FFRemoteViewController.m in Sources */,
+				4D61278A1897F92D00C74ADE /* CpuArch.c in Sources */,
 				1FB97F251897A69700E4006B /* extinfo.cpp in Sources */,
 				1FB97E961897A4D400E4006B /* unzip.c in Sources */,
 				1FB97F2B1897A69700E4006B /* find.cpp in Sources */,
+				4D6127831897F92D00C74ADE /* 7zBuf.c in Sources */,
 				1FE5F8B818838DA700CB4C09 /* KxMovieDecoder.m in Sources */,
+				4D61278E1897F92D00C74ADE /* Ppmd7.c in Sources */,
 				1FC0719F1884FC6600ED63E8 /* AFHTTPRequestOperation.m in Sources */,
 				1FC071A11884FC6600ED63E8 /* AFHTTPSessionManager.m in Sources */,
 				4DBD981218882A0600C71747 /* GCDWebServerRequest.m in Sources */,

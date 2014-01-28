@@ -12,6 +12,7 @@
 #import "FFPlayHistoryManager.h"
 #import "MiniZip.h"
 #import "UnRAR.h"
+#import "LZMAExtractor.h"
 
 /////////////////////////////////////////////////////
 
@@ -210,6 +211,8 @@
         isOK = [MiniZip extractZipArchiveAtPath:fullPath toPath:strTemp];
     } else if ( [ext isEqualToString:@"rar"] ) {
         isOK = [UnRAR extractRARArchiveAtPath:fullPath toPath:strTemp];
+    } else if ( [ext isEqualToString:@"7z"]) {
+        isOK = ([LZMAExtractor extract7zArchive:fullPath dirName:strTemp preserveDir:YES] != nil);
     }
     if ( !isOK )
         return nil;
