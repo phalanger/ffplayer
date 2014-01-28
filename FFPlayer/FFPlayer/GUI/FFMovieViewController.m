@@ -23,6 +23,7 @@ NSString * const FFMovieParameterDisableDeinterlacing = @"FFMovieParameterDisabl
 #define NETWORK_MIN_BUFFERED_DURATION 2.0
 #define NETWORK_MAX_BUFFERED_DURATION 4.0
 
+#ifdef MYDEBUG
 static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 {
     seconds = MAX(0, seconds);
@@ -36,6 +37,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     
     return [NSString stringWithFormat:@"%@%ld:%02ld:%02ld", isLeft ? @"-" : @"", (long)h,(long)m,(long)s];
 }
+#endif
 
 //////////////////////////////////////////////////
 
@@ -66,7 +68,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     UILabel             *_subtitlesLabel;
     
     ALMoviePlayerControls * _controls;
-#ifdef DEBUG
+    NSString *              _display;
+#ifdef MYDEBUG
     UILabel             *_messageLabel;
     NSTimeInterval      _debugStartTime;
     NSUInteger          _debugAudioStatus;
@@ -124,6 +127,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 {
     _parameters = parameters;
     _moviePosition = 0;
+    _display = [parameters objectForKey:@"display"];
     
     KxMovieDecoder *decoder = [[KxMovieDecoder alloc] init];
     __weak FFMovieViewController *weakSelf = self;
@@ -176,9 +180,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     self.view = [[UIView alloc] initWithFrame:bounds];
     self.view.backgroundColor = [UIColor blackColor];
     
+#ifdef MYDEBUG
     CGFloat width = bounds.size.width;
-    
-#ifdef DEBUG
     _messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,40,width-40,40)];
     _messageLabel.backgroundColor = [UIColor clearColor];
     _messageLabel.textColor = [UIColor redColor];
@@ -191,6 +194,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     
     _controls = [[ALMoviePlayerControls alloc] initWithMoviePlayer:self style:ALMoviePlayerControlsStyleFullscreen];
     _controls.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [_controls setMessage:_display];
     [self.view addSubview:_controls];
     
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
@@ -352,7 +356,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     _tickCorrectionTime = 0;
     _tickCounter = 0;
     
-#ifdef DEBUG
+#ifdef MYDEBUG
     _debugStartTime = -1;
 #endif
     
@@ -587,7 +591,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
                             if (delta < -2.0) {
                                 
                                 memset(outData, 0, numFrames * numChannels * sizeof(float));
-#ifdef DEBUG
+#ifdef MYDEBUG
                                 NSLog(@"desync audio (outrun) wait %.4f %.4f", _moviePosition, frame.position);
                                 _debugAudioStatus = 1;
                                 _debugAudioStatusTS = [NSDate date];
@@ -599,7 +603,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
                             
                             if (delta > 2.0 && count > 1) {
                                 
-#ifdef DEBUG
+#ifdef MYDEBUG
                                 NSLog(@"desync audio (lags) skip %.4f %.4f", _moviePosition, frame.position);
                                 _debugAudioStatus = 2;
                                 _debugAudioStatusTS = [NSDate date];
@@ -641,7 +645,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
                 
                 memset(outData, 0, numFrames * numChannels * sizeof(float));
                 //NSLog(@"silence audio");
-#ifdef DEBUG
+#ifdef MYDEBUG
                 _debugAudioStatus = 3;
                 _debugAudioStatusTS = [NSDate date];
 #endif
@@ -916,7 +920,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     if (_decoder.validSubtitles)
         [self presentSubtitles];
     
-#ifdef DEBUG
+#ifdef MYDEBUG
     if (self.playing && _debugStartTime < 0)
         _debugStartTime = [NSDate timeIntervalSinceReferenceDate] - _moviePosition;
 #endif
@@ -1053,7 +1057,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     
     [_controls updateMoviePlayback:position total:duration];
     
-#ifdef DEBUG
+#ifdef MYDEBUG
     const NSTimeInterval timeSinceStart = [NSDate timeIntervalSinceReferenceDate] - _debugStartTime;
     NSString *subinfo = _decoder.validSubtitles ? [NSString stringWithFormat: @" %lu",(unsigned long)_subtitles.count] : @"";
     
@@ -1125,6 +1129,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     position = MIN(_decoder.duration - 1, MAX(0, position));
     
     __weak FFMovieViewController *weakSelf = self;
+    if ( _dispatchQueue == nil )
+        return;
     
     dispatch_async(_dispatchQueue, ^{
         

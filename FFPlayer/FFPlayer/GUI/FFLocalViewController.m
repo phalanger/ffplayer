@@ -453,7 +453,7 @@ enum {
                         continue;
                     else if ( it == item )
                         index = i;
-                    [aryList addObject:[[FFPlayItem alloc] initWithPath:it.fullPath position:it.lastPos]];
+                    [aryList addObject:[[FFPlayItem alloc] initWithPath:it.fullPath position:it.lastPos keyName:it.fullPath]];
                     ++i;
                 }
                 [_ffplayer playList:aryList curIndex:index parent:self];

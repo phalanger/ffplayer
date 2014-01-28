@@ -21,6 +21,7 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     ALMoviePlayerControls * _controls;
     NSURL *                 _urlToPlay;
     CGFloat                 _startPos;
+    NSString *              _display;
 }
 
 @property (nonatomic, strong) NSTimer *durationTimer;
@@ -39,6 +40,7 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     if ( (self = [super init]) ) {
         _player = nil;
         _controls = nil;
+        _display = nil;
         _movieBackgroundView = nil;
         _urlToPlay = nil;
     }
@@ -80,6 +82,7 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     
     if ( _urlToPlay != nil ) {
         [_player prepareToPlay];
+        [_controls setMessage:_display];
         [self play];
         if ( _startPos != 0.0f )
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5f * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
@@ -344,10 +347,12 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     if ( _player == nil ) {
         _urlToPlay = url;
         _startPos = pos;
+        _display = [parameters objectForKey:@"display"];
     } else {
         [_player setContentURL:url];
         [_player prepareToPlay];
         [_player.view setFrame: self.view.bounds];
+        [_controls setMessage:[parameters objectForKey:@"display"]];
         [self play];
         if ( pos != 0.0f )
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5f * NSEC_PER_SEC), dispatch_get_main_queue(), ^{

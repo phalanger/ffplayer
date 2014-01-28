@@ -35,6 +35,9 @@
         } else {
             if ( ![_database executeUpdate:@"create table if not exists history (path text primary key, pos real, pcnt integer default 0, modtime text)"] ) {
                 NSLog(@"Create table error : %@", [_database lastError]);
+            } else {
+                if ( ![_database executeUpdate:@"delete from history where modtime < date('now', '-1 years')"])
+                    NSLog(@"Delete expire data error : %@", [_database lastError]);
             }
         }
     }

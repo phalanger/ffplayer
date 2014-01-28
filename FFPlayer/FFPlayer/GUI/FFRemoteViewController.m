@@ -202,7 +202,7 @@
             NSString * url = aryURLHistory[indexPath.row];
             int n = 0;
             CGFloat pos = [[FFPlayHistoryManager default] getLastPlayInfo:url playCount:&n];
-            [_player playList:@[ [[FFPlayItem alloc] initWithPath:url position:pos] ] curIndex:0 parent:self];
+            [_player playList:@[ [[FFPlayItem alloc] initWithPath:url position:pos keyName:url] ] curIndex:0 parent:self];
         }
     } else if ( indexPath.section == 1 ) {
         if ( indexPath.row == 0 ) {

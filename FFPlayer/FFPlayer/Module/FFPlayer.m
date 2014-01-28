@@ -17,12 +17,13 @@
 
 @implementation FFPlayItem
 
--(id) initWithPath:(NSString *)url position:(CGFloat) position
+-(id) initWithPath:(NSString *)url position:(CGFloat) position keyName:(NSString *)keyName
 {
     self = [super init];
     if ( self ) {
         self->_position = position;
         self->_url = url;
+        self->_keyName = keyName;
     }
     return self;
 }
@@ -104,6 +105,7 @@
 +(UIViewController *) playInController:(UIViewController *)vc item:(FFPlayItem *)item
 {
     NSMutableDictionary * parameters = [[NSMutableDictionary alloc] init];
+    [parameters setObject:[item.keyName lastPathComponent] forKey:@"display"];
     NSString * path = item.url;
     
     if ( [vc isKindOfClass:[FFInternalMoviePlayerController class]] ) {
@@ -140,7 +142,7 @@
         _lastController = [FFPlayer playInController:vc2 item:item];
     }
  
-    _curPlaying = item.url;
+    _curPlaying = item.keyName;
     [_parentView presentViewController:_lastController animated:animated completion:nil];
     return _lastController;
 }

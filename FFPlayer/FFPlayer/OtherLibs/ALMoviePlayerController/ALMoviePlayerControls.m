@@ -52,6 +52,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 @property (nonatomic, strong) ALButton *nextButton;
 @property (nonatomic, strong) ALButton *prevButton;
 @property (nonatomic, strong) ALButton *scaleButton;
+@property (nonatomic, strong) UILabel * messageLabel;
 
 @property (nonatomic,strong)  CAGradientLayer * topGradient;
 @property (nonatomic,strong)  CAGradientLayer * bottomGradient;
@@ -263,6 +264,15 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
                           [NSNumber numberWithFloat:0.5],
                           nil];
     [_topBar.layer insertSublayer:_topGradient atIndex:0];
+    
+    _messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,40,40,40)];
+    _messageLabel.backgroundColor = [UIColor clearColor];
+    _messageLabel.textColor = [UIColor whiteColor];
+    _messageLabel.font = [UIFont systemFontOfSize:16];
+    _messageLabel.numberOfLines = 1;
+    _messageLabel.textAlignment = NSTextAlignmentCenter;
+    _messageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [_topBar addSubview:_messageLabel];
     
     _seekDelta = [[FFSetting default] seekDelta];
     [self registerGestureRecognizer];
@@ -565,6 +575,11 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
     self.scaleButton.selected = scallingMode == UIViewContentModeScaleAspectFill;
 }
 
+-(void) setMessage:(NSString *)msg
+{
+    _messageLabel.text = msg;
+}
+
 -(BOOL) isLoadingIndicators {
     return _activityIndicator.isAnimating;
 }
@@ -650,6 +665,8 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
         }
     }
     
+    _messageLabel.frame = CGRectMake(20,40, mainViewBounds.size.width - 40,40);
+
     //common sizes
     CGFloat paddingFromBezel = mainViewBounds.size.width <= iPhoneScreenPortraitWidth ? 10.f : 20.f;
     CGFloat paddingBetweenButtons = mainViewBounds.size.width <= iPhoneScreenPortraitWidth ? 10.f : 30.f;

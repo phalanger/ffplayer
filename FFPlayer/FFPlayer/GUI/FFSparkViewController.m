@@ -13,6 +13,7 @@
 #import "FFHelper.h"
 #import "FFSetting.h"
 #import "FFPlayHistoryManager.h"
+#import "FFHelper.h"
 #import "FFPlayer.h"
 
 #define ASYNC_HUD_BEGIN(strTitle)   if ( self.navigationController.navigationBar) self.navigationController.navigationBar.userInteractionEnabled = NO;\
@@ -188,9 +189,13 @@ static FFPlayer * _internalPlayer = nil;
         item.path = [dict objectForKey:@"path"];
         item.root = [[dict objectForKey:@"root"] isEqualToString:@"true"];
         item.lock = [[dict objectForKey:@"lock"] isEqualToString:@"true"];
-        if ( item.name != nil && item.name.length > 0 && [item.name hasPrefix:@"."])
-            continue;
-        else if ( item.root ) {
+        if ( item.name != nil && item.name.length > 0) {
+            if ([item.name hasPrefix:@"."])
+                continue;
+            else if ( !item.root && !item.dir && ![FFHelper isSupportMidea:item.name] )
+                continue;
+        }
+        if ( item.root ) {
             item.mtime = @"";
             item.size = 0;
             item.playCount = 0;
@@ -320,6 +325,10 @@ static FFPlayer * _internalPlayer = nil;
     } else {
         
         cell.textLabel.text = item.name;
+        if ( item.playCount == 0 )
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:20];
+        else
+            cell.textLabel.font = [UIFont systemFontOfSize:20];
         
         NSByteCountFormatter *byteCountFormatter = [[NSByteCountFormatter alloc] init];
         [byteCountFormatter setAllowedUnits:NSByteCountFormatterUseMB];
@@ -376,7 +385,7 @@ static FFPlayer * _internalPlayer = nil;
                                                                                           ,@"aindex" : [NSString stringWithFormat:@"%d", 0]
                                                                                         } error:nil];
             
-            [aryList addObject:[[FFPlayItem alloc] initWithPath:[req.URL absoluteString] position:0.0]];
+            [aryList addObject:[[FFPlayItem alloc] initWithPath:[req.URL absoluteString] position:0.0 keyName:[_baseURL stringByAppendingPathComponent:it.name]]];
             ++i;
         }
         [_internalPlayer internalPlayList:aryList curIndex:index parent:self];

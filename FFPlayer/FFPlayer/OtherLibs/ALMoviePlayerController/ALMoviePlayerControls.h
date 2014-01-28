@@ -128,6 +128,7 @@ typedef enum {
 -(void) showControls:(void(^)(void))completion;
 -(void) hideControls:(void(^)(void))completion;
 -(void) updatePlayState:(BOOL)playing hasNext:(BOOL)hasNext hasPrev:(BOOL)hasPrev scallingMod:(int)scallingMode;
+-(void) setMessage:(NSString *)msg;
 
 -(BOOL) isLoadingIndicators;
 -(void) showLoadingIndicators;

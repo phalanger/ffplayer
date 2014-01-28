@@ -11,8 +11,9 @@
 @interface FFPlayItem : NSObject
 @property (retain,atomic) NSString *    url;
 @property (assign) CGFloat              position;
+@property (retain,atomic) NSString *    keyName;
 
--(id) initWithPath:(NSString *)url position:(CGFloat) position;
+-(id) initWithPath:(NSString *)url position:(CGFloat)position keyName:(NSString *)keyName;
 
 @end
 
