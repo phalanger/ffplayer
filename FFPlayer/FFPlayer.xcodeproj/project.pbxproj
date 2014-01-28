@@ -1825,7 +1825,7 @@
 					../ffmpeg/libs,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3E789FC6-FF1F-40A5-9F4B-5592EA4A2866";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1855,7 +1855,7 @@
 					../ffmpeg/libs,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3E789FC6-FF1F-40A5-9F4B-5592EA4A2866";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

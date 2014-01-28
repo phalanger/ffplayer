@@ -101,8 +101,6 @@
 		cursor = addrs;
 		while (cursor != NULL) {
 			// the second test keeps from picking up the loopback address
-            NSLog(@"name :%@ Is Inet:%d   isLoopBack:%d", [NSString stringWithUTF8String:cursor->ifa_name], cursor->ifa_addr->sa_family == AF_INET ? 1:0, (cursor->ifa_flags & IFF_LOOPBACK) ? 1 :0 );
-
 			if (cursor->ifa_addr->sa_family == AF_INET && (cursor->ifa_flags & IFF_LOOPBACK) == 0)
 			{
 				NSString *name = [NSString stringWithUTF8String:cursor->ifa_name];
@@ -129,8 +127,6 @@
 		cursor = addrs;
 		while (cursor != NULL) {
 			// the second test keeps from picking up the loopback address
-            NSLog(@"name :%@ Is Inet:%d   isLoopBack:%d", [NSString stringWithUTF8String:cursor->ifa_name], cursor->ifa_addr->sa_family == AF_INET ? 1:0, (cursor->ifa_flags & IFF_LOOPBACK) ? 1 :0 );
-            
 			if (cursor->ifa_addr->sa_family == AF_INET && (cursor->ifa_flags & IFF_LOOPBACK) == 0)
 			{
 				NSString *name = [NSString stringWithUTF8String:cursor->ifa_name];

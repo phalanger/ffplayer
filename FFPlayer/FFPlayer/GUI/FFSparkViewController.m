@@ -224,7 +224,9 @@ static FFPlayer * _internalPlayer = nil;
             int n = 0;
             item.lastPos = [history getLastPlayInfo:[_baseURL stringByAppendingPathComponent:item.name] playCount:&n];
             item.playCount = n;
-            item.random = (arc4random() % 0x1000000) + ((item.playCount < 0xff ?: 0xff ) * 0x1000000);
+            int a = (arc4random() % 0x1000000);
+            int b = ((item.playCount < 0x7f ? item.playCount : 0x7f ) * 0x1000000);
+            item.random = a + b;
         }
         
         [ary addObject:item];

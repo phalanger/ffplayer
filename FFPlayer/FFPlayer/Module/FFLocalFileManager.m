@@ -62,7 +62,7 @@
             self.lastPos = [history getLastPlayInfo:self.fullPath playCount:&n];
             self.playCount = n;
         }
-        self.random = (arc4random() % 0x1000000) + ((self.playCount < 0xff ?: 0xff ) * 0x1000000);
+        self.random = (arc4random() % 0x1000000) + ((self.playCount < 0xff ? self.playCount : 0xff ) * 0x1000000);
     }
     return self;
 }
