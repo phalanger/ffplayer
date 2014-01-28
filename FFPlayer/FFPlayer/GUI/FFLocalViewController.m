@@ -34,6 +34,9 @@ enum {
     
     NSArray *                   itemToMove;
     int                         currentState;
+    
+    NSString *                  tempUncompressPath;
+    NSString *                  secretName;
 }
 
 @property (nonatomic, strong) UIPopoverController *activityPopoverController;
@@ -56,6 +59,12 @@ enum {
     itemToMove = aryItemToMove;
 }
 
+-(void) switchToUncompressMode:(NSString *)strTempPath name:(NSString *)filename
+{
+    tempUncompressPath = strTempPath;
+    secretName = filename;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -63,19 +72,26 @@ enum {
     [[NSFileManager defaultManager] createDirectoryAtPath:[FFLocalFileManager getSecretRootPath] withIntermediateDirectories:NO attributes:nil error:nil];
     currentState = IN_LOCAL;
     
+    if ( secretName == nil )
+        secretName = NSLocalizedString(@"Secret", nil);
+    
     if ( itemToMove != nil ) {
         self.title = self.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"Move to %@", nil), _currentPath == nil ? @"/" : _currentPath];
         btnEdit = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(exitMove:)];
         btnDone = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(switchEditMode:)];
         self.navigationItem.rightBarButtonItem = btnDone;
         self.navigationItem.leftBarButtonItem = btnEdit;
-    } else {
+    } else if ( tempUncompressPath == nil ) {
         self.title = self.navigationItem.title = NSLocalizedString(@"Local", @"Local Files");
         btnEdit = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(switchEditMode:)];
         btnDone = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(switchEditMode:)];
         self.navigationItem.rightBarButtonItem = btnEdit;
+    } else {
+        self.navigationItem.leftBarButtonItem = nil;
+        self.navigationItem.backBarButtonItem = nil;
+        [self.navigationItem setHidesBackButton:YES];
     }
-
+    
     self.tableView.allowsSelectionDuringEditing = YES;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     
@@ -112,6 +128,12 @@ enum {
     [self reloadMovies];
 }
 
+-(void) dealloc
+{
+    if ( tempUncompressPath != nil )
+        [[NSFileManager defaultManager] removeItemAtPath:tempUncompressPath error:nil];
+}
+
 -(NSString *) getCurrentFullPath
 {
     return [FFLocalFileManager getCurrentFolder:_currentPath inSecret:(currentState == IN_SECRET)];
@@ -119,7 +141,14 @@ enum {
 
 - (void) reloadMovies
 {
-    _localMovies = [FFLocalFileManager listCurrentFolder:_currentPath inSecret:(currentState == IN_SECRET)];
+    if ( tempUncompressPath != nil ) {
+        _localMovies = [FFLocalFileManager listFolder:tempUncompressPath  subPath:_currentPath inSecret:YES];
+        currentState = IN_SECRET;
+    } else {
+        BOOL inSecret = (currentState == IN_SECRET);
+        NSString * strRoot = inSecret ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];
+        _localMovies = [FFLocalFileManager listFolder:strRoot subPath:_currentPath inSecret:inSecret];
+    }
 
     NSString * strTitle = nil;
     if ( itemToMove != nil ) {
@@ -127,15 +156,15 @@ enum {
             strTitle = [NSString stringWithFormat:NSLocalizedString(@"Move to %@ (Secret)", nil), _currentPath == nil ? @"/" : _currentPath];
         else
             strTitle = [NSString stringWithFormat:NSLocalizedString(@"Move to %@", nil), _currentPath == nil ? @"/" : _currentPath];
-    } else    {
+    } else {
         if ( _currentPath == nil ) {
             if ( currentState == IN_SECRET )
-                strTitle = NSLocalizedString(@"Secret", nil);
+                strTitle = secretName;
             else
                 strTitle = NSLocalizedString(@"Local", @"Local Files");
         } else {
             if ( currentState == IN_SECRET )
-                strTitle = [NSString stringWithFormat:@"%@ (%@)", _currentPath, NSLocalizedString(@"Secret", nil)];
+                strTitle = [NSString stringWithFormat:@"%@ (%@)", _currentPath, secretName];
             else
                 strTitle = _currentPath;
         }
@@ -367,7 +396,7 @@ enum {
         if ( item.type == LIT_PARENT )
             strPath = NSLocalizedString(@"Parent", nil);
         else if ( item.type == LIT_SECRETE )
-            strPath = NSLocalizedString(@"Secret", nil);
+            strPath = secretName;
         
         cell.textLabel.text = [NSString stringWithFormat:@"[%@]", strPath];
         cell.textLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -395,12 +424,18 @@ enum {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];
         
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@ last:%02d:%02d played %d time(s)"
+        if ( item.type == LIT_MIDEA )
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@ last:%02d:%02d played %d time(s)"
                                         , [dateFormatter stringFromDate:item.modifyTime]
                                         , [byteCountFormatter stringFromByteCount:item.size]
                                         , (int)(item.lastPos / 60), (int)(item.lastPos) % 60
                                         ,item.playCount
                                      ];
+        else
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@"
+                                         , [dateFormatter stringFromDate:item.modifyTime]
+                                         , [byteCountFormatter stringFromByteCount:item.size]
+                                         ];
         
         if ( itemToMove != nil )  {   //in Moveing mode
             cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor grayColor];
@@ -412,6 +447,8 @@ enum {
             cell.imageView.image = [UIImage imageNamed:@"movie"];
         else if ( item.type == LIT_PIC )
             cell.imageView.image = [UIImage imageNamed:@"camera"];
+        else if ( item.type == LIT_ZIP )
+            cell.imageView.image = [UIImage imageNamed:@"briefcase"];
         else
             cell.imageView.image = [UIImage imageNamed:@"disk"];
     }
@@ -428,7 +465,10 @@ enum {
         switch (item.type) {
             case LIT_PARENT:
             {
-                if ( _currentPath == nil && currentState == IN_SECRET ) {
+                if (_currentPath == nil && tempUncompressPath != nil) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                    return;
+                } else if ( _currentPath == nil && currentState == IN_SECRET ) {
                     currentState = IN_LOCAL;
                 } else {
                     _currentPath = [_currentPath stringByDeletingLastPathComponent];
@@ -464,10 +504,17 @@ enum {
                 }
                 [_ffplayer playList:aryList curIndex:index parent:self];
             }break;
-            case LIT_PIC:
-            {
+            case LIT_PIC: {
                 [self displayPic:item];
             }break;
+            case LIT_ZIP: {
+                NSString * strTemp = [FFLocalFileManager uncompress:item.fullPath];
+                if ( strTemp == nil )
+                    return;
+                FFLocalViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"LocalFile"];
+                [vc switchToUncompressMode:strTemp name:item.fileName];
+                [self.navigationController pushViewController:vc animated:YES];
+            } break;
             default:
             {
                 NSURL * newURL = [NSURL fileURLWithPath:item.fullPath];

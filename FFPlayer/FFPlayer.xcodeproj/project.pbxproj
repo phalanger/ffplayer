@@ -204,6 +204,8 @@
 		4D61275518954E4500C74ADE /* FFRemoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D61275418954E4500C74ADE /* FFRemoteViewController.m */; };
 		4D6127581895555400C74ADE /* FFPlayHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127571895555400C74ADE /* FFPlayHistory.m */; };
 		4D61275A1896B0D100C74ADE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6127591896B0D100C74ADE /* MobileCoreServices.framework */; };
+		4D61275D1897E60600C74ADE /* briefcase.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D61275B1897E60600C74ADE /* briefcase.png */; };
+		4D61275E1897E60600C74ADE /* briefcase@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D61275C1897E60600C74ADE /* briefcase@2x.png */; };
 		4DBD97F8188814D000C71747 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F6188814D000C71747 /* folder.png */; };
 		4DBD97F9188814D000C71747 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F7188814D000C71747 /* folder@2x.png */; };
 		4DBD97FC1888156D00C71747 /* movie.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97FA1888156D00C71747 /* movie.png */; };
@@ -591,6 +593,8 @@
 		4D6127561895555400C74ADE /* FFPlayHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFPlayHistory.h; path = Module/FFPlayHistory.h; sourceTree = "<group>"; };
 		4D6127571895555400C74ADE /* FFPlayHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFPlayHistory.m; path = Module/FFPlayHistory.m; sourceTree = "<group>"; };
 		4D6127591896B0D100C74ADE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		4D61275B1897E60600C74ADE /* briefcase.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = briefcase.png; path = Resource/briefcase.png; sourceTree = "<group>"; };
+		4D61275C1897E60600C74ADE /* briefcase@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "briefcase@2x.png"; path = "Resource/briefcase@2x.png"; sourceTree = "<group>"; };
 		4DBD97F6188814D000C71747 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folder.png; path = Resource/folder.png; sourceTree = "<group>"; };
 		4DBD97F7188814D000C71747 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resource/folder@2x.png"; sourceTree = "<group>"; };
 		4DBD97FA1888156D00C71747 /* movie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = movie.png; path = Resource/movie.png; sourceTree = "<group>"; };
@@ -1082,6 +1086,8 @@
 		1FC071B81885361E00ED63E8 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				4D61275B1897E60600C74ADE /* briefcase.png */,
+				4D61275C1897E60600C74ADE /* briefcase@2x.png */,
 				1FB97E0E18978B4800E4006B /* camera.png */,
 				1FB97E0F18978B4800E4006B /* camera@2x.png */,
 				1FB97DE01896401F00E4006B /* connections.png */,
@@ -1339,6 +1345,7 @@
 				1FC071D41885366D00ED63E8 /* movieFullscreen@2x.png in Resources */,
 				1FC071D61885366D00ED63E8 /* moviePause@2x.png in Resources */,
 				1FB97F581897A69700E4006B /* UnRARDll.vcproj in Resources */,
+				4D61275D1897E60600C74ADE /* briefcase.png in Resources */,
 				1FC071D81885366D00ED63E8 /* moviePlay@2x.png in Resources */,
 				1FC071D11885366D00ED63E8 /* movieForwardSelected.png in Resources */,
 				1FE5F88F1883891D00CB4C09 /* Images.xcassets in Resources */,
@@ -1363,6 +1370,7 @@
 				1FC071CC1885366D00ED63E8 /* movieBackwardSelected@2x.png in Resources */,
 				1FB97F321897A69700E4006B /* makefile.bcc in Resources */,
 				1FE5F8841883891D00CB4C09 /* Main_iPhone.storyboard in Resources */,
+				4D61275E1897E60600C74ADE /* briefcase@2x.png in Resources */,
 				1FB97F331897A69700E4006B /* makefile.cygmin in Resources */,
 				1FB97F361897A69700E4006B /* makefile.unix in Resources */,
 				4DBD97FD1888156D00C71747 /* movie@2x.png in Resources */,

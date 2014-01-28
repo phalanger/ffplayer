@@ -49,6 +49,7 @@ typedef enum {
 +(NSString *) getSparkSvrListPath;
 
 +(NSString *) getCurrentFolder:(NSString *) strSubPath inSecret:(BOOL) inSecret;
-+(NSArray *) listCurrentFolder:(NSString *) strSubPath inSecret:(BOOL) inSecret;
++(NSArray *) listFolder:(NSString *)folder  subPath:(NSString *)strSubPath inSecret:(BOOL) inSecret;
++(NSString *) uncompress:(NSString *)fullPath;
 
 @end

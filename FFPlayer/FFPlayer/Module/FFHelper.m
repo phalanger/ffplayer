@@ -193,6 +193,19 @@
     return NO;
 }
 
++(BOOL) isSupportCompress:(NSString *)path
+{
+    NSString *ext = path.pathExtension.lowercaseString;
+    
+    if ([ext isEqualToString:@"zip"] ||
+        [ext isEqualToString:@"rar"]||
+        [ext isEqualToString:@"7z"]
+        )
+        return YES;
+    
+    return NO;
+}
+
 +(BOOL) isInternalPlayerSupport:(NSString *)path
 {
     /*

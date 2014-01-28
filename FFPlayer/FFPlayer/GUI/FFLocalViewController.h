@@ -11,6 +11,7 @@
 @interface FFLocalViewController : UITableViewController
 
 -(void) switchToSelectFolderAndMoveItems:(NSArray *)itemToMove;
+-(void) switchToUncompressMode:(NSString *)strTempPath name:(NSString *)filename;
 -(void) toggleLock;
 
 @end

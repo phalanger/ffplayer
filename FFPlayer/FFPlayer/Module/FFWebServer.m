@@ -86,7 +86,7 @@ static dispatch_queue_t _connectionQueue = NULL;
     [byteCountFormatter setAllowedUnits:NSByteCountFormatterUseMB];
     NSString * strRoot = inSecret ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];
     
-    NSArray * ary = [FFLocalFileManager listCurrentFolder:subPath inSecret:inSecret];
+    NSArray * ary = [FFLocalFileManager listFolder:strRoot subPath:subPath inSecret:inSecret];
     for ( FFLocalItem * item in ary ) {
         NSString * strSubItem = [item.fullPath substringFromIndex:(strRoot.length + 1)];
         NSString * strDisplay = [item.fileName gtm_stringByEscapingForHTML];
@@ -146,7 +146,7 @@ static dispatch_queue_t _connectionQueue = NULL;
 
 -(void) getFolderContentInXML:(NSString *)subPath data:(NSMutableDictionary *)data inSecret:(BOOL)inSecret parentURL:(NSString *)parentURL
 {
-//    NSString * strRoot = inSecret ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];
+    NSString * strRoot = inSecret ? [FFLocalFileManager getSecretRootPath] : [FFLocalFileManager getRootFullPath];
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     formatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
@@ -158,7 +158,7 @@ static dispatch_queue_t _connectionQueue = NULL;
         [root setObject:@{ @"xmlns:d" : @"DAV:" } forKey:XMLDictionaryAttributesKey];
         [root setObject:aryResponse forKey:@"d:response"];
     
-    NSArray * ary = [FFLocalFileManager listCurrentFolder:subPath inSecret:inSecret];
+    NSArray * ary = [FFLocalFileManager listFolder:strRoot subPath:subPath inSecret:inSecret];
     for ( FFLocalItem * item in ary ) {
         if ( item.type == LIT_PARENT )
             continue;

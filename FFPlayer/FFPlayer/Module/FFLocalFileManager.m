@@ -10,6 +10,8 @@
 #import "FFHelper.h"
 #import "FFSetting.h"
 #import "FFPlayHistoryManager.h"
+#import "MiniZip.h"
+#import "UnRAR.h"
 
 /////////////////////////////////////////////////////
 
@@ -42,6 +44,8 @@
             self.type = LIT_MIDEA;
         else if ( [FFHelper isSupportPic:strPath])
             self.type = LIT_PIC;
+        else if ( [FFHelper isSupportCompress:strPath])
+            self.type = LIT_ZIP;
         else
             self.type = LIT_UNKNOWN;
         
@@ -136,11 +140,10 @@
     return root;
 }
 
-+(NSArray *) listCurrentFolder:(NSString *) strSubPath inSecret:(BOOL) inSecret
++(NSArray *) listFolder:(NSString *)root  subPath:(NSString *)strSubPath inSecret:(BOOL) inSecret
 {
     NSMutableArray *ma = [NSMutableArray array];
     NSFileManager *fm = [[NSFileManager alloc] init];
-    NSString *folder = [FFLocalFileManager getCurrentFolder:strSubPath inSecret:inSecret];
     
     if ( strSubPath != nil && strSubPath.length > 0 ) {
         [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_PARENT]];
@@ -149,7 +152,17 @@
     } else if ( inSecret )
         [ma addObject:[[FFLocalItem alloc] initWithPath:nil type:LIT_PARENT]];
     
-    NSArray *contents = [fm contentsOfDirectoryAtPath:folder error:nil];
+    if ( strSubPath != nil && strSubPath.length > 0 ) {
+        root = [root stringByAppendingPathComponent:strSubPath];
+    }
+   
+    NSArray *contents = [fm contentsOfDirectoryAtPath:root error:nil];
+    return [FFLocalFileManager folderContent:contents folder:root tempResult:ma];
+}
+
++(NSArray *) folderContent:(NSArray *) contents folder:(NSString *)folder tempResult:(NSMutableArray *)ma
+{
+    NSFileManager *fm = [[NSFileManager alloc] init];
     
     for (NSString *filename in contents) {
         
@@ -182,6 +195,25 @@
         [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"random" ascending:YES]];
     
     return [[ma sortedArrayUsingDescriptors:arySort] copy];
+}
+
++(NSString *) uncompress:(NSString *)fullPath
+{
+    NSString *ext = fullPath.pathExtension.lowercaseString;
+    NSString * strTemp = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
+    NSFileManager *fm = [[NSFileManager alloc] init];
+    [fm removeItemAtPath:strTemp error:nil];
+    if ( ![fm createDirectoryAtPath:strTemp withIntermediateDirectories:NO attributes:nil error:nil] )
+        return nil;
+    BOOL isOK = FALSE;
+    if ( [ext isEqualToString:@"zip"]) {
+        isOK = [MiniZip extractZipArchiveAtPath:fullPath toPath:strTemp];
+    } else if ( [ext isEqualToString:@"rar"] ) {
+        isOK = [UnRAR extractRARArchiveAtPath:fullPath toPath:strTemp];
+    }
+    if ( !isOK )
+        return nil;
+    return strTemp;
 }
 
 @end

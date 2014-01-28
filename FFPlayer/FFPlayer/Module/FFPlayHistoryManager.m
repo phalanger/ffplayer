@@ -73,7 +73,7 @@
 {
     *playCount = 0;
     CGFloat res = 0.0f;
-    if ( _database != nil ) {
+    if ( ![key hasPrefix:NSTemporaryDirectory()] && _database != nil ) {
         FMResultSet *rs = [_database executeQuery:@"select * from history where path=?", [self convertKey:key]];
         if ([rs next]) {
             res = (CGFloat)[rs doubleForColumn:@"pos"];
@@ -86,7 +86,7 @@
 
 -(void) updateLastPlayInfo:(NSString *)key pos:(CGFloat)pos
 {
-    if ( _database == nil )
+    if ( [key hasPrefix:NSTemporaryDirectory()] || _database == nil )
         return;
     else if ( ![_database executeUpdate:@"update history set pos=?, pcnt=pcnt+1, modtime=date('now') where path=?", [NSNumber numberWithFloat:pos], [self convertKey:key]]
         || [_database changes] == 0 )
