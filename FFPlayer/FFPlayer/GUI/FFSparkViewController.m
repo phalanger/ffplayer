@@ -160,6 +160,23 @@ static FFPlayer * _internalPlayer = nil;
     [self loadList];
 }
 
+-(void) unlock {
+    __weak FFSparkViewController * weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [FFAlertView showWithTitle:NSLocalizedString(@"Input the password", nil)
+                           message:nil
+                       defaultText:nil
+                             style:UIAlertViewStyleSecureTextInput
+                        usingBlock:^(NSUInteger btn, NSString * str) {
+                            if ( btn == 0 || str == nil || str.length == 0 )
+                                return;
+                            [weakSelf doUnlock:str];
+                        }
+                 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                 otherButtonTitles:NSLocalizedString(@"OK", nil),nil];
+    });
+}
+
 -(void) needLogin
 {
     __weak FFSparkViewController * weakSelf = self;
@@ -280,6 +297,26 @@ static FFPlayer * _internalPlayer = nil;
     __weak FFSparkViewController * weakSelf = self;
     ASYNC_HUD_BEGIN( NSLocalizedString(@"Login", nil) );
 
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
+    [manager GET:strQuery parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        ASYNC_HUD_END;
+        NSLog(@"JSON: %@", responseObject);
+        [weakSelf loadList];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        ASYNC_HUD_END;
+        [weakSelf handleError:operation error:error];
+    }];
+}
+
+-(void) doUnlock:(NSString *)pass
+{
+    NSString * strMD5 = [FFHelper md5HexDigest:pass];
+    NSString * strQuery = [NSString stringWithFormat:@"%@/login?pid=%@", _urlPrefix, strMD5];
+    
+    __weak FFSparkViewController * weakSelf = self;
+    ASYNC_HUD_BEGIN( NSLocalizedString(@"Login", nil) );
+    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
     [manager GET:strQuery parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {

@@ -11,5 +11,6 @@
 @interface FFSparkViewController : UITableViewController
 
 -(void) setSparkServer:(NSString *)setting baseURL:(NSString *)baseURL name:(NSString *)name;
+-(void) unlock;
 
 @end

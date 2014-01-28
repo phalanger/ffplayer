@@ -9,6 +9,7 @@
 #import "FFTabViewController.h"
 #import "FFLocalViewController.h"
 #import "FFRemoteViewController.h"
+#import "FFSparkViewController.h"
 #import "FFSettingViewController.h"
 #import "FFHelper.h"
 #import "FFSetting.h"
@@ -18,6 +19,7 @@
     time_t      _lastClickTime;
     int         _clickLocalCount;
     int         _indexOfLocal;
+    int         _indexOfSpark;
 }
 @end
 
@@ -39,6 +41,7 @@
 
     _lastClickTime = 0;
     _indexOfLocal = 0;
+    _indexOfSpark = 1;
     _clickLocalCount = 0;
     
     int c = self.viewControllers.count;
@@ -50,9 +53,10 @@
             if ( [root isKindOfClass:[FFLocalViewController class]] ) {
                 _indexOfLocal = i;
                 viewController.tabBarItem.title = NSLocalizedString(@"Local", nil);
-            } else if ( [root isKindOfClass:[FFRemoteViewController class]] )
+            } else if ( [root isKindOfClass:[FFRemoteViewController class]] ) {
+                _indexOfSpark = i;
                 viewController.tabBarItem.title = NSLocalizedString(@"Remote", nil);
-            else if ( [root isKindOfClass:[FFSettingViewController class]] )
+            } else if ( [root isKindOfClass:[FFSettingViewController class]] )
                 viewController.tabBarItem.title = NSLocalizedString(@"Setting", nil);
         }
     }
@@ -72,7 +76,8 @@
 - (BOOL)tabBarController:(UITabBarController *)theTabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     BOOL boRes = (theTabBarController.selectedViewController != viewController);
-    if ( !boRes && [theTabBarController selectedIndex] == _indexOfLocal )  {
+    int nSelectIndex = [theTabBarController selectedIndex];
+    if ( !boRes && (nSelectIndex == _indexOfLocal || nSelectIndex == _indexOfSpark))  {
         time_t now = time(NULL);
         if ( now > _lastClickTime + 1)
             _clickLocalCount = 1;
@@ -82,8 +87,14 @@
         if ( _clickLocalCount > 2 ) {
             _clickLocalCount = 0;
             UINavigationController * nav = (UINavigationController *)viewController;
-            FFLocalViewController * local = [nav.viewControllers objectAtIndex:0];
-            [local toggleLock];
+            if ( nSelectIndex == _indexOfLocal) {
+                FFLocalViewController * local = [nav.viewControllers objectAtIndex:0];
+                [local toggleLock];
+            } else if ( nSelectIndex == _indexOfSpark ) {
+                UIViewController * vc = [nav.viewControllers lastObject];
+                if ( [vc isKindOfClass:[FFSparkViewController class]] )
+                    [(FFSparkViewController*)vc unlock];
+            }
         }
     }
     return boRes;
