@@ -14,19 +14,23 @@
 #import "FFAlertView.h"
 #import "FFLocalFileManager.h"
 #import "TTOpenInAppActivity.h"
+#import "MWPhotoBrowser.h"
 
 enum {
     IN_LOCAL,
     IN_SECRET,
 };
 
-@interface FFLocalViewController () <UIDocumentInteractionControllerDelegate>
+@interface FFLocalViewController () <UIDocumentInteractionControllerDelegate, MWPhotoBrowserDelegate>
 {
     NSArray *   _localMovies;
     NSString * _currentPath;
     UIBarButtonItem *           btnEdit;
     UIBarButtonItem *           btnDone;
     FFPlayer *                  _ffplayer;
+    
+    NSMutableArray *            _photos;
+    NSMutableArray *            _thumbs;
     
     NSArray *                   itemToMove;
     int                         currentState;
@@ -406,6 +410,8 @@ enum {
         
         if (item.type == LIT_MIDEA )
             cell.imageView.image = [UIImage imageNamed:@"movie"];
+        else if ( item.type == LIT_PIC )
+            cell.imageView.image = [UIImage imageNamed:@"camera"];
         else
             cell.imageView.image = [UIImage imageNamed:@"disk"];
     }
@@ -457,6 +463,10 @@ enum {
                     ++i;
                 }
                 [_ffplayer playList:aryList curIndex:index parent:self];
+            }break;
+            case LIT_PIC:
+            {
+                [self displayPic:item];
             }break;
             default:
             {
@@ -600,5 +610,79 @@ enum {
 }
 
  */
+
+-(void) displayPic:(FFLocalItem *)item
+{
+    NSMutableArray *photos = [[NSMutableArray alloc] init];
+    NSMutableArray *thumbs = [[NSMutableArray alloc] init];
+    
+    MWPhoto *photo;
+    BOOL displayActionButton = YES;
+    BOOL displaySelectionButtons = NO;
+    BOOL displayNavArrows = YES;
+    BOOL enableGrid = YES;
+    BOOL startOnGrid = NO;
+
+    int index = 0, i = 0;
+    for ( FFLocalItem * it in _localMovies) {
+        if  ( it.type != LIT_PIC )
+            continue;
+        else if ( it == item )
+            index = i;
+        ++i;
+        
+        photo = [MWPhoto photoWithURL:[NSURL fileURLWithPath:it.fullPath]];
+        photo.caption = it.fileName;
+        [photos addObject:photo];
+        [thumbs addObject:photo];
+    }
+    
+    _photos = photos;
+    _thumbs = thumbs;
+
+    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    browser.displayActionButton = displayActionButton;
+    browser.displayNavArrows = displayNavArrows;
+    browser.displaySelectionButtons = displaySelectionButtons;
+    browser.alwaysShowControls = displaySelectionButtons;
+    browser.extendedLayoutIncludesOpaqueBars = YES;
+    browser.zoomPhotosToFill = YES;
+    browser.enableGrid = enableGrid;
+    browser.startOnGrid = startOnGrid;
+    [browser setCurrentPhotoIndex:index];
+    
+    [self.navigationController pushViewController:browser animated:YES];
+    /*
+    {
+        // Modal
+        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:browser];
+        nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:nc animated:YES];
+    }
+    */
+    // Release
+	
+    // Test reloading of data after delay
+    double delayInSeconds = 3;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+    });
+}
+
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return _photos.count;
+}
+
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    if (index < _photos.count)
+        return [_photos objectAtIndex:index];
+    return nil;
+}
+
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser thumbPhotoAtIndex:(NSUInteger)index {
+    if (index < _thumbs.count)
+        return [_thumbs objectAtIndex:index];
+    return nil;
+}
 
 @end

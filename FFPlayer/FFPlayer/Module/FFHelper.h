@@ -14,10 +14,13 @@
 
 + (float)iOSVersion;
 +(BOOL) isSupportMidea:(NSString *)path;
++(BOOL) isSupportPic:(NSString *)path;
 +(BOOL) isInternalPlayerSupport:(NSString *)path;
 + (CGSize)sizeInOrientation:(UIInterfaceOrientation)orientation;
 +(BOOL) isIpad;
 + (NSString *)md5HexDigest:(NSString*)input;
+
++(void) switchToFullScreen:(UIViewController *)vc;
 
 //copy from uidevice-extension
 //https://github.com/erica/uidevice-extension

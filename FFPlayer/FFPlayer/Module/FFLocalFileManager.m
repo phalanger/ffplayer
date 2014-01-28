@@ -40,6 +40,8 @@
             self.type = LIT_DIR;
         else if (  [FFHelper isSupportMidea:strPath] )
             self.type = LIT_MIDEA;
+        else if ( [FFHelper isSupportPic:strPath])
+            self.type = LIT_PIC;
         else
             self.type = LIT_UNKNOWN;
         
@@ -49,7 +51,7 @@
         self.lastPos = 0.0f;
         self.playCount = 0;
 
-        if ( self.type > LIT_FOLDER_DEF_END ) {
+        if ( self.type == LIT_MIDEA ) {
             FFPlayHistoryManager * history = [FFPlayHistoryManager default];
             int n = 0;
             self.lastPos = [history getLastPlayInfo:self.fullPath playCount:&n];

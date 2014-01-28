@@ -197,11 +197,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     [_controls setMessage:_display];
     [self.view addSubview:_controls];
     
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        // iOS 7
-        [self prefersStatusBarHidden];
-        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
-    }
+    [FFHelper switchToFullScreen:self];
     
     if (_decoder) {
         [self setupPresentView];

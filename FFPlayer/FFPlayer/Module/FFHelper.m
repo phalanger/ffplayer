@@ -45,6 +45,15 @@
     return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
 }
 
++(void) switchToFullScreen:(UIViewController *)vc
+{
+    if ([vc respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        // iOS 7
+        [vc prefersStatusBarHidden];
+        [vc performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    }
+}
+
 + (NSString *) hostname
 {
 	char baseHostName[256]; // Thanks, Gunnar Larisch
@@ -160,6 +169,25 @@
         [ext isEqualToString:@"mpg"] ||
         [ext isEqualToString:@"flv"] ||
         [ext isEqualToString:@"vob"])
+        return YES;
+    
+    return NO;
+}
+
++(BOOL) isSupportPic:(NSString *)path
+{
+    NSString *ext = path.pathExtension.lowercaseString;
+    
+    if ([ext isEqualToString:@"jpg"] ||
+        [ext isEqualToString:@"jpeg"]||
+        [ext isEqualToString:@"bmp"]||
+        [ext isEqualToString:@"gif"] ||
+        [ext isEqualToString:@"pic"] ||
+        [ext isEqualToString:@"png"] ||
+        [ext isEqualToString:@"tiff"] ||
+        [ext isEqualToString:@"icn"] ||
+        [ext isEqualToString:@"icon"]
+        )
         return YES;
     
     return NO;
