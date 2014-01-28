@@ -19,6 +19,13 @@
 		1FB97DEF1896499E00E4006B /* TTOpenInAppActivity7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB97DEA1896499E00E4006B /* TTOpenInAppActivity7@2x.png */; };
 		1FB97DF218964D5900E4006B /* FFSparkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97DF118964D5900E4006B /* FFSparkViewController.m */; };
 		1FB97DF6189653A300E4006B /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97DF5189653A300E4006B /* MBProgressHUD.m */; };
+		1FB97DF9189741CA00E4006B /* FFPlayHistoryManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97DF8189741CA00E4006B /* FFPlayHistoryManager.m */; };
+		1FB97E061897499600E4006B /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97DFC1897499600E4006B /* FMDatabase.m */; };
+		1FB97E071897499600E4006B /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97DFE1897499600E4006B /* FMDatabaseAdditions.m */; };
+		1FB97E081897499600E4006B /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E001897499600E4006B /* FMDatabasePool.m */; };
+		1FB97E091897499600E4006B /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E021897499600E4006B /* FMDatabaseQueue.m */; };
+		1FB97E0B1897499600E4006B /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB97E051897499600E4006B /* FMResultSet.m */; };
+		1FB97E0D1897510500E4006B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB97E0C1897510500E4006B /* libsqlite3.dylib */; };
 		1FBC5B091889176F005FB7DB /* Website in Resources */ = {isa = PBXBuildFile; fileRef = 1FBC5B081889176F005FB7DB /* Website */; };
 		1FBC5B0E188929BC005FB7DB /* GTMNSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B0D188929BC005FB7DB /* GTMNSString.m */; };
 		1FBC5B11188935EE005FB7DB /* FFLocalFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC5B10188935EE005FB7DB /* FFLocalFileManager.m */; };
@@ -139,6 +146,19 @@
 		1FB97DF118964D5900E4006B /* FFSparkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFSparkViewController.m; path = GUI/FFSparkViewController.m; sourceTree = "<group>"; };
 		1FB97DF4189653A300E4006B /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = OtherLibs/MBProgressHUD/MBProgressHUD.h; sourceTree = "<group>"; };
 		1FB97DF5189653A300E4006B /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = OtherLibs/MBProgressHUD/MBProgressHUD.m; sourceTree = "<group>"; };
+		1FB97DF7189741CA00E4006B /* FFPlayHistoryManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFPlayHistoryManager.h; path = Module/FFPlayHistoryManager.h; sourceTree = "<group>"; };
+		1FB97DF8189741CA00E4006B /* FFPlayHistoryManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFPlayHistoryManager.m; path = Module/FFPlayHistoryManager.m; sourceTree = "<group>"; };
+		1FB97DFB1897499600E4006B /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = OtherLibs/fmdb/FMDatabase.h; sourceTree = "<group>"; };
+		1FB97DFC1897499600E4006B /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabase.m; path = OtherLibs/fmdb/FMDatabase.m; sourceTree = "<group>"; };
+		1FB97DFD1897499600E4006B /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = OtherLibs/fmdb/FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		1FB97DFE1897499600E4006B /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = OtherLibs/fmdb/FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		1FB97DFF1897499600E4006B /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabasePool.h; path = OtherLibs/fmdb/FMDatabasePool.h; sourceTree = "<group>"; };
+		1FB97E001897499600E4006B /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabasePool.m; path = OtherLibs/fmdb/FMDatabasePool.m; sourceTree = "<group>"; };
+		1FB97E011897499600E4006B /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseQueue.h; path = OtherLibs/fmdb/FMDatabaseQueue.h; sourceTree = "<group>"; };
+		1FB97E021897499600E4006B /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseQueue.m; path = OtherLibs/fmdb/FMDatabaseQueue.m; sourceTree = "<group>"; };
+		1FB97E041897499600E4006B /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = OtherLibs/fmdb/FMResultSet.h; sourceTree = "<group>"; };
+		1FB97E051897499600E4006B /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = OtherLibs/fmdb/FMResultSet.m; sourceTree = "<group>"; };
+		1FB97E0C1897510500E4006B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		1FBC5B081889176F005FB7DB /* Website */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Website; path = FFPlayer/Resource/Website; sourceTree = "<group>"; };
 		1FBC5B0B188929BC005FB7DB /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMDefines.h; path = OtherLibs/GTMNSString/GTMDefines.h; sourceTree = "<group>"; };
 		1FBC5B0C188929BC005FB7DB /* GTMNSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMNSString.h; path = OtherLibs/GTMNSString/GTMNSString.h; sourceTree = "<group>"; };
@@ -279,6 +299,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FB97E0D1897510500E4006B /* libsqlite3.dylib in Frameworks */,
 				4D61275A1896B0D100C74ADE /* MobileCoreServices.framework in Frameworks */,
 				1FE5F8EE1883930D00CB4C09 /* AVFoundation.framework in Frameworks */,
 				1FE5F8EC18838EEA00CB4C09 /* libz.dylib in Frameworks */,
@@ -343,6 +364,23 @@
 			name = MBProgressHUD;
 			sourceTree = "<group>";
 		};
+		1FB97DFA1897497800E4006B /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				1FB97DFB1897499600E4006B /* FMDatabase.h */,
+				1FB97DFC1897499600E4006B /* FMDatabase.m */,
+				1FB97DFD1897499600E4006B /* FMDatabaseAdditions.h */,
+				1FB97DFE1897499600E4006B /* FMDatabaseAdditions.m */,
+				1FB97DFF1897499600E4006B /* FMDatabasePool.h */,
+				1FB97E001897499600E4006B /* FMDatabasePool.m */,
+				1FB97E011897499600E4006B /* FMDatabaseQueue.h */,
+				1FB97E021897499600E4006B /* FMDatabaseQueue.m */,
+				1FB97E041897499600E4006B /* FMResultSet.h */,
+				1FB97E051897499600E4006B /* FMResultSet.m */,
+			);
+			name = fmdb;
+			sourceTree = "<group>";
+		};
 		1FBC5B0A188929AA005FB7DB /* GTMNSString */ = {
 			isa = PBXGroup;
 			children = (
@@ -391,6 +429,8 @@
 				1FBC5B10188935EE005FB7DB /* FFLocalFileManager.m */,
 				4D6127561895555400C74ADE /* FFPlayHistory.h */,
 				4D6127571895555400C74ADE /* FFPlayHistory.m */,
+				1FB97DF7189741CA00E4006B /* FFPlayHistoryManager.h */,
+				1FB97DF8189741CA00E4006B /* FFPlayHistoryManager.m */,
 			);
 			name = Module;
 			sourceTree = "<group>";
@@ -398,6 +438,7 @@
 		1FC0718A1884FC3B00ED63E8 /* OtherLibs */ = {
 			isa = PBXGroup;
 			children = (
+				1FB97DFA1897497800E4006B /* fmdb */,
 				1FB97DF31896539500E4006B /* MBProgressHUD */,
 				1FB97DE41896498F00E4006B /* TTOpenInAppActivity */,
 				1F44BC531890FE8000C3E0D9 /* XMLDictionary */,
@@ -511,6 +552,7 @@
 		1FE5F86F1883891D00CB4C09 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1FB97E0C1897510500E4006B /* libsqlite3.dylib */,
 				4D6127591896B0D100C74ADE /* MobileCoreServices.framework */,
 				1FE5F8ED1883930D00CB4C09 /* AVFoundation.framework */,
 				1FE5F8EB18838EEA00CB4C09 /* libz.dylib */,
@@ -750,13 +792,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FB97DF9189741CA00E4006B /* FFPlayHistoryManager.m in Sources */,
 				1FC071B318850D1F00ED63E8 /* ALButton.m in Sources */,
 				1FBC5B11188935EE005FB7DB /* FFLocalFileManager.m in Sources */,
+				1FB97E061897499600E4006B /* FMDatabase.m in Sources */,
 				1FC071A41884FC6600ED63E8 /* AFURLConnectionOperation.m in Sources */,
+				1FB97E081897499600E4006B /* FMDatabasePool.m in Sources */,
 				1FC071851884C82600ED63E8 /* FFLocalViewController.m in Sources */,
 				1FC071A31884FC6600ED63E8 /* AFSecurityPolicy.m in Sources */,
 				4D0165C418856D650031DC71 /* FFInternalMoviePlayerController.m in Sources */,
 				4DBD981018882A0600C71747 /* GCDWebServer.m in Sources */,
+				1FB97E0B1897499600E4006B /* FMResultSet.m in Sources */,
 				1FB97DF6189653A300E4006B /* MBProgressHUD.m in Sources */,
 				1FE5F8B618838DA700CB4C09 /* KxAudioManager.m in Sources */,
 				1FC071B7188518D900ED63E8 /* FFMovieViewController.m in Sources */,
@@ -782,8 +828,10 @@
 				1FBC5B0E188929BC005FB7DB /* GTMNSString.m in Sources */,
 				1FC071A51884FC6600ED63E8 /* AFURLRequestSerialization.m in Sources */,
 				4DBD981118882A0600C71747 /* GCDWebServerConnection.m in Sources */,
+				1FB97E091897499600E4006B /* FMDatabaseQueue.m in Sources */,
 				1FC071A21884FC6600ED63E8 /* AFNetworkReachabilityManager.m in Sources */,
 				1FB97DF218964D5900E4006B /* FFSparkViewController.m in Sources */,
+				1FB97E071897499600E4006B /* FMDatabaseAdditions.m in Sources */,
 				1FC071E31887B68A00ED63E8 /* FFTabViewController.m in Sources */,
 				4D61275518954E4500C74ADE /* FFRemoteViewController.m in Sources */,
 				1FE5F8B818838DA700CB4C09 /* KxMovieDecoder.m in Sources */,

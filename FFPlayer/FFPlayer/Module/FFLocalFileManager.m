@@ -9,7 +9,7 @@
 #import "FFLocalFileManager.h"
 #import "FFHelper.h"
 #import "FFSetting.h"
-
+#import "FFPlayHistoryManager.h"
 
 /////////////////////////////////////////////////////
 
@@ -45,6 +45,17 @@
         
         self.size = [[attr valueForKey:NSFileSize] longLongValue];
         self.modifyTime = [attr valueForKey:NSFileModificationDate];
+
+        self.lastPos = 0.0f;
+        self.playCount = 0;
+
+        if ( self.type > LIT_FOLDER_DEF_END ) {
+            FFPlayHistoryManager * history = [FFPlayHistoryManager default];
+            int n = 0;
+            self.lastPos = [history getLastPlayInfo:self.fullPath playCount:&n];
+            self.playCount = n;
+        }
+        self.random = (arc4random() % 0x1000000) + ((self.playCount < 0xff ?: 0xff ) * 0x1000000);
     }
     return self;
 }
@@ -165,6 +176,8 @@
         [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"modifyTime" ascending:(nSort == SORT_BY_DATE)]];
     else if ( nSort == SORT_BY_NAME || nSort == SORT_BY_NAME_DESC )
         [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"fullPath" ascending:(nSort == SORT_BY_NAME)]];
+    else
+        [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"random" ascending:YES]];
     
     return [[ma sortedArrayUsingDescriptors:arySort] copy];
 }

@@ -32,6 +32,9 @@ enum SORT_TYPE
 -(int) sortType;
 -(void) setSortType:(int) type;
 
+-(int) sparkSortType;
+-(void) setSparkSortType:(int) type;
+
 -(int) seekDelta;
 -(void) setSeekDelta:(int) n;
 

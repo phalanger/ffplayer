@@ -123,7 +123,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 -(void) playMovieImp:(NSString *)path pos:(CGFloat)pos parameters: (NSDictionary *) parameters
 {
     _parameters = parameters;
-    _moviePosition = pos;
+    _moviePosition = 0;
     
     KxMovieDecoder *decoder = [[KxMovieDecoder alloc] init];
     __weak FFMovieViewController *weakSelf = self;
@@ -142,6 +142,11 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
             });
         }
     });
+    
+    if ( pos != 0.0f )
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5f * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self setMoviePosition:pos];
+        });
 }
 
 -(void) playMovie:(NSString *)path pos:(CGFloat)pos parameters:(NSDictionary *)parameters
@@ -1294,6 +1299,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 
 -(void) onDone
 {
+    if ( self.delegate )
+        [self.delegate onDoneWithPos:_moviePosition];
     if (self.presentingViewController || !self.navigationController)
         [self dismissViewControllerAnimated:YES completion:nil];
     else

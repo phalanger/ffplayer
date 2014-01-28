@@ -12,6 +12,7 @@
 #import "FFAlertView.h"
 #import "FFHelper.h"
 #import "FFSetting.h"
+#import "FFPlayHistoryManager.h"
 #import "FFPlayer.h"
 
 #define ASYNC_HUD_BEGIN(strTitle)   if ( self.navigationController.navigationBar) self.navigationController.navigationBar.userInteractionEnabled = NO;\
@@ -33,7 +34,9 @@
 @property (assign) BOOL         lock;
 @property (atomic) NSString *   mtime;
 @property (assign) long long    size;
-
+@property (assign) int          random;
+@property (assign) int          playCount;
+@property (assign) CGFloat      lastPos;
 
 @end
 
@@ -176,6 +179,8 @@ static FFPlayer * _internalPlayer = nil;
 {
     NSMutableArray * ary = [[NSMutableArray alloc] init];
     NSArray * aryItems = [((NSDictionary *)dictData) objectForKey:@"data"];
+    FFPlayHistoryManager * history = [FFPlayHistoryManager default];
+
     for ( NSDictionary * dict in aryItems ) {
         FFSparkItem * item = [[FFSparkItem alloc] init];
         item.name = [dict objectForKey:@"name"];
@@ -188,9 +193,16 @@ static FFPlayer * _internalPlayer = nil;
         else if ( item.root ) {
             item.mtime = @"";
             item.size = 0;
+            item.playCount = 0;
+            item.lastPos = 0.0f;
         } else {
             item.mtime = [dict objectForKey:@"mtime"];
             item.size = [[dict objectForKey:@"size"] longLongValue];
+            
+            int n = 0;
+            item.lastPos = [history getLastPlayInfo:[_baseURL stringByAppendingPathComponent:item.name] playCount:&n];
+            item.playCount = n;
+            item.random = (arc4random() % 0x1000000) + ((item.playCount < 0xff ?: 0xff ) * 0x1000000);
         }
         
         [ary addObject:item];
@@ -198,11 +210,13 @@ static FFPlayer * _internalPlayer = nil;
     
     NSMutableArray * arySort = [[NSMutableArray alloc] init];
     [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"dir" ascending:NO]];
-    int nSort = [[FFSetting default] sortType];
+    int nSort = [[FFSetting default] sparkSortType];
     if ( nSort == SORT_BY_DATE || nSort == SORT_BY_DATE_DESC )
         [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"mtime" ascending:(nSort == SORT_BY_DATE)]];
     else if ( nSort == SORT_BY_NAME || nSort == SORT_BY_NAME_DESC )
         [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:(nSort == SORT_BY_NAME)]];
+    else
+        [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"random" ascending:YES]];
     
     _arySprkItems = [[ary sortedArrayUsingDescriptors:arySort] copy];
 
@@ -310,7 +324,13 @@ static FFPlayer * _internalPlayer = nil;
         NSByteCountFormatter *byteCountFormatter = [[NSByteCountFormatter alloc] init];
         [byteCountFormatter setAllowedUnits:NSByteCountFormatterUseMB];
         
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@", item.mtime, [byteCountFormatter stringFromByteCount:item.size]];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@ last:%02d:%02d played %d time(s)"
+                                     , item.mtime
+                                     , [byteCountFormatter stringFromByteCount:item.size]
+                                     , (int)(item.lastPos / 60), (int)(item.lastPos) % 60
+                                     ,item.playCount
+                                     ];
+        
         cell.imageView.image = [UIImage imageNamed:@"movie"];
     }
     

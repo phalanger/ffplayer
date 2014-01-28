@@ -13,6 +13,7 @@
 #import "FFInternalMoviePlayerController.h"
 #import "ALMoviePlayerControls.h"
 #import "KxMovieDecoder.h"
+#import "FFPlayHistoryManager.h"
 
 @implementation FFPlayItem
 
@@ -38,6 +39,7 @@
     UIViewController *         _lastController;
     KxMovieDecoder *           _decoder;
     BOOL                       _forceInternal;
+    NSString *                 _curPlaying;
 }
 @end
 
@@ -52,7 +54,7 @@
         self->_parentView = nil;
         self->_lastController = nil;
         self->_decoder = nil;
-        self->_forceInternal = YES;
+        self->_forceInternal = NO;
     }
     
     return self;
@@ -106,7 +108,7 @@
     
     if ( [vc isKindOfClass:[FFInternalMoviePlayerController class]] ) {
         FFInternalMoviePlayerController * vc1 = (FFInternalMoviePlayerController *)vc;
-        [vc1 playMovie:path pos:0.f parameters:parameters];
+        [vc1 playMovie:path pos:item.position parameters:parameters];
     } else {
         FFMovieViewController * vc2 = (FFMovieViewController *)vc;
         
@@ -117,7 +119,7 @@
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
             parameters[FFMovieParameterDisableDeinterlacing] = @(YES);
         
-        [vc2 playMovie:path pos:0.f parameters:parameters];
+        [vc2 playMovie:path pos:item.position parameters:parameters];
     }
     
     return vc;
@@ -137,21 +139,34 @@
         FFMovieViewController * vc2 = [FFMovieViewController movieViewControllerWithDelegate:self];
         _lastController = [FFPlayer playInController:vc2 item:item];
     }
-    
+ 
+    _curPlaying = item.url;
     [_parentView presentViewController:_lastController animated:animated completion:nil];
     return _lastController;
+}
+
+-(void) onDoneWithPos:(CGFloat)curPos
+{
+    if ( _curPlaying != nil )
+        [[FFPlayHistoryManager default] updateLastPlayInfo:_curPlaying pos:curPos ];
 }
 
 -(void) onFinish:(UIViewController *)control curPos:(CGFloat)curPos
 {
     if ( [[FFSetting default] autoPlayNext] )
         [self onNext:control curPos:curPos];
-    else
+    else {
+        if ( _curPlaying != nil )
+            [[FFPlayHistoryManager default] updateLastPlayInfo:_curPlaying pos:curPos ];
         [control dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 -(void) onNext:(UIViewController *)control curPos:(CGFloat)curPos
 {
+    if ( _curPlaying != nil )
+        [[FFPlayHistoryManager default] updateLastPlayInfo:_curPlaying pos:curPos ];
+
     if ( [self hasNext] ) {
         ++_curIndex;
         FFPlayItem * item = _playList[_curIndex];
@@ -167,6 +182,9 @@
 
 -(void) onPre:(UIViewController *)control curPos:(CGFloat)curPos
 {
+    if ( _curPlaying != nil )
+        [[FFPlayHistoryManager default] updateLastPlayInfo:_curPlaying pos:curPos ];
+
     if ( [self hasPre] ) {
         --_curIndex;
         FFPlayItem * item = _playList[_curIndex];

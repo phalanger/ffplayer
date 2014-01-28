@@ -25,6 +25,7 @@ enum {
     MENU_ABOUT,
     LAB_WEB,
     LAB_WEBDAV,
+    SPARK_SORT_TYPE,
 };
 
 @interface FFSettingViewController () <UITextFieldDelegate>
@@ -45,6 +46,7 @@ enum {
     sectionHeader = [NSArray arrayWithObjects:NSLocalizedString(@"Global Setting", nil),
                                         NSLocalizedString(@"Upload/Download", nil),
                                         NSLocalizedString(@"Movie player", nil),
+                                        NSLocalizedString(@"Spark setting", nil),
                                         NSLocalizedString(@"Other", nil),
                                     nil];
     
@@ -78,13 +80,16 @@ enum {
                                 ,@(MENU_SORT_TYPE)
                                 ,@(MENU_SEEK_DELTA)
                                 ] mutableCopy];
+
+    NSMutableArray * arySpark = [@[ @(SPARK_SORT_TYPE)
+                                    ] mutableCopy];
     NSMutableArray * aryOther = [@[ @(MENU_ABOUT)
                                 ] mutableCopy];
     
     if ( [[FFSetting default] unlock] )
         [aryGlobal addObject:@(MENU_RESET_PASSWORD)];
     
-    sectionCellCount = @[ aryGlobal, aryUpload, aryMovie, aryOther ];
+    sectionCellCount = @[ aryGlobal, aryUpload, aryMovie, arySpark, aryOther ];
     [self.tableView reloadData];
 }
 
@@ -107,7 +112,7 @@ enum {
         case SORT_BY_DATE_DESC:
             str = NSLocalizedString(@"By Date Desc", nil); break;
         case SORT_RANDOM:
-            str = NSLocalizedString(@"Randon", nil); break;
+            str = NSLocalizedString(@"Random", nil); break;
         case SORT_BY_NAME_DESC:
             str = NSLocalizedString(@"By Name Desc", nil); break;
         default:
@@ -248,7 +253,11 @@ enum {
             cell.detailTextLabel.text = nil;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         } break;
-            
+        case SPARK_SORT_TYPE: {
+            cell.textLabel.text = NSLocalizedString(@"Sort", nil);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.detailTextLabel.text = [FFSettingViewController getSortString:[setting sparkSortType]];
+        }
         default:
             break;
     }
@@ -345,6 +354,7 @@ enum {
             if ( [[FFSetting default] unlock] ) { //reset password
                 [self resetPassword];
             } break;
+        case SPARK_SORT_TYPE:
         case MENU_SORT_TYPE: {
                 [FFAlertView showWithTitle:NSLocalizedString(@"Sort Type", nil)
                                    message:NSLocalizedString(@"Select sort type.", nil)
@@ -354,7 +364,10 @@ enum {
                                     if ( btn == 0 )
                                         return;
                                     --btn;
-                                    [[FFSetting default] setSortType:btn];
+                                    if ([nID intValue] == MENU_SORT_TYPE)
+                                        [[FFSetting default] setSortType:btn];
+                                    else
+                                        [[FFSetting default] setSparkSortType:btn];
                                     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
                                     cell.detailTextLabel.text = [FFSettingViewController getSortString:btn];
                                 }
@@ -363,7 +376,7 @@ enum {
                                             ,NSLocalizedString(@"By Name Desc", nil)
                                             ,NSLocalizedString(@"By Date", nil)
                                             ,NSLocalizedString(@"By Date Desc", nil)
-                                            ,NSLocalizedString(@"Randon", nil)
+                                            ,NSLocalizedString(@"Random", nil)
                                     , nil];
         }break;
             

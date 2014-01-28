@@ -69,6 +69,17 @@
     [_setting synchronize];
 }
 
+-(int) sparkSortType
+{
+    return [_setting integerForKey:@"spark_sort_type"];
+}
+
+-(void) setSparkSortType:(int) type
+{
+    [_setting setInteger:type forKey:@"spark_sort_type"];
+    [_setting synchronize];
+}
+
 -(int) seekDelta
 {
     int n = [_setting integerForKey:@"seek_delta"];

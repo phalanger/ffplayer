@@ -80,8 +80,11 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
     
     if ( _urlToPlay != nil ) {
         [_player prepareToPlay];
-        [_player setCurrentPlaybackTime:_startPos];
         [self play];
+        if ( _startPos != 0.0f )
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5f * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [_player setCurrentPlaybackTime:_startPos];
+            });
     }
 }
 
@@ -330,7 +333,14 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 
 -(void) playMovie:(NSString *)path pos:(CGFloat)pos parameters: (NSDictionary *) parameters
 {
+    /*
+    if ( [path hasPrefix:@"/"] )
+        path = [@"file://" stringByAppendingString:[[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+                stringByReplacingOccurrencesOfString:@"+" withString:@"%2B"]];
+    NSURL * url = [NSURL URLWithString:path];
+     */
     NSURL * url = [path hasPrefix:@"/"] ? [NSURL fileURLWithPath:path] : [NSURL URLWithString:path];
+    
     if ( _player == nil ) {
         _urlToPlay = url;
         _startPos = pos;
@@ -338,8 +348,11 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
         [_player setContentURL:url];
         [_player prepareToPlay];
         [_player.view setFrame: self.view.bounds];
-        [_player setCurrentPlaybackTime:pos];
         [self play];
+        if ( pos != 0.0f )
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5f * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [_player setCurrentPlaybackTime:pos];
+            });
     }
 }
 
@@ -453,6 +466,8 @@ static const NSTimeInterval fullscreenAnimationDuration = 0.3;
 -(void) onDone
 {
     [_player pause];
+    if ( self.delegate )
+        [self.delegate onDoneWithPos:[_player currentPlaybackTime]];
     [self unload];
     if (self.presentingViewController || !self.navigationController)
         [self dismissViewControllerAnimated:YES completion:nil];

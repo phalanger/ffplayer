@@ -29,6 +29,10 @@ typedef enum {
 @property (readonly, getter = isDir)   BOOL   isDir;
 @property (readonly, getter = sortNameHelper)   int    sortNameHelper;
 @property (readonly)  BOOL          editable;
+@property (assign) int              random;
+@property (assign) CGFloat          lastPos;
+@property (assign) int              playCount;
+
 -(id) initWithPath:(NSString *)strPath type:(LOCAL_ITEM_TYPE)type;
 -(id) initWithAttributes:(NSDictionary *) attrs path:(NSString *)strPath;
 @end

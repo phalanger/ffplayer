@@ -11,6 +11,7 @@
 #import "FFSparkViewController.h"
 #import "FFAlertView.h"
 #import "FFPlayer.h"
+#import "FFPlayHistoryManager.h"
 
 @interface FFRemoteViewController ()
 {
@@ -115,20 +116,25 @@
             cell.textLabel.text = NSLocalizedString(@"Add Media URL", nil);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.imageView.image = [UIImage imageNamed:@"plus"];
+            cell.detailTextLabel.text = nil;
         } else {
-            cell.textLabel.text = aryURLHistory[ indexPath.row ];
+            NSURL * url = [NSURL URLWithString:aryURLHistory[ indexPath.row ]];
+            cell.textLabel.text = [[url path] lastPathComponent];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.imageView.image = [UIImage imageNamed:@"movie"];
+            cell.detailTextLabel.text = aryURLHistory[ indexPath.row ];
         }
     } else if ( indexPath.section == 1 ) { //Sprk Server
         if ( indexPath.row == 0 ) {
             cell.textLabel.text = NSLocalizedString(@"Add Server IP", nil);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.imageView.image = [UIImage imageNamed:@"plus"];
+            cell.detailTextLabel.text = nil;
         } else {
             cell.textLabel.text = arySparkList[ indexPath.row ];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.imageView.image = [UIImage imageNamed:@"connections"];
+            cell.detailTextLabel.text = nil;
         }
     }
     // Configure the cell...
@@ -194,7 +200,9 @@
             [self addWebURL];
         } else {
             NSString * url = aryURLHistory[indexPath.row];
-            [_player playList:@[ [[FFPlayItem alloc] initWithPath:url position:0.0] ] curIndex:0 parent:self];
+            int n = 0;
+            CGFloat pos = [[FFPlayHistoryManager default] getLastPlayInfo:url playCount:&n];
+            [_player playList:@[ [[FFPlayItem alloc] initWithPath:url position:pos] ] curIndex:0 parent:self];
         }
     } else if ( indexPath.section == 1 ) {
         if ( indexPath.row == 0 ) {

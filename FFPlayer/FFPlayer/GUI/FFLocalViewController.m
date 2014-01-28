@@ -391,7 +391,12 @@ enum {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];
         
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@", [dateFormatter stringFromDate:item.modifyTime], [byteCountFormatter stringFromByteCount:item.size]];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@ last:%02d:%02d played %d time(s)"
+                                        , [dateFormatter stringFromDate:item.modifyTime]
+                                        , [byteCountFormatter stringFromByteCount:item.size]
+                                        , (int)(item.lastPos / 60), (int)(item.lastPos) % 60
+                                        ,item.playCount
+                                     ];
         
         if ( itemToMove != nil )  {   //in Moveing mode
             cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor grayColor];
@@ -448,7 +453,7 @@ enum {
                         continue;
                     else if ( it == item )
                         index = i;
-                    [aryList addObject:[[FFPlayItem alloc] initWithPath:it.fullPath position:0.0]];
+                    [aryList addObject:[[FFPlayItem alloc] initWithPath:it.fullPath position:it.lastPos]];
                     ++i;
                 }
                 [_ffplayer playList:aryList curIndex:index parent:self];
