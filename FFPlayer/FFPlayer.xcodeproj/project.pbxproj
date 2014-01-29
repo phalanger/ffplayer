@@ -224,6 +224,8 @@
 		4D6127921897F92D00C74ADE /* 7zAlloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127801897F92D00C74ADE /* 7zAlloc.c */; };
 		4D6127931897F92D00C74ADE /* 7zMain.c in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127821897F92D00C74ADE /* 7zMain.c */; };
 		4D6127961897F98D00C74ADE /* LZMAExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6127951897F98D00C74ADE /* LZMAExtractor.m */; };
+		4D6127991899486500C74ADE /* arrowup.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D6127971899486500C74ADE /* arrowup.png */; };
+		4D61279A1899486500C74ADE /* arrowup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D6127981899486500C74ADE /* arrowup@2x.png */; };
 		4DBD97F8188814D000C71747 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F6188814D000C71747 /* folder.png */; };
 		4DBD97F9188814D000C71747 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97F7188814D000C71747 /* folder@2x.png */; };
 		4DBD97FC1888156D00C71747 /* movie.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBD97FA1888156D00C71747 /* movie.png */; };
@@ -648,6 +650,8 @@
 		4D6127821897F92D00C74ADE /* 7zMain.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 7zMain.c; sourceTree = "<group>"; };
 		4D6127941897F98D00C74ADE /* LZMAExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LZMAExtractor.h; path = OtherLibs/Compress/LZMAExtractor.h; sourceTree = "<group>"; };
 		4D6127951897F98D00C74ADE /* LZMAExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LZMAExtractor.m; path = OtherLibs/Compress/LZMAExtractor.m; sourceTree = "<group>"; };
+		4D6127971899486500C74ADE /* arrowup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrowup.png; path = Resource/arrowup.png; sourceTree = "<group>"; };
+		4D6127981899486500C74ADE /* arrowup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrowup@2x.png"; path = "Resource/arrowup@2x.png"; sourceTree = "<group>"; };
 		4DBD97F6188814D000C71747 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folder.png; path = Resource/folder.png; sourceTree = "<group>"; };
 		4DBD97F7188814D000C71747 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resource/folder@2x.png"; sourceTree = "<group>"; };
 		4DBD97FA1888156D00C71747 /* movie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = movie.png; path = Resource/movie.png; sourceTree = "<group>"; };
@@ -1142,6 +1146,8 @@
 		1FC071B81885361E00ED63E8 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				4D6127971899486500C74ADE /* arrowup.png */,
+				4D6127981899486500C74ADE /* arrowup@2x.png */,
 				4D61275B1897E60600C74ADE /* briefcase.png */,
 				4D61275C1897E60600C74ADE /* briefcase@2x.png */,
 				1FB97E0E18978B4800E4006B /* camera.png */,
@@ -1455,6 +1461,7 @@
 				1FC071D21885366D00ED63E8 /* movieForwardSelected@2x.png in Resources */,
 				1FC071D71885366D00ED63E8 /* moviePlay.png in Resources */,
 				1FE5F8871883891D00CB4C09 /* Main_iPad.storyboard in Resources */,
+				4D61279A1899486500C74ADE /* arrowup@2x.png in Resources */,
 				1FC071D41885366D00ED63E8 /* movieFullscreen@2x.png in Resources */,
 				1FC071D61885366D00ED63E8 /* moviePause@2x.png in Resources */,
 				1FB97F581897A69700E4006B /* UnRARDll.vcproj in Resources */,
@@ -1479,6 +1486,7 @@
 				4DBD98051888168400C71747 /* disk@2x.png in Resources */,
 				4DBD97F9188814D000C71747 /* folder@2x.png in Resources */,
 				1FB97DEE1896499E00E4006B /* TTOpenInAppActivity7.png in Resources */,
+				4D6127991899486500C74ADE /* arrowup.png in Resources */,
 				1FC071C91885366D00ED63E8 /* movieBackward.png in Resources */,
 				1FC071CC1885366D00ED63E8 /* movieBackwardSelected@2x.png in Resources */,
 				1FB97F321897A69700E4006B /* makefile.bcc in Resources */,

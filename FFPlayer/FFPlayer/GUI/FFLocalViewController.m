@@ -405,6 +405,8 @@ enum {
         cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor blackColor];
         if ( item.type == LIT_SECRETE )
             cell.imageView.image = [UIImage imageNamed:@"padlock"];
+        else if ( item.type == LIT_PARENT )
+            cell.imageView.image = [UIImage imageNamed:@"arrowup"];
         else
             cell.imageView.image = [UIImage imageNamed:@"folder"];
         

@@ -30,6 +30,7 @@
 
 @property (atomic) NSString *   path;
 @property (atomic) NSString *   name;
+@property (assign) BOOL         goParent;
 @property (assign) BOOL         dir;
 @property (assign) BOOL         root;
 @property (assign) BOOL         lock;
@@ -139,6 +140,10 @@ static FFPlayer * _internalPlayer = nil;
     _arySprkItems = [[NSArray alloc] init];
     self.title = _name;
 
+    self.navigationItem.leftBarButtonItem = nil;
+    self.navigationItem.backBarButtonItem = nil;
+    [self.navigationItem setHidesBackButton:YES];
+
     btnRefresh = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(onRefresh:)];
     self.navigationItem.rightBarButtonItem = btnRefresh;
     _loading = FALSE;
@@ -242,7 +247,9 @@ static FFPlayer * _internalPlayer = nil;
     else
         [arySort addObject:[NSSortDescriptor sortDescriptorWithKey:@"random" ascending:YES]];
     
-    _arySprkItems = [[ary sortedArrayUsingDescriptors:arySort] copy];
+    FFSparkItem * itemGoParent = [[FFSparkItem alloc] init];
+    itemGoParent.goParent = YES;
+    _arySprkItems = [@[itemGoParent] arrayByAddingObjectsFromArray:[ary sortedArrayUsingDescriptors:arySort]];
 
     [self.tableView reloadData];
 }
@@ -352,7 +359,13 @@ static FFPlayer * _internalPlayer = nil;
     
     // Configure the cell...
     FFSparkItem * item = [_arySprkItems objectAtIndex:indexPath.row];
-    if ( item.dir ) {
+    if ( item.goParent ) {
+        cell.textLabel.text = [NSString stringWithFormat:@"[%@]", NSLocalizedString(@"Parent", nil)];
+        cell.textLabel.font = [UIFont boldSystemFontOfSize:20];
+        cell.detailTextLabel.text = nil;
+        cell.detailTextLabel.textColor = cell.textLabel.textColor = [UIColor blackColor];
+        cell.imageView.image = [UIImage imageNamed:@"arrowup"];
+    } else if ( item.dir ) {
         cell.textLabel.text = [NSString stringWithFormat:@"[%@]", item.name];
         cell.textLabel.font = [UIFont boldSystemFontOfSize:20];
         cell.detailTextLabel.text = nil;
@@ -389,7 +402,9 @@ static FFPlayer * _internalPlayer = nil;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     FFSparkItem * item = [_arySprkItems objectAtIndex:indexPath.row];
-    if ( item.dir ) {
+    if ( item.goParent ) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else if ( item.dir ) {
         FFSparkViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FFSparkViewController"];
         NSString * strNewBaseURL = nil;
         if ( item.root )
@@ -411,7 +426,7 @@ static FFPlayer * _internalPlayer = nil;
         NSMutableArray  * aryList = [[NSMutableArray alloc] init];
         int index = 0, i = 0;
         for ( FFSparkItem * it in _arySprkItems) {
-            if  ( it.dir || it.root )
+            if  ( it.dir || it.root || it.goParent )
                 continue;
             else if ( it == item )
                 index = i;
