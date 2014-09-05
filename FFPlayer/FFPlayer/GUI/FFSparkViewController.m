@@ -106,6 +106,7 @@ static FFPlayer * _internalPlayer = nil;
     NSString * _name;
     NSString * _baseURL;
     NSString * _urlPrefix;
+    NSString * _extPHP;
     NSArray *    _arySprkItems;
 }
 @end
@@ -122,6 +123,11 @@ static FFPlayer * _internalPlayer = nil;
         _urlPrefix = [NSString stringWithFormat:@"http://%@:27888", _setting];
     else
         _urlPrefix = [NSString stringWithFormat:@"http://%@", _setting];
+    
+    if ( [_setting rangeOfString:@"/"].location != NSNotFound)
+        _extPHP = @".php";
+    else
+        _extPHP = @"";
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -277,7 +283,7 @@ static FFPlayer * _internalPlayer = nil;
     
     __weak FFSparkViewController * weakSelf = self;
     ASYNC_HUD_BEGIN( NSLocalizedString(@"Loading", nil) );
-    NSString * strURL = [_urlPrefix stringByAppendingString:@"/list"];
+    NSString * strURL = [[_urlPrefix stringByAppendingString:@"/list"] stringByAppendingString:_extPHP];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:strURL]];
     
     if ( _baseURL != nil && _baseURL.length > 0 ) {
@@ -293,7 +299,12 @@ static FFPlayer * _internalPlayer = nil;
         [weakSelf onGetList:responseObject];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         ASYNC_HUD_END;
-        [weakSelf handleError:operation error:error];
+        if ( error.code == -1016 && [[error.userInfo objectForKey:@"NSLocalizedDescription"] isEqualToString:@"Request failed: unacceptable content-type: text/plain"] ) {
+            _extPHP = @".php";
+            [weakSelf loadList];
+        } else {
+            [weakSelf handleError:operation error:error];
+        }
     }];
     [[NSOperationQueue mainQueue] addOperation:op];
 }
@@ -301,7 +312,7 @@ static FFPlayer * _internalPlayer = nil;
 -(void) login:(NSString *)pass
 {
     NSString * strMD5 = [FFHelper md5HexDigest:pass];
-    NSString * strQuery = [NSString stringWithFormat:@"%@/login_server?spid=%@", _urlPrefix, strMD5];
+    NSString * strQuery = [NSString stringWithFormat:@"%@/login_server%@?spid=%@", _urlPrefix, _extPHP, strMD5];
     
     __weak FFSparkViewController * weakSelf = self;
     ASYNC_HUD_BEGIN( NSLocalizedString(@"Login", nil) );
@@ -321,7 +332,7 @@ static FFPlayer * _internalPlayer = nil;
 -(void) doUnlock:(NSString *)pass
 {
     NSString * strMD5 = [FFHelper md5HexDigest:pass];
-    NSString * strQuery = [NSString stringWithFormat:@"%@/login?pid=%@", _urlPrefix, strMD5];
+    NSString * strQuery = [NSString stringWithFormat:@"%@/login%@?pid=%@", _urlPrefix, _extPHP, strMD5];
     
     __weak FFSparkViewController * weakSelf = self;
     ASYNC_HUD_BEGIN( NSLocalizedString(@"Login", nil) );
@@ -418,7 +429,7 @@ static FFPlayer * _internalPlayer = nil;
         if ( _internalPlayer == nil )
             _internalPlayer = [[FFPlayer alloc] init];
         
-        NSString * strURL = [_urlPrefix stringByAppendingString:@"/play.m3u8"];
+        NSString * strURL = [[_urlPrefix stringByAppendingString:@"/play.m3u8"] stringByAppendingString:_extPHP];
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:strURL]];
         AFHTTPRequestSerializer * sz = [AFHTTPRequestSerializer serializer];
         FFSetting * setting = [FFSetting default];
